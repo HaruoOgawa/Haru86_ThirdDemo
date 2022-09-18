@@ -13,10 +13,6 @@ namespace shaderlib { // プリプロセッサでどれをリンクするか選ぶのもありかも？？ 
 		#include "GraphicsEngine/Graphics/Shader/DepthColor.frag"
 	};
 	
-	const std::string ShaderLib::NormalMapColor_frag = {
-		#include "GraphicsEngine/Graphics/Shader/NormalMapColor.frag"
-	};
-	
 #ifdef _DEBUG
 	const std::string ShaderLib::GridPlane_frag = {
 		#include "GraphicsEngine/Graphics/Shader/GridPlane.frag"

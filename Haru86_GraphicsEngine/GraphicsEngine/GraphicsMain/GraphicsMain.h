@@ -13,7 +13,6 @@ enum class ERerderingTarget
 {
 	COLOR,
 	DEPTH,
-	NORMAL,
 };
 
 namespace app { class GradDemo; }
@@ -43,8 +42,7 @@ public:
 	float m_MilliSecondsTime;
 	float m_SecondsTimeOffset;
 	float m_DeltaTime;
-	float animTime;
-
+	
 	//frame board
 	std::shared_ptr<class CameraObject> game_camera_instance;
 	

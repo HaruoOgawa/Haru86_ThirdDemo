@@ -8,7 +8,6 @@
 class GameObject;
 class Mesh;
 class Material;
-class TimelineAnimationClip;
 class TransformComponent;
 
 class MeshRendererComponent
@@ -31,7 +30,6 @@ public:
     std::shared_ptr<Material> m_material;
     std::shared_ptr<TransformComponent> m_transform;
 
-    std::vector<TimelineAnimationClip*> animationClips;
     bool useZTest;
     bool useAlphaTest;
     RenderingSurfaceType m_SurfaceType;

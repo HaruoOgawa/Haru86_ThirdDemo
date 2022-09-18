@@ -36,7 +36,6 @@ GraphicsMain::GraphicsMain()
 	m_DeltaTime(0.0f),
 	previousTime(0.0f),
 	mouseStateBool(false),
-	animTime(0.0f),
 	renderingTarget(ERerderingTarget::COLOR),
 	m_MainCamera(nullptr),
 	m_UsingCamera(nullptr),

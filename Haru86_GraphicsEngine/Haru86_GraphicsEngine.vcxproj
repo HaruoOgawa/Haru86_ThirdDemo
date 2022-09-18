@@ -348,6 +348,7 @@ xcopy "$(ProjectDir)GraphicsEngine\Library\GLFW\x64\lib\glfw3.dll" "$(OutDir)" /
       <AdditionalLibraryDirectories>$(ProjectDir)GraphicsEngine\Library\GLFW\x64\lib;$(ProjectDir)GraphicsEngine\Library\GLEW\x64\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glfw3dll.lib;glew32d.lib;WinMM.Lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(ProjectDir)GraphicsEngine\Library\GLEW\x64\bin\glew32d.dll" "$(OutDir)" /i /s /y
@@ -425,7 +426,6 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <None Include="bin\libfreetype-6.dll" />
     <None Include="bin\SDL2_ttf.dll" />
     <None Include="bin\zlib1.dll" />
-    <None Include="GraphicsEngine\Graphics\Shader\NormalMapColor.frag" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
