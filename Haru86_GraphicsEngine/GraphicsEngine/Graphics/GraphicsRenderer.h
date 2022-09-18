@@ -11,8 +11,6 @@
 enum class ERenderTargetType {
 	COLOR_TEXTURE_BUFFER,
 	COLOR_RENDER_BUFFER,
-	REALTIME_CUBEMAP,
-	NONECOLORBUFFER,
 };
 
 enum class EDepthTargetType {
@@ -21,7 +19,6 @@ enum class EDepthTargetType {
 };
 
 class Texture;
-
 
 class GraphicsRenderer
 {
@@ -34,7 +31,6 @@ class GraphicsRenderer
 	unsigned int polygon_frameBuffer;
 	unsigned int polygon_frameBuffer_MSAA;
 	unsigned int polygon_depthBuffer;
-	unsigned int polygon_normalBuffer;
 	unsigned int raymarching_frameBuffer;
 	unsigned int raymarching_depthBuffer;
 	unsigned int p_r_BlendingBuffer;
@@ -54,8 +50,10 @@ public:
 	}
 	static void Create();
 	static void Destroy();
+#ifdef _DEBUG
 	static int CheckError();
 	static int CheckFrameBufferError();
+#endif // _DEBUG
 
 	GraphicsRenderer(class GraphicsMain* game);
 	~GraphicsRenderer();
@@ -78,7 +76,6 @@ public:
 	//FrameTextures
 	std::shared_ptr<Texture> polygon_frameTexture;
 	std::shared_ptr<Texture> polygon_depthTexture;
-	std::shared_ptr<Texture> polygon_normalTexture;
 	std::shared_ptr<Texture> polygon_ShadowTexture;
 	std::shared_ptr<Texture> raymarching_frameTexture;
 	std::shared_ptr<Texture> raymarching_depthTexture;

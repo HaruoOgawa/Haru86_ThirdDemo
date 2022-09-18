@@ -1,7 +1,6 @@
 #include "PostProcess.h"
 #include "GraphicsEngine/Graphics/Texture.h"
 #include <glew.h>
-#include "CBloom.h"
 #include "GraphicsEngine/Graphics/Mesh.h"
 #include "GraphicsEngine/Graphics/Material.h"
 #include "GraphicsEngine/Graphics/GraphicsRenderer.h"
@@ -30,10 +29,6 @@ void PostProcess::DestroyInstance() {
 
 PostProcess::PostProcess():
 	m_UsePostProcess(false),
-	m_UseBloom(false),
-	m_BloomIntensity(0.0),
-	m_Bloom(std::make_unique<CBloom>()),
-	m_BloomTexture(std::make_shared<Texture>()),
 	m_UseSSR(false),
 	m_LatePostProcesCallBack([]() {}),
 	m_PolygonePPRenderer(nullptr)
@@ -53,16 +48,9 @@ PostProcess::PostProcess():
 		shaderlib::ShaderLib::StandardRenderBoard_vert,
 		shaderlib::ShaderLib::LatePostProcess_frag
 	);
-
-	if (!GraphicsRenderer::GetInstance()->CreateFrameBuffer(GraphicsRenderer::GetInstance()->GetScreenSize().x, GraphicsRenderer::GetInstance()->GetScreenSize().y, m_BloomTexture, m_BloomFrameBuffer, GL_RGBA16F, GL_RGBA, GL_FLOAT)) {
-		printf("Cannot Create FrameBuffer\n");
-	}
 }
 
 void PostProcess::DrawPolygonPostProcess(const std::shared_ptr<Texture>& SrcTexture, const unsigned int& DestBuffer)const {
-	// Draw Bloom
-	if (m_UseBloom)m_Bloom->Draw(SrcTexture, m_BloomFrameBuffer);
-
 	// Draw PostProcess Result
 	GraphicsMain::GetInstance()->renderingTarget = ERerderingTarget::COLOR;
 	glBindFramebuffer(GL_FRAMEBUFFER, DestBuffer);
@@ -75,17 +63,11 @@ void PostProcess::DrawPolygonPostProcess(const std::shared_ptr<Texture>& SrcText
 
 	// draw PostProcess Board
 	m_PolygonePPRenderer->Draw(GL_TRIANGLES, false, 0, [&]() {
-		// Bloom
-		m_BloomTexture->SetActive(GL_TEXTURE0);
-		m_PolygonePPRenderer->m_material->SetTexUniform("_BloomTexture", 0);
-		m_PolygonePPRenderer->m_material->SetFloatUniform("_UseBloom", (m_BloomTexture && m_UseBloom) ? 1.0 : 0.0);
-
 		// Set SrcTexture
 		SrcTexture->SetActive(GL_TEXTURE1);
 		m_PolygonePPRenderer->m_material->SetTexUniform("_SrcTexture", 1);
 	});
 
-	m_BloomTexture->SetEnactive(GL_TEXTURE0);
 	SrcTexture->SetEnactive(GL_TEXTURE1);
 }
 
@@ -100,31 +82,9 @@ void PostProcess::DrawLatePostProcess(const std::shared_ptr<Texture>& SrcTexture
 	glEnable(GL_DEPTH_TEST);
 
 	m_LateMeshRenderer->Draw(GL_TRIANGLES, false, 0, [&]() {
-		m_LatePostProcesCallBack();
-
-		m_LateMeshRenderer->m_material->SetMatrixUniform("VPMatrix", m_LateMeshRenderer->m_transform->m_pMatrix * m_LateMeshRenderer->m_transform->m_vMatrix);
-		m_LateMeshRenderer->m_material->SetMatrixUniform("InvVPMatrix", glm::inverse(m_LateMeshRenderer->m_transform->m_pMatrix * m_LateMeshRenderer->m_transform->m_vMatrix));
-
 		SrcTexture->SetActive(GL_TEXTURE0);
 		m_LateMeshRenderer->m_material->SetTexUniform("_SrcTexture", 0);
 	
-		GraphicsRenderer::GetInstance()->polygon_normalTexture->SetActive(GL_TEXTURE1);
-		m_LateMeshRenderer->m_material->SetTexUniform("_NormalMap", 1);
-
-		GraphicsRenderer::GetInstance()->polygon_depthTexture->SetActive(GL_TEXTURE2);
-		m_LateMeshRenderer->m_material->SetTexUniform("_DepthMapPolygone", 2);
-
-		GraphicsRenderer::GetInstance()->raymarching_depthTexture->SetActive(GL_TEXTURE3);
-		m_LateMeshRenderer->m_material->SetTexUniform("_DepthMapRaymarch", 3);
-
-		GraphicsRenderer::GetInstance()->p_r_DepthBlendingTexture->SetActive(GL_TEXTURE4);
-		m_LateMeshRenderer->m_material->SetTexUniform("_DepthMapMixed", 4);
-
-		m_LateMeshRenderer->m_material->SetIntUniform("_UseSSR", (m_UseSSR) ? 1 : 0);
 	});
 	SrcTexture->SetEnactive(GL_TEXTURE0);
-	GraphicsRenderer::GetInstance()->polygon_normalTexture->SetEnactive(GL_TEXTURE1);
-	GraphicsRenderer::GetInstance()->polygon_depthTexture->SetEnactive(GL_TEXTURE2);
-	GraphicsRenderer::GetInstance()->raymarching_depthTexture->SetEnactive(GL_TEXTURE3);
-	GraphicsRenderer::GetInstance()->p_r_DepthBlendingTexture->SetEnactive(GL_TEXTURE4);
 }

@@ -56,21 +56,10 @@ void PolygonRaymarchingMixer::Draw(bool IsDepthMix) {
 
 			}
 		}
-		/*else {
-			m_material->SetFloatUniform("_existRaymarching", 1.0);
-		}*/
-
-		//polygon_normalTexture
-		if (GraphicsRenderer::GetInstance()->polygon_normalTexture != nullptr) {
-			GraphicsRenderer::GetInstance()->polygon_normalTexture->SetActive(GL_TEXTURE4);
-			m_MixerRenderer->m_material->SetTexUniform("polygon_normalTexture", 4);
-		}
-
 	});
 
 	GraphicsRenderer::GetInstance()->m_PolygonPostProcess_FrameTexture->SetEnactive(GL_TEXTURE0);
 	GraphicsRenderer::GetInstance()->polygon_depthTexture->SetEnactive(GL_TEXTURE1);
 	GraphicsRenderer::GetInstance()->raymarching_frameTexture->SetEnactive(GL_TEXTURE2);
 	GraphicsRenderer::GetInstance()->raymarching_depthTexture->SetEnactive(GL_TEXTURE3);
-	GraphicsRenderer::GetInstance()->polygon_normalTexture->SetEnactive(GL_TEXTURE4);
 }

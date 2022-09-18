@@ -10,7 +10,7 @@
 #include "Texture.h"
 #include "GraphicsEngine/Graphics/PolygonRaymarchingMixer.h"
 #include "GraphicsEngine/Graphics/PostProcess.h"
-#include "Assets/App/GenocideCronus/GenocideCronus.h"
+#include "Assets/App/GradDemo/GradDemo.h"
 
 GraphicsRenderer* GraphicsRenderer::renderer_instance = nullptr;
 
@@ -25,6 +25,7 @@ void GraphicsRenderer::Destroy() {
 	renderer_instance = nullptr;
 }
 
+#ifdef _DEBUG
 int GraphicsRenderer::CheckError() {
 	int Error = 0;
 #ifdef _DEBUG
@@ -134,6 +135,9 @@ int GraphicsRenderer::CheckFrameBufferError() {
 	return Error;
 }
 
+#endif // _DEBUG
+
+
 GraphicsRenderer::GraphicsRenderer(GraphicsMain* game)
 	: mgame(game),
 	sWindow(nullptr),
@@ -145,7 +149,6 @@ GraphicsRenderer::GraphicsRenderer(GraphicsMain* game)
 	polygon_depthTexture(std::make_shared<Texture>()),
 	raymarching_frameTexture(std::make_shared<Texture>()),
 	raymarching_depthTexture(std::make_shared<Texture>()),
-	polygon_normalTexture(std::make_shared<Texture>()),
 	polygon_ShadowTexture(std::make_shared<Texture>()),
 	p_r_BlendingTexture(std::make_shared<Texture>()),
 	p_r_DepthBlendingTexture(std::make_shared<Texture>()),
@@ -154,7 +157,6 @@ GraphicsRenderer::GraphicsRenderer(GraphicsMain* game)
 	m_BackgroudColor(glm::vec4(0.0f,0.0f,0.0f,1.0f)),
 	polygon_frameBuffer(0),
 	polygon_depthBuffer(0),
-	polygon_normalBuffer(0),
 	raymarching_frameBuffer(0),
 	raymarching_depthBuffer(0),
 	p_r_BlendingBuffer(0),
@@ -169,7 +171,6 @@ GraphicsRenderer::~GraphicsRenderer() {
 	if (polygon_frameBuffer != 0)glDeleteFramebuffers(1, &polygon_frameBuffer);
 	if (polygon_frameBuffer_MSAA != 0)glDeleteFramebuffers(1, &polygon_frameBuffer_MSAA);
 	if (polygon_depthBuffer != 0)glDeleteFramebuffers(1, &polygon_depthBuffer);
-	if (polygon_normalBuffer != 0)glDeleteFramebuffers(1, &polygon_normalBuffer);
 	if (raymarching_frameBuffer != 0)glDeleteFramebuffers(1, &raymarching_frameBuffer);
 	if (raymarching_depthBuffer != 0)glDeleteFramebuffers(1, &raymarching_depthBuffer);
 	if (p_r_BlendingBuffer != 0)glDeleteFramebuffers(1, &p_r_BlendingBuffer);
@@ -242,13 +243,10 @@ bool GraphicsRenderer::Initialize(float width,float height) {
 	CreateFrameBuffer(static_cast<int>(GetScreenSize().x), static_cast<int>(GetScreenSize().y),polygon_frameTexture, polygon_frameBuffer, GL_RGBA16F, GL_RGBA, GL_FLOAT);
 	CreateFrameBuffer(static_cast<int>(GetScreenSize().x), static_cast<int>(GetScreenSize().y),nullptr, polygon_frameBuffer_MSAA,
 		GL_RGBA16F, GL_RGBA, GL_FLOAT,ERenderTargetType::COLOR_RENDER_BUFFER,EDepthTargetType::DEPTH_RENDER_BUFFER,true);
-		//GL_RGBA, GL_RGBA, GL_FLOAT,ERenderTargetType::COLOR_RENDER_BUFFER,EDepthTargetType::DEPTH_RENDER_BUFFER,true);
-		//GL_RGBA16F, GL_RGBA, GL_FLOAT, ERenderTargetType::COLOR_RENDER_BUFFER, EDepthTargetType::DEPTH_RENDER_BUFFER, false);
-
+	
 	CreateFrameBuffer(static_cast<int>(GetScreenSize().x), static_cast<int>(GetScreenSize().y), polygon_depthTexture, polygon_depthBuffer, GL_RGBA, GL_RGBA,GL_FLOAT);
 	CreateFrameBuffer(static_cast<int>(GetScreenSize().x), static_cast<int>(GetScreenSize().y), raymarching_frameTexture, raymarching_frameBuffer, GL_RGBA, GL_RGBA);
 	CreateFrameBuffer(static_cast<int>(GetScreenSize().x), static_cast<int>(GetScreenSize().y), raymarching_depthTexture, raymarching_depthBuffer, GL_RGBA, GL_RGBA);
-	CreateFrameBuffer(static_cast<int>(GetScreenSize().x), static_cast<int>(GetScreenSize().y), polygon_normalTexture, polygon_normalBuffer, GL_RGBA, GL_RGBA);
 	CreateFrameBuffer(static_cast<int>(GetScreenSize().x), static_cast<int>(GetScreenSize().y), p_r_BlendingTexture, p_r_BlendingBuffer, GL_RGBA16F, GL_RGBA, GL_FLOAT);
 	CreateFrameBuffer(static_cast<int>(GetScreenSize().x), static_cast<int>(GetScreenSize().y), p_r_DepthBlendingTexture, p_r_DepthBlendingBuffer, GL_RGBA16F, GL_RGBA, GL_FLOAT);
 	CreateFrameBuffer(static_cast<int>(GetScreenSize().x), static_cast<int>(GetScreenSize().y), m_PolygonPostProcess_FrameTexture, m_PolygonPostProcess_FrameBuffer, GL_RGBA16F, GL_RGBA, GL_FLOAT);
@@ -331,15 +329,6 @@ bool GraphicsRenderer::CreateFrameBuffer(int width, int height, std::shared_ptr<
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorRenderBuffer);
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	}
-	else if (RenderTargetType == ERenderTargetType::REALTIME_CUBEMAP) // 動的キューブマップ
-	{
-		fTex->CreateForCubemap(width, height, internalformat, format, type);
-	}
-	else if (RenderTargetType == ERenderTargetType::NONECOLORBUFFER)
-	{
-		glDrawBuffer(GL_NONE);
-		glReadBuffer(GL_NONE);
-	}
 	else {
 		return false;
 	}
@@ -397,22 +386,6 @@ void GraphicsRenderer::Draw(const std::shared_ptr<TransformComponent>& UsingCame
 	//glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	//glClear(GL_DEPTH_BUFFER_BIT);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glEnable(GL_DEPTH_TEST);
-
-	if (mgame->m_App) {
-		mgame->m_App->Draw(false);
-	}
-
-	// ポリゴンオブジェクトのノーマルマップをレンダリング
-	GraphicsMain::GetInstance()->renderingTarget = ERerderingTarget::NORMAL;
-	glBindFramebuffer(GL_FRAMEBUFFER, polygon_normalBuffer);
-	glViewport(0, 0, static_cast<int>(GetScreenSize().x * frameResolusion), static_cast<int>(GetScreenSize().y * frameResolusion));
-
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // alphaが1だとその値がノーマルマッピングに使われるから注意
-	// たしかにディファード(遅延)レンダリングは、フレームバッファの値をそのまま使うからそうなるわな
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glEnable(GL_DEPTH_TEST);

@@ -3,9 +3,7 @@
 #include "../Graphics/Mesh.h"
 #include <vector>
 #include <algorithm>
-#include "Assets/App/GenocideCronus/GenocideCronus.h"
-#include "GraphicsEngine/Graphics/ReflectionProbe.h"
-#include "GraphicsEngine/Sound/SoundPlayer.h"
+#include "Assets/App/GradDemo/GradDemo.h"
 #include "GraphicsEngine/Component/TransformComponent.h"
 #include "GraphicsEngine/Component/MeshRendererComponent.h"
 #include <time.h>
@@ -38,23 +36,15 @@ GraphicsMain::GraphicsMain()
 	m_DeltaTime(0.0f),
 	previousTime(0.0f),
 	mouseStateBool(false),
-	animTime(0.0f),
 	renderingTarget(ERerderingTarget::COLOR),
 	m_MainCamera(nullptr),
 	m_UsingCamera(nullptr),
-	m_SoundPlayer(nullptr),
 	m_GroabalLightPosition(nullptr)
 {
 }
 
 GraphicsMain::~GraphicsMain() {
 	GraphicsRenderer::Destroy();
-
-	gameObjectList.clear();
-	raymarchingObjectList.clear();
-	postProcessGameObjectList.clear();
-	uiObjectList.clear();
-	m_ReflectionProbeList.clear();
 }
 
 bool GraphicsMain::CreateApp() {
@@ -67,7 +57,7 @@ bool GraphicsMain::CreateApp() {
 
 bool GraphicsMain::Initialize() {
 	// メモリ確保
-	m_App = new GenocideCronus();
+	m_App = new app::GradDemo();
 	LoadData();
 	
 	return true;
@@ -85,26 +75,8 @@ void GraphicsMain::LoadData() {
 		shaderlib::ShaderLib::StandardRenderBoard_frag
 	);
 
-	//
-	if (m_MainCamera == nullptr) {
-		m_MainCamera = std::make_shared<TransformComponent>(glm::vec3(0.0f, 0.0f, -3.0f), glm::vec3(0.0f), glm::vec3(1.0f));
-	}
-
-	if (!m_GroabalLightPosition)
-	{
-		m_GroabalLightPosition = std::make_shared<TransformComponent>(glm::vec3(10.0f));
-	}
-
-	//
-	m_SoundPlayer = std::make_shared<sound::SoundPlayer>();
-	if (m_SecondsTimeOffset != 0.0f && m_SecondsTimeOffset > 0.0f)
-	{
-		m_SoundPlayer->Skip(m_SecondsTimeOffset);
-	}
-	else
-	{
-		m_SoundPlayer->Play();
-	}
+	if (m_MainCamera == nullptr) m_MainCamera = std::make_shared<TransformComponent>(glm::vec3(0.0f, 0.0f, -3.0f), glm::vec3(0.0f), glm::vec3(1.0f));
+	if (!m_GroabalLightPosition) m_GroabalLightPosition = std::make_shared<TransformComponent>(glm::vec3(10.0f));
 }
 
 bool GraphicsMain::RunLoop() {
@@ -144,14 +116,8 @@ void GraphicsMain::Update() {
 	m_MilliSecondsTime = static_cast<float>(clock()) + m_SecondsTimeOffset*1000.0f;
 	m_SecondsTime = m_MilliSecondsTime * 0.001f;
 	m_DeltaTime = (m_MilliSecondsTime - previousTime) / 1000.0f;
-	/*if (m_DeltaTime > 0.05f) {
-		m_DeltaTime = 0.05f;
-	}*/
 	previousTime = m_MilliSecondsTime;
-
-	if (m_App) {
-		m_App->Update();
-	}
+	if (m_App)m_App->Update();
 }
 
 // ここのDrawではカメラ位置を変える
@@ -160,18 +126,8 @@ void GraphicsMain::Draw() {
 	glfwSwapInterval(1);
 
 	// 通常の描画(画面に表示される部分)
-	//m_UseCameraIndex = 0;
 	GraphicsRenderer::GetInstance()->Draw(m_MainCamera, true,0, []() {},GraphicsRenderer::GetInstance()->GetScreenSize().x, GraphicsRenderer::GetInstance()->GetScreenSize().y);
 
-	// リアルタイムリフレクションプローブ (重いので使用しない or シーンによって使い分ける)
-	for (const auto& ReflectionProbe : m_ReflectionProbeList) {
-		if (ReflectionProbe) {
-			ReflectionProbe->Draw();
-		}
-	}
-	
 	//カラーバッファを入れ替える
 	glfwSwapBuffers(GraphicsRenderer::GetInstance()->GetWindow());
-
-	//m_UseCameraIndex = 0;
 }
