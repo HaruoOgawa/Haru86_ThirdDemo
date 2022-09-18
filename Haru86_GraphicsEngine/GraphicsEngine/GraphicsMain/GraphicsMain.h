@@ -1,0 +1,92 @@
+#pragma once
+
+#include "../Graphics/GraphicsRenderer.h"
+#include <vector>
+#include <memory>
+#include <map>
+#include <glm/glm.hpp>
+
+#include <glew.h>
+#include <glfw3.h>
+
+enum class ERerderingTarget
+{
+	COLOR,
+	DEPTH,
+	NORMAL,
+};
+
+namespace sound {
+	class SoundPlayer;
+}
+
+class GenocideCronus;
+class TransformComponent;
+class ReflectionProbe;
+class MeshRendererComponent;
+
+class GraphicsMain
+{
+public:
+	static GraphicsMain* GetInstance()
+	{
+		return s_pInstance;
+	}
+
+	static void Create();
+	static void Destroy();
+
+	GraphicsMain();
+	~GraphicsMain();
+	bool CreateApp();
+	bool Initialize();
+	bool RunLoop();
+
+	unsigned int GetAppSceneIndex()const;
+
+	float m_SecondsTime;
+	float m_MilliSecondsTime;
+	float m_SecondsTimeOffset;
+	float m_DeltaTime;
+	float animTime;
+
+	//frame board
+	std::shared_ptr<class CameraObject> game_camera_instance;
+	
+	//
+	GenocideCronus* m_App;
+	ERerderingTarget renderingTarget;
+	bool isRunning;
+	float previousTime;
+	std::vector<class GameObject*> gameObjectList;
+	std::vector<class GameObject*> raymarchingObjectList;
+	std::shared_ptr<MeshRendererComponent> m_MainBoardRenderer;
+	std::vector<class GameObject*> postProcessGameObjectList;
+	std::vector<class UIObject*> uiObjectList;
+
+	bool mouseStateBool;
+
+	// ÉâÉCÉg
+	std::shared_ptr<TransformComponent> m_GroabalLightPosition;
+
+	// ÉJÉÅÉâ
+	std::shared_ptr<TransformComponent> m_MainCamera;
+	std::shared_ptr<TransformComponent> m_UsingCamera;
+
+	// 
+	std::vector<ReflectionProbe*> m_ReflectionProbeList;
+
+	//
+	std::shared_ptr<sound::SoundPlayer> m_SoundPlayer;
+	
+private :
+	void UpdateTimeline();
+	void InputProcess();
+	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+	void Update();
+	void Draw();
+	void LoadData();
+protected:
+	static GraphicsMain* s_pInstance;
+};
+
