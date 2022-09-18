@@ -10,7 +10,7 @@
 #include "Texture.h"
 #include "GraphicsEngine/Graphics/PolygonRaymarchingMixer.h"
 #include "GraphicsEngine/Graphics/PostProcess.h"
-#include "Assets/App/GenocideCronus/GenocideCronus.h"
+#include "Assets/App/GradDemo/GradDemo.h"
 
 GraphicsRenderer* GraphicsRenderer::renderer_instance = nullptr;
 
@@ -25,6 +25,7 @@ void GraphicsRenderer::Destroy() {
 	renderer_instance = nullptr;
 }
 
+#ifdef _DEBUG
 int GraphicsRenderer::CheckError() {
 	int Error = 0;
 #ifdef _DEBUG
@@ -133,6 +134,9 @@ int GraphicsRenderer::CheckFrameBufferError() {
 
 	return Error;
 }
+
+#endif // _DEBUG
+
 
 GraphicsRenderer::GraphicsRenderer(GraphicsMain* game)
 	: mgame(game),

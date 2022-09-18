@@ -16,13 +16,8 @@ enum class ERerderingTarget
 	NORMAL,
 };
 
-namespace sound {
-	class SoundPlayer;
-}
-
-class GenocideCronus;
+namespace app { class GradDemo; }
 class TransformComponent;
-class ReflectionProbe;
 class MeshRendererComponent;
 
 class GraphicsMain
@@ -54,16 +49,12 @@ public:
 	std::shared_ptr<class CameraObject> game_camera_instance;
 	
 	//
-	GenocideCronus* m_App;
+	app::GradDemo* m_App;
 	ERerderingTarget renderingTarget;
 	bool isRunning;
 	float previousTime;
-	std::vector<class GameObject*> gameObjectList;
-	std::vector<class GameObject*> raymarchingObjectList;
 	std::shared_ptr<MeshRendererComponent> m_MainBoardRenderer;
-	std::vector<class GameObject*> postProcessGameObjectList;
-	std::vector<class UIObject*> uiObjectList;
-
+	
 	bool mouseStateBool;
 
 	// ÉâÉCÉg
@@ -72,13 +63,6 @@ public:
 	// ÉJÉÅÉâ
 	std::shared_ptr<TransformComponent> m_MainCamera;
 	std::shared_ptr<TransformComponent> m_UsingCamera;
-
-	// 
-	std::vector<ReflectionProbe*> m_ReflectionProbeList;
-
-	//
-	std::shared_ptr<sound::SoundPlayer> m_SoundPlayer;
-	
 private :
 	void UpdateTimeline();
 	void InputProcess();

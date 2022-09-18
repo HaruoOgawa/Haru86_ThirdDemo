@@ -54,8 +54,11 @@ public:
 	}
 	static void Create();
 	static void Destroy();
+#ifdef _DEBUG
 	static int CheckError();
 	static int CheckFrameBufferError();
+#endif // _DEBUG
+
 
 	GraphicsRenderer(class GraphicsMain* game);
 	~GraphicsRenderer();
