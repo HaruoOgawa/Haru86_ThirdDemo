@@ -15,6 +15,7 @@ enum class ERerderingTarget
 	DEPTH,
 };
 
+namespace sound { class SoundPlayer;}
 namespace app { class GradDemo; }
 class TransformComponent;
 class MeshRendererComponent;
@@ -61,6 +62,9 @@ public:
 	// ƒJƒƒ‰
 	std::shared_ptr<TransformComponent> m_MainCamera;
 	std::shared_ptr<TransformComponent> m_UsingCamera;
+
+	//
+	std::shared_ptr<sound::SoundPlayer> m_SoundPlayer;
 private :
 	void UpdateTimeline();
 	void InputProcess();
