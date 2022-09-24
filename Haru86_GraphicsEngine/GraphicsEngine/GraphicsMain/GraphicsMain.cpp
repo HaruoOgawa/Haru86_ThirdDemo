@@ -5,6 +5,7 @@
 #include <algorithm>
 #include "Assets/App/GradDemo/GradDemo.h"
 #include "GraphicsEngine/Component/TransformComponent.h"
+#include "GraphicsEngine/Sound/SoundPlayer.h"
 #include "GraphicsEngine/Component/MeshRendererComponent.h"
 #include <time.h>
 
@@ -39,6 +40,7 @@ GraphicsMain::GraphicsMain()
 	renderingTarget(ERerderingTarget::COLOR),
 	m_MainCamera(nullptr),
 	m_UsingCamera(nullptr),
+	m_SoundPlayer(nullptr),
 	m_GroabalLightPosition(nullptr)
 {
 }
@@ -77,6 +79,17 @@ void GraphicsMain::LoadData() {
 
 	if (m_MainCamera == nullptr) m_MainCamera = std::make_shared<TransformComponent>(glm::vec3(0.0f, 0.0f, -3.0f), glm::vec3(0.0f), glm::vec3(1.0f));
 	if (!m_GroabalLightPosition) m_GroabalLightPosition = std::make_shared<TransformComponent>(glm::vec3(10.0f));
+
+	//
+	m_SoundPlayer = std::make_shared<sound::SoundPlayer>();
+	if (m_SecondsTimeOffset != 0.0f && m_SecondsTimeOffset > 0.0f)
+	{
+		m_SoundPlayer->Skip(m_SecondsTimeOffset);
+	}
+	else
+	{
+		m_SoundPlayer->Play();
+	}
 }
 
 bool GraphicsMain::RunLoop() {
