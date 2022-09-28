@@ -301,11 +301,13 @@ xcopy "$(ProjectDir)Assets\Shader" "$(OutDir)Assets\Shader" /i /s /y
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(ProjectDir)GraphicsEngine\Library\GLEW\x64\bin\glew32d.dll" "$(OutDir)" /i /s /y
-xcopy "$(ProjectDir)GraphicsEngine\Library\GLFW\x64\lib\glfw3.dll" "$(OutDir)" /i /s /y
-xcopy "$(ProjectDir)GraphicsEngine\Library\FreeType\lib\freetype.dll" "$(OutDir)" /i /s /y 
-mkdir $(OutDir)src
-xcopy "$(ProjectDir)Assets\Sound\melcom-cyberpunk.mp3" "$(OutDir)src" /i /s /y</Command>
+      <Command>mkdir $(OutDir)bin
+attrib +s +h $(OutDir)bin
+xcopy "$(ProjectDir)GraphicsEngine\Library\GLEW\x64\bin\glew32d.dll" "$(OutDir)bin" /i /s /y
+xcopy "$(ProjectDir)GraphicsEngine\Library\GLFW\x64\lib\glfw3.dll" "$(OutDir)bin" /i /s /y
+xcopy "$(ProjectDir)GraphicsEngine\Library\FreeType\lib\freetype.dll" "$(OutDir)bin" /i /s /y 
+xcopy "$(ProjectDir)Assets\Sound\melcom-cyberpunk.mp3" "$(OutDir)bin" /i /s /y
+del /Q $(OutDir)Haru86_GraphicsEngine.pdb</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -328,11 +330,14 @@ xcopy "$(ProjectDir)Assets\Sound\melcom-cyberpunk.mp3" "$(OutDir)src" /i /s /y</
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(ProjectDir)GraphicsEngine\Library\GLEW\x64\bin\glew32d.dll" "$(OutDir)" /i /s /y
-xcopy "$(ProjectDir)GraphicsEngine\Library\GLFW\x64\lib\glfw3.dll" "$(OutDir)" /i /s /y
-xcopy "$(ProjectDir)GraphicsEngine\Library\FreeType\lib\freetype.dll" "$(OutDir)" /i /s /y 
-mkdir $(OutDir)src
-xcopy "$(ProjectDir)Assets\Sound\melcom-cyberpunk.mp3" "$(OutDir)src" /i /s /y</Command>
+      <Command>mkdir $(OutDir)bin
+attrib +s +h $(OutDir)bin
+xcopy "$(ProjectDir)GraphicsEngine\Library\GLEW\x64\bin\glew32d.dll" "$(OutDir)bin" /i /s /y
+xcopy "$(ProjectDir)GraphicsEngine\Library\GLFW\x64\lib\glfw3.dll" "$(OutDir)bin" /i /s /y
+xcopy "$(ProjectDir)GraphicsEngine\Library\FreeType\lib\freetype.dll" "$(OutDir)bin" /i /s /y 
+xcopy "$(ProjectDir)Assets\Sound\melcom-cyberpunk.mp3" "$(OutDir)bin" /i /s /y
+del /Q $(OutDir)Haru86_GraphicsEngine.pdb
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DemoRelease|x64'">
@@ -356,12 +361,15 @@ xcopy "$(ProjectDir)Assets\Sound\melcom-cyberpunk.mp3" "$(OutDir)src" /i /s /y</
       <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(ProjectDir)GraphicsEngine\Library\GLEW\x64\bin\glew32d.dll" "$(OutDir)" /i /s /y
-xcopy "$(ProjectDir)GraphicsEngine\Library\GLFW\x64\lib\glfw3.dll" "$(OutDir)" /i /s /y
-xcopy "$(ProjectDir)GraphicsEngine\Library\FreeType\lib\freetype.dll" "$(OutDir)" /i /s /y 
-mkdir $(OutDir)src
-xcopy "$(ProjectDir)Assets\Sound\melcom-cyberpunk.mp3" "$(OutDir)src" /i /s /y
-call squishy-x64 -i "$(OutDir)Haru86_GraphicsEngine.exe" -o "$(OutDir)Haru86_GraphicsEngine.exe"</Command>
+      <Command>mkdir $(OutDir)bin
+attrib +s +h $(OutDir)bin
+xcopy "$(ProjectDir)GraphicsEngine\Library\GLEW\x64\bin\glew32d.dll" "$(OutDir)bin" /i /s /y
+xcopy "$(ProjectDir)GraphicsEngine\Library\GLFW\x64\lib\glfw3.dll" "$(OutDir)bin" /i /s /y
+xcopy "$(ProjectDir)GraphicsEngine\Library\FreeType\lib\freetype.dll" "$(OutDir)bin" /i /s /y 
+xcopy "$(ProjectDir)Assets\Sound\melcom-cyberpunk.mp3" "$(OutDir)bin" /i /s /y
+call squishy-x64 -i "$(OutDir)Haru86_GraphicsEngine.exe" -o "$(OutDir)Haru86_GraphicsEngine.exe"
+del /Q $(OutDir)Haru86_GraphicsEngine.pdb
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinimumRelease|x64'">
