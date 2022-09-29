@@ -307,6 +307,7 @@ xcopy "$(ProjectDir)GraphicsEngine\Library\GLEW\x64\bin\glew32d.dll" "$(OutDir)b
 xcopy "$(ProjectDir)GraphicsEngine\Library\GLFW\x64\lib\glfw3.dll" "$(OutDir)bin" /i /s /y
 xcopy "$(ProjectDir)GraphicsEngine\Library\FreeType\lib\freetype.dll" "$(OutDir)bin" /i /s /y 
 xcopy "$(ProjectDir)Assets\Sound\melcom-cyberpunk.mp3" "$(OutDir)bin" /i /s /y
+xcopy "$(ProjectDir)Assets\Font\arial.ttf" "$(OutDir)bin" /i /s /y
 del /Q $(OutDir)Haru86_GraphicsEngine.pdb</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -336,6 +337,7 @@ xcopy "$(ProjectDir)GraphicsEngine\Library\GLEW\x64\bin\glew32d.dll" "$(OutDir)b
 xcopy "$(ProjectDir)GraphicsEngine\Library\GLFW\x64\lib\glfw3.dll" "$(OutDir)bin" /i /s /y
 xcopy "$(ProjectDir)GraphicsEngine\Library\FreeType\lib\freetype.dll" "$(OutDir)bin" /i /s /y 
 xcopy "$(ProjectDir)Assets\Sound\melcom-cyberpunk.mp3" "$(OutDir)bin" /i /s /y
+xcopy "$(ProjectDir)Assets\Font\arial.ttf" "$(OutDir)bin" /i /s /y
 del /Q $(OutDir)Haru86_GraphicsEngine.pdb
 </Command>
     </PostBuildEvent>
@@ -367,6 +369,7 @@ xcopy "$(ProjectDir)GraphicsEngine\Library\GLEW\x64\bin\glew32d.dll" "$(OutDir)b
 xcopy "$(ProjectDir)GraphicsEngine\Library\GLFW\x64\lib\glfw3.dll" "$(OutDir)bin" /i /s /y
 xcopy "$(ProjectDir)GraphicsEngine\Library\FreeType\lib\freetype.dll" "$(OutDir)bin" /i /s /y 
 xcopy "$(ProjectDir)Assets\Sound\melcom-cyberpunk.mp3" "$(OutDir)bin" /i /s /y
+xcopy "$(ProjectDir)Assets\Font\arial.ttf" "$(OutDir)bin" /i /s /y
 call squishy-x64 -i "$(OutDir)Haru86_GraphicsEngine.exe" -o "$(OutDir)Haru86_GraphicsEngine.exe"
 del /Q $(OutDir)Haru86_GraphicsEngine.pdb
 </Command>
@@ -423,6 +426,8 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <ClInclude Include="GraphicsEngine\Graphics\Mesh.h" />
     <ClInclude Include="GraphicsEngine\Sound\SoundPlayer.h" />
     <ClInclude Include="GraphicsEngine\Text\TextRenderer.h" />
+    <ClInclude Include="GraphicsEngine\Text\TextObject.h" />
+    <ClInclude Include="GraphicsEngine\Text\TTFFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Assets\App\GradDemo\GradDemo.cpp" />
@@ -441,6 +446,8 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <ClCompile Include="GraphicsEngine\Graphics\PostProcess.cpp" />
     <ClCompile Include="GraphicsEngine\Sound\SoundPlayer.cpp" />
     <ClCompile Include="GraphicsEngine\Text\TextRenderer.cpp" />
+    <ClCompile Include="GraphicsEngine\Text\TextObject.cpp" />
+    <ClCompile Include="GraphicsEngine\Text\TTFFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="bin\libfreetype-6.dll" />
