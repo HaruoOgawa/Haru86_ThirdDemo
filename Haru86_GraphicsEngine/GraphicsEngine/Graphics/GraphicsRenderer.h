@@ -18,6 +18,7 @@ enum class EDepthTargetType {
 	DEPTH_TEXTURE_BUFFER,
 };
 
+namespace text { class TextRenderer; }
 class Texture;
 
 class GraphicsRenderer
@@ -84,6 +85,9 @@ public:
 	//PostProcess FrameTexture
 	std::shared_ptr<Texture> m_PolygonPostProcess_FrameTexture;
 	std::shared_ptr<Texture> m_LatePostProcess_FrameTexture;
+
+	//
+	std::shared_ptr<text::TextRenderer> m_TextRenderer;
 
 	// îwåiêF
 	void SetBackgroudColor(glm::vec4 BackgroudColor);

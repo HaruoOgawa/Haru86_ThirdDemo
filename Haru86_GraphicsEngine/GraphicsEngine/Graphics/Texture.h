@@ -8,9 +8,7 @@ class Texture
 public:
 	Texture();
 	~Texture();
-	void CreateForRendering(int width, int height,GLint internalformat,GLint format,GLenum type= GL_UNSIGNED_BYTE);
-	void CreateForCubemap(int width, int height,GLint internalformat,GLint format,GLenum type= GL_UNSIGNED_BYTE);
-	bool Load(const std::string& fileName);
+	void CreateForRendering(int width, int height,GLint internalformat,GLint format,GLenum type= GL_UNSIGNED_BYTE, unsigned char* pData = 0);
 	unsigned int GetTextureID() const { return mTextureID; }
 	int GetWidth()const { return mWidth; }
 	int GetHeight()const { return mHeight; }

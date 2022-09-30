@@ -14,5 +14,6 @@ namespace shaderlib {
 		static const std::string PolygonPostProcess_frag;
 		static const std::string PolygonRaymarchingMixer_vert;
 		static const std::string PolygonRaymarchingMixer_frag;
+		static const std::string Text_frag;
 	};
 }
