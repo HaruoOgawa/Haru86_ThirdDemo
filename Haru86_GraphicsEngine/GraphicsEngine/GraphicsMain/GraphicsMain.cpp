@@ -7,6 +7,7 @@
 #include "GraphicsEngine/Component/TransformComponent.h"
 #include "GraphicsEngine/Sound/SoundPlayer.h"
 #include "GraphicsEngine/Component/MeshRendererComponent.h"
+#include "GraphicsEngine/Text/TTFFactory.h"
 #include <time.h>
 
 #ifdef _DEBUG
@@ -41,6 +42,7 @@ GraphicsMain::GraphicsMain()
 	m_MainCamera(nullptr),
 	m_UsingCamera(nullptr),
 	m_SoundPlayer(nullptr),
+	m_TTFFactory(nullptr),
 	m_GroabalLightPosition(nullptr)
 {
 }
@@ -90,6 +92,10 @@ void GraphicsMain::LoadData() {
 	{
 		m_SoundPlayer->Play();
 	}
+
+	//
+	m_TTFFactory = std::make_shared<text::TTFFactory>();
+	if(!m_TTFFactory->Load()) isRunning = false;
 }
 
 bool GraphicsMain::RunLoop() {

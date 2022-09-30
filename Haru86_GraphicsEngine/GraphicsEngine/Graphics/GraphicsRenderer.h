@@ -18,6 +18,7 @@ enum class EDepthTargetType {
 	DEPTH_TEXTURE_BUFFER,
 };
 
+namespace text { class TextRenderer; }
 class Texture;
 
 class GraphicsRenderer

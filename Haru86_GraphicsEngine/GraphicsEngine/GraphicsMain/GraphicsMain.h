@@ -17,6 +17,7 @@ enum class ERerderingTarget
 
 namespace sound { class SoundPlayer;}
 namespace app { class GradDemo; }
+namespace text { class TTFFactory; }
 class TransformComponent;
 class MeshRendererComponent;
 
@@ -63,8 +64,11 @@ public:
 	std::shared_ptr<TransformComponent> m_MainCamera;
 	std::shared_ptr<TransformComponent> m_UsingCamera;
 
-	//
+	// サウンド
 	std::shared_ptr<sound::SoundPlayer> m_SoundPlayer;
+
+	// テキスト
+	std::shared_ptr<text::TTFFactory>	m_TTFFactory;
 private :
 	void UpdateTimeline();
 	void InputProcess();
