@@ -3,12 +3,15 @@
 
 class MeshRendererComponent;
 
+namespace text {class TextObject;}
+
 namespace app
 {
     class GradDemo
     {
         //
         std::shared_ptr<MeshRendererComponent> m_TestRenderer;
+        std::shared_ptr<text::TextObject> m_TextObject;
 
         //
         unsigned int m_SceneIndex;

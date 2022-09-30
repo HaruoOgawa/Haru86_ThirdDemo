@@ -17,6 +17,6 @@ namespace text {
 
 		bool Load();
 
-		//const SFTCharacter GetFTChar(char character)const;
+		const std::shared_ptr<Texture>& GetFTChar(unsigned char character)const;
 	};
 }

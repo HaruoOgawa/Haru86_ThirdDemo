@@ -70,4 +70,12 @@ namespace text {
 
 		return true;
 	}
+
+	const std::shared_ptr<Texture>& TTFFactory::GetFTChar(unsigned char character)const
+	{
+		const auto& it = m_TTFCharacterTexMap.find(character);
+		if (it == m_TTFCharacterTexMap.end()) return nullptr;
+		
+		return it->second;
+	}
 }

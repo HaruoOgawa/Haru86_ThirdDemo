@@ -163,7 +163,8 @@ GraphicsRenderer::GraphicsRenderer(GraphicsMain* game)
 	p_r_BlendingBuffer(0),
 	p_r_DepthBlendingBuffer(0),
 	m_PolygonPostProcess_FrameBuffer(0),
-	m_LatePostProcess_FrameBuffer(0)
+	m_LatePostProcess_FrameBuffer(0),
+	m_TextRenderer(nullptr)
 {
 }
 
@@ -255,6 +256,9 @@ bool GraphicsRenderer::Initialize(float width,float height) {
 
 	//
 	m_Mixer = std::make_unique<PolygonRaymarchingMixer>();
+
+	//
+	m_TextRenderer = std::make_shared<text::TextRenderer>();
 
 	return true;
 }
