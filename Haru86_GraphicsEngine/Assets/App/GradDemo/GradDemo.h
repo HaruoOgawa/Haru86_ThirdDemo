@@ -11,7 +11,6 @@ namespace app
     {
         //
         std::shared_ptr<MeshRendererComponent> m_TestRenderer;
-        std::shared_ptr<text::TextObject> m_TextObject;
 
         //
         unsigned int m_SceneIndex;

@@ -9,8 +9,7 @@ namespace app
 {
     GradDemo::GradDemo() :
         m_SceneIndex(0),
-        m_TestRenderer(nullptr),
-        m_TextObject(nullptr)
+        m_TestRenderer(nullptr)
     {
     }
 
@@ -23,8 +22,6 @@ namespace app
             shaderlib::ShaderLib::Standard_vert,
             shaderlib::ShaderLib::Standard_frag
         );
-
-        m_TextObject = std::make_shared<text::TextObject>();
     }
 
     void GradDemo::Load()
@@ -41,7 +38,7 @@ namespace app
     void GradDemo::Draw(bool IsRaymarching)
     {
         //m_TestRenderer->Draw();
-        m_TextObject->Draw("Test");
+        text::TextObject::Draw("Haru86_");
     }
 
     void GradDemo::UpdateTimeline()
