@@ -17,6 +17,8 @@ namespace app
 				#include "../../Shader/MoonSea/MoonSea.frag"
 			)
 		);
+		m_MoonSeaMeshRenderer->useZTest = false;
+		m_MoonSeaMeshRenderer->useAlphaTest = true;
 	}
 
 	void MoonSea::Update()

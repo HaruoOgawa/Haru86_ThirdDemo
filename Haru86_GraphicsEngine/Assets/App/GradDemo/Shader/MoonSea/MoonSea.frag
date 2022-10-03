@@ -5,7 +5,8 @@ R"(
 #define gl_FragCoord fragCoord
 #define gl_FragColor fragColor
 #define _time iTime
-#define main() mainImage( out vec4 fragColor, in vec2 fragCoord )*/
+#define main() mainImage( out vec4 fragColor, in vec2 fragCoord )
+const int _RenderingTarget = 1;*/
 
 #version 330
 uniform float _time;
@@ -218,14 +219,14 @@ mapr map(vec3 p)
     mr.d=1000.0;
     mr.m=-1;
     
-    //compm(mr,length( trs(p,vec3(1.0),vec3(0.0),vec3(0.0,-0.35,0.0)) )-0.5,0,true);
+    compm(mr,length( trs(p,vec3(1.0),vec3(0.0),vec3(0.0,-0.35,0.0)) )-0.5,0,true);
     
     return mr;
 }
 
 // https://www.shadertoy.com/view/MlfXWH
 #define EPS (2.0/_resolution.x)
-vec3 sky(vec3 rd)
+vec3 sky(vec3 rd,bool IsRef)
 {
     //
     vec3 col = vec3(0.0),skycol=mix(vec3(0.0,0.038,0.038),vec3(0.0,0.04,0.15),(rd.y*0.5+0.5));
@@ -242,18 +243,23 @@ vec3 sky(vec3 rd)
         s*=1.35;
     }
     
-    // ŒŽ
-    vec2 moonPos = rd.xy/rd.z+vec2(0.0,0.25);
-    float moond=length(moonPos),moonr=0.355;
-    vec3 moonCol = vec3(fbm(moonPos*10.0))
-        *smoothstep(0.37,0.35,moond);
-    moonCol+=vec3(1.0)*pow(moond*2.25,-16.0)
-    *( (moond<moonr)? 0.0:0.01 );
-    
     //
-    col = skycol + 0.2*clouds*max(0.0,rd.y);
+    col = skycol + 0.25*clouds*max(0.0,rd.y);
     col += star*max(0.0,rd.y)*2.0; 
-    col += moonCol;
+    
+    if(IsRef)
+    {
+        // ŒŽ
+        vec2 moonPos = rd.xy/rd.z+vec2(0.0,0.25);
+        float moond=length(moonPos),moonr=0.355;
+        vec3 moonCol = vec3(fbm(moonPos*10.0))
+            *smoothstep(0.37,0.35,moond);
+        moonCol+=vec3(1.0)*pow(moond*2.25,-16.0)
+        *( (moond<moonr)? 0.0:0.01 );
+        
+        col += moonCol*vec3(0.5,0.4,0.15)*2.0;
+    }
+    
     return col;
 }
 
@@ -267,7 +273,7 @@ vec3 getSeaColor(vec3 p,vec3 n,vec3 l,vec3 eye,vec3 dist)
     float fresnel = clamp(1.0-dot(n,-eye),0.0,1.0);
     fresnel = pow(fresnel,3.0)*0.65;
     
-    vec3 reflected=sky(reflect(eye,n));
+    vec3 reflected=sky(reflect(eye,n),true);
     vec3 refracted=SEA_BASE+pow(dot(n,l)*0.4+0.6,80.0)*SEA_WATER_COLOR*0.12;
     
     vec3 col = mix(reflected,refracted,fresnel);
@@ -306,8 +312,13 @@ vec3 gn(vec3 p)
 
 void main()
 {
+if(_RenderingTarget==2) // ZTest
+{
+    gl_FragColor = vec4(vec3(0.0),1.0);
+}
+else
+{
     //vec2 st = (gl_FragCoord.xy*2.0-_resolution.xy)/min(_resolution.x,_resolution.y);
-
     vec2 st=uv*2.0-1.0;
     st.x*=(_resolution.x/_resolution.y);
 
@@ -319,7 +330,7 @@ void main()
     for(;++i<ln;){mr=map(ro+rd*(t+=mr.d));if(mr.d<dmin)break;acc+=exp(-3.0*mr.d);}
 
      // ”wŒi‚Ì–é‹ó
-    col = sky(rd);
+    col = sky(rd,false);
     col = smoothstep(0.0,1.0,col);
     col*=1.2;
   
@@ -333,11 +344,10 @@ void main()
         vec3 p = ro+rd*t;
         vec3 n = gn(p);
         vec3 pn = n*0.5+0.5;
-        col += vec3(1.0-fbm(5.0*pn.xy/pn.z) );
+        col = vec3(1.0-fbm(5.0*pn.xy/pn.z) )+vec3(0.5,0.4,0.15);
     }
     
     // Sea
-
     //if(mr.d>dmin)
     {
         vec3 p;
@@ -352,12 +362,12 @@ void main()
             col = vec3(1.0)*max(0.0,dot(n,ldir));
             vec3 SeaCol = getSeaColor(p,n,ldir,rd,dist);
             col=SeaCol;
-            //float mixt=pow(smoothstep(0.0,-0.05,rd.y),0.3);
-            //col = mix(col,SeaCol,mixt);
         }
     }
     
     gl_FragColor = vec4(col,1.0);
+}
+
 }
 
 )"
