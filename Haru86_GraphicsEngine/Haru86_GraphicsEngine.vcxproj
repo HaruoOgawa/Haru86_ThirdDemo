@@ -428,6 +428,7 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <ClInclude Include="GraphicsEngine\Text\TextRenderer.h" />
     <ClInclude Include="GraphicsEngine\Text\TextObject.h" />
     <ClInclude Include="GraphicsEngine\Text\TTFFactory.h" />
+    <ClInclude Include="Assets\App\GradDemo\Script\MoonSea\MoonSea.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Assets\App\GradDemo\GradDemo.cpp" />
@@ -448,8 +449,10 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <ClCompile Include="GraphicsEngine\Text\TextRenderer.cpp" />
     <ClCompile Include="GraphicsEngine\Text\TextObject.cpp" />
     <ClCompile Include="GraphicsEngine\Text\TTFFactory.cpp" />
+    <ClCompile Include="Assets\App\GradDemo\Script\MoonSea\MoonSea.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\App\GradDemo\Shader\MoonSea\MoonSea.frag" />
     <None Include="bin\libfreetype-6.dll" />
     <None Include="bin\SDL2_ttf.dll" />
     <None Include="bin\zlib1.dll" />
