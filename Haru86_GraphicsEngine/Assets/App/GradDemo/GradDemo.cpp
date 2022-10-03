@@ -4,13 +4,14 @@
 #include "GraphicsEngine/Graphics/ShaderLib.h"
 #include "GraphicsEngine/GraphicsMain/GraphicsMain.h"
 #include "GraphicsEngine/Text/TextObject.h"
+#include "Script/MoonSea/MoonSea.h"
 
 namespace app
 {
     GradDemo::GradDemo() :
         m_SceneIndex(0),
         m_TestRenderer(nullptr),
-        m_TextObject(nullptr)
+        m_MoonSea(nullptr)
     {
     }
 
@@ -24,7 +25,7 @@ namespace app
             shaderlib::ShaderLib::Standard_frag
         );
 
-        m_TextObject = std::make_shared<text::TextObject>();
+        m_MoonSea = std::make_shared<app::MoonSea>();
     }
 
     void GradDemo::Load()
@@ -36,16 +37,19 @@ namespace app
     {
         float t = GraphicsMain::GetInstance()->m_SecondsTime,r = 2.5f;
         GraphicsMain::GetInstance()->m_MainCamera->m_position = glm::vec3(r * glm::cos(t), 0.0f,r * glm::sin(t));
+
+        m_MoonSea->Update();
     }
 
     void GradDemo::Draw(bool IsRaymarching)
     {
         //m_TestRenderer->Draw();
-        m_TextObject->Draw("Test");
+        //text::TextObject::Draw("Haru86_");
+        m_MoonSea->Draw(IsRaymarching);
     }
 
     void GradDemo::UpdateTimeline()
     {
-
+        m_MoonSea->UpdateTimeLine(0.0f);
     }
 }

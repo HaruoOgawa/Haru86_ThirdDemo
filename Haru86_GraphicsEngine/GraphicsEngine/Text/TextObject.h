@@ -2,12 +2,9 @@
 #include <string>
 
 namespace text {
-	class TextObject
+	static class TextObject
 	{
 	public:
-		TextObject();
-		virtual ~TextObject();
-
-		void Draw(std::string DrawTexLine);
+		static void Draw(std::string DrawTexLine);
 	};
 }

@@ -30,10 +30,10 @@ namespace text
 		{
 			//
 			float XVal = (n / (static_cast<float>(DrawTextLine.size()) - 1)) * 2.0f - 1.0f;
-			XVal *= 1.5f;
+			XVal *= 2.0f;
 
 			//
-			m_TextMeshRenderer->m_transform->m_scale = glm::vec3(0.5f);
+			m_TextMeshRenderer->m_transform->m_scale = glm::vec3(0.25f);
 			m_TextMeshRenderer->m_transform->m_position = glm::vec3(XVal, 0.0f, 0.0f);
 			const auto& CharTex = GraphicsMain::GetInstance()->m_TTFFactory->GetFTChar(static_cast<unsigned char>(TextData[static_cast<size_t>(n)]));
 			m_TextMeshRenderer->Draw(GL_TRIANGLES, false, 0, [&]() {

@@ -7,11 +7,13 @@ namespace text {class TextObject;}
 
 namespace app
 {
+    class MoonSea;
+
     class GradDemo
     {
         //
         std::shared_ptr<MeshRendererComponent> m_TestRenderer;
-        std::shared_ptr<text::TextObject> m_TextObject;
+        std::shared_ptr<MoonSea> m_MoonSea;
 
         //
         unsigned int m_SceneIndex;
