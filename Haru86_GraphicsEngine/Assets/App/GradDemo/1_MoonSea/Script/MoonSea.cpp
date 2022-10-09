@@ -14,7 +14,7 @@ namespace app
 			RenderingSurfaceType::RAYMARCHING,
 			shaderlib::ShaderLib::StandardRenderBoard_vert,
 			std::string(
-				#include "../../Shader/MoonSea/MoonSea.frag"
+				#include "../Shader/MoonSea.frag"
 			)
 		);
 		m_MoonSeaMeshRenderer->useZTest = false;
