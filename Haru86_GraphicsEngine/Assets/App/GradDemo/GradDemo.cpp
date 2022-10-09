@@ -4,9 +4,9 @@
 #include "GraphicsEngine/Graphics/ShaderLib.h"
 #include "GraphicsEngine/GraphicsMain/GraphicsMain.h"
 #include "GraphicsEngine/Text/TextObject.h"
-#include "1_MoonSea/Script/MoonSea.h"
-#include "3_EarthAndMoon/Script/EarthAndMoon.h"
-#include "4_MoonTravel/Script/MoonTravel.h"
+#include "0_MoonSea/Script/MoonSea.h"
+#include "2_EarthAndMoon/Script/EarthAndMoon.h"
+#include "3_MoonTravel/Script/MoonTravel.h"
 
 #ifdef _DEBUG
 #include "GraphicsEngine/Message/Console.h"
@@ -18,7 +18,6 @@ namespace app
     GradDemo::GradDemo() :
         m_SceneIndex(0),
         m_LocalTime(0.0f),
-        m_TestRenderer(nullptr),
         m_MoonSea(nullptr),
         m_EarthAndMoon(nullptr),
         m_MoonTravel(nullptr)
@@ -37,14 +36,6 @@ namespace app
             if (m_DebugTimeLock)m_LocalTime = GraphicsMain::GetInstance()->m_SecondsTimeOffset;
         }*/
 #endif
-
-        m_TestRenderer = std::make_shared<MeshRendererComponent>(
-            std::make_shared<TransformComponent>(),
-            PrimitiveType::SPHERE,
-            RenderingSurfaceType::RASTERIZER,
-            shaderlib::ShaderLib::Standard_vert,
-            shaderlib::ShaderLib::Standard_frag
-        );
 
         m_MoonSea = std::make_shared<app::MoonSea>();
         m_EarthAndMoon = std::make_shared<app::EarthAndMoon>();
@@ -67,12 +58,11 @@ namespace app
 
     void GradDemo::Draw(bool IsRaymarching)
     {
-        //m_TestRenderer->Draw();
+        if (m_SceneIndex == 0 || m_SceneIndex == 1) m_MoonSea->Draw(IsRaymarching);
+        if (m_SceneIndex == 2) m_EarthAndMoon->Draw(IsRaymarching);
+        if (m_SceneIndex == 3) m_MoonTravel->Draw(IsRaymarching);
+
         //text::TextObject::Draw("Haru86_");
-        
-        if (m_SceneIndex == 0) m_MoonSea->Draw(IsRaymarching);
-        if (m_SceneIndex == 1) m_EarthAndMoon->Draw(IsRaymarching);
-        if (m_SceneIndex == 2) m_MoonTravel->Draw(IsRaymarching);
     }
 
     void GradDemo::UpdateTimeline()
@@ -80,19 +70,23 @@ namespace app
         m_LocalTime = GraphicsMain::GetInstance()->m_SecondsTime;
 
         // とりあえずデバッグで3つ分繰り替えす
-        m_LocalTime = glm::mod(m_LocalTime, 15.0f);
+        m_LocalTime = glm::mod(m_LocalTime, 20.0f);
 
-        if (m_LocalTime >= 0.0f && m_LocalTime < 5.0f)
+        if (m_LocalTime >= 0.0f && m_LocalTime < 5.0f) // MoonSea
         {
             m_SceneIndex = 0;
         }
-        else if (m_LocalTime >= 5.0f && m_LocalTime < 10.0f)
+        else if (m_LocalTime >= 5.0f && m_LocalTime < 10.0f) // LeaveEarth
         {
             m_SceneIndex = 1;
         }
-        else if (m_LocalTime >= 10.0f && m_LocalTime < 15.0f)
+        else if (m_LocalTime >= 10.0f && m_LocalTime < 15.0f) // EarthAndMoon
         {
             m_SceneIndex = 2;
+        }
+        else if (m_LocalTime >= 15.0f && m_LocalTime < 20.0f) // MoonTravel
+        {
+            m_SceneIndex = 3;
         }
 
 #ifdef _DEBUG

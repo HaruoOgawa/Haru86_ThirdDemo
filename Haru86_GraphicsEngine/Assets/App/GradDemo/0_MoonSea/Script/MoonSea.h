@@ -8,6 +8,8 @@ namespace app
 	class MoonSea
 	{
 		std::shared_ptr<MeshRendererComponent> m_MoonSeaMeshRenderer;
+
+		bool								   m_IsLeaveEarth;
 	private:
 	public:
 		MoonSea();

@@ -62,11 +62,11 @@ void PostProcess::DrawPolygonPostProcess(const std::shared_ptr<Texture>& SrcText
 	glEnable(GL_DEPTH_TEST);
 
 	// draw PostProcess Board
-	m_PolygonePPRenderer->Draw(GL_TRIANGLES, false, 0, [&]() {
+	m_PolygonePPRenderer->Draw([&]() {
 		// Set SrcTexture
 		SrcTexture->SetActive(GL_TEXTURE1);
 		m_PolygonePPRenderer->m_material->SetTexUniform("_SrcTexture", 1);
-	});
+	}, GL_TRIANGLES, false, 0);
 
 	SrcTexture->SetEnactive(GL_TEXTURE1);
 }
@@ -81,10 +81,10 @@ void PostProcess::DrawLatePostProcess(const std::shared_ptr<Texture>& SrcTexture
 
 	glEnable(GL_DEPTH_TEST);
 
-	m_LateMeshRenderer->Draw(GL_TRIANGLES, false, 0, [&]() {
+	m_LateMeshRenderer->Draw([&]() {
 		SrcTexture->SetActive(GL_TEXTURE0);
 		m_LateMeshRenderer->m_material->SetTexUniform("_SrcTexture", 0);
 	
-	});
+	}, GL_TRIANGLES, false, 0);
 	SrcTexture->SetEnactive(GL_TEXTURE0);
 }
