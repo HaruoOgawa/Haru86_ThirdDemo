@@ -15,6 +15,8 @@ uniform float _RenderingTarget;
 uniform vec3 _WorldCameraPos;
 uniform vec3 _WorldCameraCenter;
 
+uniform int _IsLeaveEarth;
+
 in vec2 uv;
 
 struct mapr // MapResult
@@ -65,6 +67,20 @@ float noise(in vec2 st)
     return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
 }
 
+float hash( float n ) { return fract(sin(n)*753.5453123); }
+float noise3( in vec3 x )
+{
+    vec3 p = floor(x);
+    vec3 f = fract(x);
+    f = f*f*(3.0-2.0*f);
+	
+    float n = p.x + p.y*157.0 + 113.0*p.z;
+    return mix(mix(mix( hash(n+  0.0), hash(n+  1.0),f.x),
+                   mix( hash(n+157.0), hash(n+158.0),f.x),f.y),
+               mix(mix( hash(n+113.0), hash(n+114.0),f.x),
+                   mix( hash(n+270.0), hash(n+271.0),f.x),f.y),f.z);
+}
+
 float fbm(vec2 p)
 {
     mat2 m=rot(35.6*pi/180.0);
@@ -77,6 +93,20 @@ float fbm(vec2 p)
     }
     
     return f/ASum;
+}
+
+float fbm3(vec3 p,float num,float A)
+{
+    float w=0.0,asum=0.0;
+    for(float i=0.0;i<num;i++)
+    {
+        float Att = pow(0.5,i+1.0) * A;
+        w+=Att*noise3(p);
+        p=2.0*p;
+        asum+=Att;
+    }
+    
+    return w/asum;
 }
 
 vec3 trs(vec3 p,vec3 s,vec3 r,vec3 t)
@@ -344,7 +374,8 @@ else
         vec3 p = ro+rd*t;
         vec3 n = gn(p);
         vec3 pn = n*0.5+0.5;
-        col = vec3(1.0-fbm(5.0*pn.xy/pn.z) )+vec3(0.5,0.4,0.15);
+        //col = vec3(1.0-fbm(5.0*pn.xy/pn.z) )+vec3(0.5,0.4,0.15);
+        col = vec3(1.0-fbm3(7.5*p,4.0,1.0))+vec3(0.5,0.4,0.15);
     }
     
     // Sea
