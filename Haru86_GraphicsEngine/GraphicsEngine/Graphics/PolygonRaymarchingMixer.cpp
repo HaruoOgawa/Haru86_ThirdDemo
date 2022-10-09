@@ -18,7 +18,7 @@ PolygonRaymarchingMixer::PolygonRaymarchingMixer() {
 }
 
 void PolygonRaymarchingMixer::Draw(bool IsDepthMix) {
-	m_MixerRenderer->Draw(GL_TRIANGLES, false, 0, [&]() {
+	m_MixerRenderer->Draw([&]() {
 		// デプスマップをミックスするかどうか
 		if (IsDepthMix)
 		{
@@ -56,7 +56,7 @@ void PolygonRaymarchingMixer::Draw(bool IsDepthMix) {
 
 			}
 		}
-	});
+	}, GL_TRIANGLES, false, 0);
 
 	GraphicsRenderer::GetInstance()->m_PolygonPostProcess_FrameTexture->SetEnactive(GL_TEXTURE0);
 	GraphicsRenderer::GetInstance()->polygon_depthTexture->SetEnactive(GL_TEXTURE1);

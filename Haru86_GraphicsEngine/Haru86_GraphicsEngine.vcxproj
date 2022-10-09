@@ -406,6 +406,7 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Assets\App\GradDemo\GradDemo.h" />
+    <ClInclude Include="Assets\App\GradDemo\2_EarthAndMoon\Script\EarthAndMoon.h" />
     <ClInclude Include="GraphicsEngine\Graphics\EGraphicsParam.h" />
     <ClInclude Include="GraphicsEngine\Graphics\ShaderLib.h" />
     <ClInclude Include="GraphicsEngine\Message\Console.h" />
@@ -428,10 +429,13 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <ClInclude Include="GraphicsEngine\Text\TextRenderer.h" />
     <ClInclude Include="GraphicsEngine\Text\TextObject.h" />
     <ClInclude Include="GraphicsEngine\Text\TTFFactory.h" />
-    <ClInclude Include="Assets\App\GradDemo\Script\MoonSea\MoonSea.h" />
+    <ClInclude Include="Assets\App\GradDemo\0_MoonSea\Script\MoonSea.h" />
+    <ClInclude Include="Assets\App\GradDemo\1_LeaveEarth\Script\LeaveEarth.h" />
+    <ClInclude Include="Assets\App\GradDemo\3_MoonTravel\Script\MoonTravel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Assets\App\GradDemo\GradDemo.cpp" />
+    <ClCompile Include="Assets\App\GradDemo\2_EarthAndMoon\Script\EarthAndMoon.cpp" />
     <ClCompile Include="GraphicsEngine\Graphics\ShaderLib.cpp" />
     <ClCompile Include="GraphicsEngine\Graphics\ComputeBuffer.cpp" />
     <ClCompile Include="GraphicsEngine\GraphicsMain\GraphicsMain.cpp" />
@@ -449,10 +453,15 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <ClCompile Include="GraphicsEngine\Text\TextRenderer.cpp" />
     <ClCompile Include="GraphicsEngine\Text\TextObject.cpp" />
     <ClCompile Include="GraphicsEngine\Text\TTFFactory.cpp" />
-    <ClCompile Include="Assets\App\GradDemo\Script\MoonSea\MoonSea.cpp" />
+    <ClCompile Include="Assets\App\GradDemo\0_MoonSea\Script\MoonSea.cpp" />
+    <ClCompile Include="Assets\App\GradDemo\1_LeaveEarth\Script\LeaveEarth.cpp" />
+    <ClCompile Include="Assets\App\GradDemo\3_MoonTravel\Script\MoonTravel.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\App\GradDemo\Shader\MoonSea\MoonSea.frag" />
+    <None Include="Assets\App\GradDemo\2_EarthAndMoon\Shader\EarthAndMoon.frag" />
+    <None Include="Assets\App\GradDemo\1_LeaveEarth\Shader\LeaveEarth.frag" />
+    <None Include="Assets\App\GradDemo\0_MoonSea\Shader\MoonSea.frag" />
+    <None Include="Assets\App\GradDemo\3_MoonTravel\Shader\MoonTravel.frag" />
     <None Include="bin\libfreetype-6.dll" />
     <None Include="bin\SDL2_ttf.dll" />
     <None Include="bin\zlib1.dll" />

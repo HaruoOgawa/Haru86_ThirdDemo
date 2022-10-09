@@ -479,9 +479,9 @@ void GraphicsRenderer::Draw(const std::shared_ptr<TransformComponent>& UsingCame
 	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_BLEND);
 
-	GraphicsMain::GetInstance()->m_MainBoardRenderer->Draw(GL_TRIANGLES, false, 0, [this]() {
+	GraphicsMain::GetInstance()->m_MainBoardRenderer->Draw([this]() {
 		m_LatePostProcess_FrameTexture->SetActive(GL_TEXTURE0);
 		GraphicsMain::GetInstance()->m_MainBoardRenderer->m_material->SetTexUniform("frameTex", 0);
-	});
+	}, GL_TRIANGLES, false, 0);
 	m_LatePostProcess_FrameTexture->SetEnactive(GL_TEXTURE0);
 }

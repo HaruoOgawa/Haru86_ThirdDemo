@@ -24,7 +24,7 @@ public:
 
     ~MeshRendererComponent()=default;
 
-    void Draw(GLenum DrawVertexWay = GL_TRIANGLES, bool IsInstancing = false, int InstanceNum = 16, std::function<void(void)> TemporaryCallBack = []() {});
+    void Draw(std::function<void(void)> TemporaryCallBack = []() {}, GLenum DrawVertexWay = GL_TRIANGLES, bool IsInstancing = false, int InstanceNum = 16);
     
     std::shared_ptr<Mesh> m_mesh;
     std::shared_ptr<Material> m_material;

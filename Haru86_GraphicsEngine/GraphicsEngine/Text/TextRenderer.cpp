@@ -16,6 +16,8 @@ namespace text
 			shaderlib::ShaderLib::Standard_vert,
 			shaderlib::ShaderLib::Text_frag
 		);
+
+		m_TextMeshRenderer->useAlphaTest = true;
 	}
 	
 	TextRenderer::~TextRenderer()
@@ -36,14 +38,14 @@ namespace text
 			m_TextMeshRenderer->m_transform->m_scale = glm::vec3(0.25f);
 			m_TextMeshRenderer->m_transform->m_position = glm::vec3(XVal, 0.0f, 0.0f);
 			const auto& CharTex = GraphicsMain::GetInstance()->m_TTFFactory->GetFTChar(static_cast<unsigned char>(TextData[static_cast<size_t>(n)]));
-			m_TextMeshRenderer->Draw(GL_TRIANGLES, false, 0, [&]() {
+			m_TextMeshRenderer->Draw([&]() {
 				if (CharTex)
 				{
-					CharTex->SetActive(GL_TEXTURE1);
-					m_TextMeshRenderer->m_material->SetIntUniform("_MainTex", 1);
+					CharTex->SetActive(GL_TEXTURE0);
+					m_TextMeshRenderer->m_material->SetIntUniform("_MainTex", 0);
 				}
-				});
-			if (CharTex)CharTex->SetEnactive(GL_TEXTURE1);
+				}, GL_TRIANGLES, false, 0);
+			if (CharTex)CharTex->SetEnactive(GL_TEXTURE0);
 		}
 	}
 }

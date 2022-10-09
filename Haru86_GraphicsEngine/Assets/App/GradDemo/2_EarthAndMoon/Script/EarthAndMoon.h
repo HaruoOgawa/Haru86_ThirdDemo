@@ -1,0 +1,18 @@
+#pragma once
+#include <memory>
+
+class MeshRendererComponent;
+
+namespace app {
+	class EarthAndMoon
+	{
+		std::shared_ptr<MeshRendererComponent> m_MeshRenderer;
+	public:
+		EarthAndMoon();
+		virtual ~EarthAndMoon() = default;
+
+		void Update();
+		void Draw(bool IsRaymarching);
+		void UpdateTimeLine(float time);
+	};
+}

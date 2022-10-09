@@ -3,15 +3,13 @@
 
 class MeshRendererComponent;
 
-namespace app
-{
-	class MoonSea
+namespace app {
+	class MoonTravel
 	{
-		std::shared_ptr<MeshRendererComponent> m_MoonSeaMeshRenderer;
-	private:
+		std::shared_ptr<MeshRendererComponent> m_MeshRenderer;
 	public:
-		MoonSea();
-		virtual ~MoonSea() = default;
+		MoonTravel();
+		virtual ~MoonTravel() = default;
 
 		void Update();
 		void Draw(bool IsRaymarching);
