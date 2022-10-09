@@ -431,7 +431,7 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <ClInclude Include="GraphicsEngine\Text\TTFFactory.h" />
     <ClInclude Include="Assets\App\GradDemo\1_MoonSea\Script\MoonSea.h" />
     <ClInclude Include="Assets\App\GradDemo\2_LeaveEarth\Script\LeaveEarth.h" />
-    <ClInclude Include="MoonTravel.h" />
+    <ClInclude Include="Assets\App\GradDemo\4_MoonTravel\Script\MoonTravel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Assets\App\GradDemo\GradDemo.cpp" />

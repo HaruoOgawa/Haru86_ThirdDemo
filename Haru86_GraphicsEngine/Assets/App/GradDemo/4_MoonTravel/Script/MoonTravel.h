@@ -4,12 +4,12 @@
 class MeshRendererComponent;
 
 namespace app {
-	class EarthAndMoon
+	class MoonTravel
 	{
 		std::shared_ptr<MeshRendererComponent> m_MeshRenderer;
 	public:
-		EarthAndMoon();
-		virtual ~EarthAndMoon() = default;
+		MoonTravel();
+		virtual ~MoonTravel() = default;
 
 		void Update();
 		void Draw(bool IsRaymarching);
