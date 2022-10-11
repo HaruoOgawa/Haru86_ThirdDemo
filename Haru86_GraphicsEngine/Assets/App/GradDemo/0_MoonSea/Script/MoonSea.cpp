@@ -3,6 +3,7 @@
 #include "GraphicsEngine/Component/TransformComponent.h"
 #include "GraphicsEngine/Graphics/ShaderLib.h"
 #include "GraphicsEngine/GraphicsMain/GraphicsMain.h"
+#include "GraphicsEngine/Graphics/PostProcess.h"
 
 namespace app
 {
@@ -32,7 +33,7 @@ namespace app
 		if (IsRaymarching)
 		{
 			m_MoonSeaMeshRenderer->Draw([this]() {
-				m_MoonSeaMeshRenderer->m_material->SetIntUniform("_IsLeaveEarth", (m_IsLeaveEarth) ? 1 : 0);
+				m_MoonSeaMeshRenderer->m_material->SetFloatUniform("_LeaveStartTime", 44.0f);
 			});
 		}
 	}
@@ -47,6 +48,14 @@ namespace app
 		else if (SceneIndex == 1)
 		{
 			m_IsLeaveEarth = true;
+
+			if (time >= 60.0f)
+			{
+				PostProcess::GetInstance()->m_LatePostProcesCallBack = [=]() {
+					PostProcess::GetInstance()->m_LateMeshRenderer->m_material->SetIntUniform("_UseWhite", 1);
+					PostProcess::GetInstance()->m_LateMeshRenderer->m_material->SetFloatUniform("_WhiteVal", time - 60.0f);
+				};
+			}
 		}
 	}
 }

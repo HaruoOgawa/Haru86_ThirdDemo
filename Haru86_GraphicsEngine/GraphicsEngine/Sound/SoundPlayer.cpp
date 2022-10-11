@@ -8,7 +8,9 @@
 
 namespace sound 
 {
-	SoundPlayer::SoundPlayer() {
+	SoundPlayer::SoundPlayer():
+		m_IsMute(false)
+	{
 		Initialize();
 	}
 
@@ -40,6 +42,8 @@ namespace sound
 
 	bool SoundPlayer::Play() 
 	{
+		if (m_IsMute) return Pause();
+
 		std::array<char, MAXERRORLENGTH> errorString;
 		mciGetErrorStringA(
 			mciSendStringA("play mp3", nullptr, 0, nullptr),
@@ -77,6 +81,11 @@ namespace sound
 
 		//Console::Log("cmd: %s\n", cmd.c_str());
 		//std::printf("%s\n", errorString.data());
+	}
+
+	void SoundPlayer::Mute(bool IsMute)
+	{
+		m_IsMute = IsMute;
 	}
 
 	void SoundPlayer::Release() {

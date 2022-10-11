@@ -69,6 +69,9 @@ bool GraphicsMain::Initialize() {
 
 void GraphicsMain::LoadData() {
 	//
+	m_SoundPlayer = std::make_shared<sound::SoundPlayer>();
+
+	//
 	m_App->Start();
 
 	m_MainBoardRenderer = std::make_shared<MeshRendererComponent>(
@@ -83,7 +86,6 @@ void GraphicsMain::LoadData() {
 	if (!m_GroabalLightPosition) m_GroabalLightPosition = std::make_shared<TransformComponent>(glm::vec3(10.0f));
 
 	//
-	m_SoundPlayer = std::make_shared<sound::SoundPlayer>();
 	if (m_SecondsTimeOffset != 0.0f && m_SecondsTimeOffset > 0.0f)
 	{
 		m_SoundPlayer->Skip(m_SecondsTimeOffset);

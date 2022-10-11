@@ -82,6 +82,8 @@ void PostProcess::DrawLatePostProcess(const std::shared_ptr<Texture>& SrcTexture
 	glEnable(GL_DEPTH_TEST);
 
 	m_LateMeshRenderer->Draw([&]() {
+		m_LatePostProcesCallBack();
+
 		SrcTexture->SetActive(GL_TEXTURE0);
 		m_LateMeshRenderer->m_material->SetTexUniform("_SrcTexture", 0);
 	
