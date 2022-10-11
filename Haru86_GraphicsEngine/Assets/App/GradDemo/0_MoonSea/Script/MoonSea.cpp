@@ -32,7 +32,7 @@ namespace app
 		if (IsRaymarching)
 		{
 			m_MoonSeaMeshRenderer->Draw([this]() {
-				m_MoonSeaMeshRenderer->m_material->SetIntUniform("_IsLeaveEarth", (m_IsLeaveEarth) ? 1 : 0);
+				m_MoonSeaMeshRenderer->m_material->SetFloatUniform("_LeaveStartTime", 43.0f);
 			});
 		}
 	}

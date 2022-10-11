@@ -28,7 +28,7 @@ namespace app
     {
 #ifdef _DEBUG
         // 時間のオフセット
-        GraphicsMain::GetInstance()->m_SecondsTimeOffset = 0.0f;// シーンを飛ばすためのオフセット
+        GraphicsMain::GetInstance()->m_SecondsTimeOffset = 30.0f;// シーンを飛ばすためのオフセット
 
         // デバッグ用
         /*{
@@ -70,26 +70,27 @@ namespace app
         m_LocalTime = GraphicsMain::GetInstance()->m_SecondsTime;
 
         // とりあえずデバッグで3つ分繰り替えす
-        m_LocalTime = glm::mod(m_LocalTime, 20.0f);
-
-        if (m_LocalTime >= 0.0f && m_LocalTime < 5.0f) // MoonSea
-        {
-            m_SceneIndex = 0;
-        }
-        else if (m_LocalTime >= 5.0f && m_LocalTime < 10.0f) // LeaveEarth
-        {
-            m_SceneIndex = 1;
-        }
-        else if (m_LocalTime >= 10.0f && m_LocalTime < 15.0f) // EarthAndMoon
-        {
-            m_SceneIndex = 2;
-        }
-        else if (m_LocalTime >= 15.0f && m_LocalTime < 20.0f) // MoonTravel
-        {
-            m_SceneIndex = 3;
-        }
+        //m_LocalTime = glm::mod(m_LocalTime, 20.0f);
+        //if (m_LocalTime >= 0.0f && m_LocalTime < 5.0f) // MoonSea
+        //{
+        //    m_SceneIndex = 0;
+        //}
+        //else if (m_LocalTime >= 5.0f && m_LocalTime < 10.0f) // LeaveEarth
+        //{
+        //    m_SceneIndex = 1;
+        //}
+        //else if (m_LocalTime >= 10.0f && m_LocalTime < 15.0f) // EarthAndMoon
+        //{
+        //    m_SceneIndex = 2;
+        //}
+        //else if (m_LocalTime >= 15.0f && m_LocalTime < 20.0f) // MoonTravel
+        //{
+        //    m_SceneIndex = 3;
+        //}
 
 #ifdef _DEBUG
+        m_SceneIndex = 0;
+
         Console::Log("m_LocalTime: %f\n", m_LocalTime);
 #endif // _DEBUG
 
