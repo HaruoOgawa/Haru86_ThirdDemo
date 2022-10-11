@@ -6,6 +6,7 @@ namespace sound
 {
 	class SoundPlayer
 	{
+		bool m_IsMute;
 	public:
 		SoundPlayer();
 		virtual ~SoundPlayer();
@@ -14,6 +15,7 @@ namespace sound
 		bool Pause();
 		void Release();
 		void Skip(float SkipOffset);
+		void Mute(bool IsMute);
 
 	private:
 		std::string GetExeDir(char path[]);
