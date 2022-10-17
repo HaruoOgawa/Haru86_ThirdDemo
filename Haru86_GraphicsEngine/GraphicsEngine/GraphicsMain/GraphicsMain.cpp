@@ -134,10 +134,10 @@ void GraphicsMain::key_callback(GLFWwindow* window, int key, int scancode, int a
 }
 
 void GraphicsMain::Update() {
-	//m_MilliSecondsTime = static_cast<float>(clock()) + m_SecondsTimeOffset*1000.0f;
+	m_MilliSecondsTime = static_cast<float>(clock()) + m_SecondsTimeOffset*1000.0f;
 
 	// Debug用(コミットしない)
-	m_MilliSecondsTime = glm::mod(static_cast<float>(clock()), (87.0f - 40.0f) * 1000.0f) + 40.0f * 1000.0f;
+	//m_MilliSecondsTime = glm::mod(static_cast<float>(clock()), (87.0f - 40.0f) * 1000.0f) + 40.0f * 1000.0f;
 
 	m_SecondsTime = m_MilliSecondsTime * 0.001f;
 	m_DeltaTime = (m_MilliSecondsTime - previousTime) / 1000.0f;

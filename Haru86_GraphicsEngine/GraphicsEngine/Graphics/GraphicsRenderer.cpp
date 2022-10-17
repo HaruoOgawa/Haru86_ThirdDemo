@@ -400,7 +400,7 @@ void GraphicsRenderer::Draw(const std::shared_ptr<TransformComponent>& UsingCame
 	}
 
 	// ポリゴンオブジェクトのポストプロセス
-	PostProcess::GetInstance()->DrawPolygonPostProcess(polygon_frameTexture, m_PolygonPostProcess_FrameBuffer);
+	//PostProcess::GetInstance()->DrawPolygonPostProcess(polygon_frameTexture, m_PolygonPostProcess_FrameBuffer);
 
 	// レイマーチングをレンダリングするのはデフォルトバッファのみ(リフレクションプローブでは無視)
 	//レイマーチングオブジェクトのカラーマップをレンダリング///////////////

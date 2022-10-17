@@ -7,6 +7,7 @@
 #include "0_MoonSea/Script/MoonSea.h"
 #include "2_EarthAndMoon/Script/EarthAndMoon.h"
 #include "3_MoonTravel/Script/MoonTravel.h"
+#include "4_CyberpunkSpaceRay/Script/CyberpunkSpaceRay.h"
 #include "GraphicsEngine/Sound/SoundPlayer.h"
 
 #ifdef _DEBUG
@@ -21,7 +22,8 @@ namespace app
         m_LocalTime(0.0f),
         m_MoonSea(nullptr),
         m_EarthAndMoon(nullptr),
-        m_MoonTravel(nullptr)
+        m_MoonTravel(nullptr),
+        m_CyberpunkSpaceRay(nullptr)
     {
     }
 
@@ -29,10 +31,10 @@ namespace app
     {
 #ifdef _DEBUG
         // 時間のオフセット
-        GraphicsMain::GetInstance()->m_SecondsTimeOffset = 40.0f;// シーンを飛ばすためのオフセット
+        GraphicsMain::GetInstance()->m_SecondsTimeOffset = 95.0f;// シーンを飛ばすためのオフセット
 
         // 音楽のミュート
-        GraphicsMain::GetInstance()->m_SoundPlayer->Mute(true);
+        //GraphicsMain::GetInstance()->m_SoundPlayer->Mute(true);
 
         // デバッグ用
         /*{
@@ -44,6 +46,7 @@ namespace app
         m_MoonSea = std::make_shared<app::MoonSea>();
         m_EarthAndMoon = std::make_shared<app::EarthAndMoon>();
         m_MoonTravel = std::make_shared<app::MoonTravel>();
+        m_CyberpunkSpaceRay = std::make_shared<app::CyberpunkSpaceRay>();
     }
 
     void GradDemo::Load()
@@ -58,6 +61,7 @@ namespace app
         m_MoonSea->Update();
         m_EarthAndMoon->Update();
         m_MoonTravel->Update();
+        m_CyberpunkSpaceRay->Update();
     }
 
     void GradDemo::Draw(bool IsRaymarching)
@@ -65,6 +69,7 @@ namespace app
         if (m_SceneIndex == 0 || m_SceneIndex == 1) m_MoonSea->Draw(IsRaymarching);
         if (m_SceneIndex == 2) m_EarthAndMoon->Draw(IsRaymarching);
         if (m_SceneIndex == 3) m_MoonTravel->Draw(IsRaymarching);
+        if (m_SceneIndex == 4) m_CyberpunkSpaceRay->Draw(IsRaymarching);
 
         //text::TextObject::Draw("Haru86_");
     }
@@ -126,5 +131,6 @@ namespace app
         m_MoonSea->UpdateTimeLine(m_LocalTime);
         m_EarthAndMoon->UpdateTimeLine(m_LocalTime);
         m_MoonTravel->UpdateTimeLine(m_LocalTime);
+        m_CyberpunkSpaceRay->UpdateTimeLine(m_LocalTime);
     }
 }
