@@ -232,7 +232,7 @@ else
     vec2 st=uv*2.0-1.0;
     st.x*=(_resolution.x/_resolution.y);
 #endif
-    float zfactor=1.0-0.25*length(st);
+    float zfactor=1.0-0.45*length(st);
     CameraIndex = (fract(_time*0.1)<0.5)? 0 : 1;
   
     vec3 col = vec3(0.0),ro=vec3(0.0,0.0,1.5),ta=vec3(0.0,0.0,0.0);
@@ -286,10 +286,12 @@ else
             }
             
             float glow=0.0;
-            //glow+=max((modc(length(p)-_time*1.5*2.5, 10.0)-9.0)*2.5, 0.0);
-            glow+=1.0;
             vec2 gp=DrawPattern(p.xz*0.5);
+            glow+=gp.x*max((modc(length(p)-_time*1.5*2.5, 10.0)-9.0)*2.5, 0.0);
+            //glow+=gp.x;
+            
             if(gp.x<1.3){glow=0.0;}
+            // ƒŒƒC‚Æ‚’¼‚Å‚ ‚é‚Ù‚ÇŒõ‚ç‚¹‚é
             glow+=max(1.0-abs(dot(rd,n)) - 0.4, 0.0) * 1.0;
             vec3 glowcol=vec3(1.0,1.0,1.0)*glow*0.25;
             
