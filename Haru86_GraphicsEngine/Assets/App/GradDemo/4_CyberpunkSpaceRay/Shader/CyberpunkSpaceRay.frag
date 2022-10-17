@@ -266,19 +266,6 @@ else
         if(mr.m == 0) // Debug
         {
             col = vec3(exp(-0.25*t));
-            
-            vec3 p=ro+rd*t;
-            vec3 n=gn(p);
-            float glow=0.0;
-            glow+=max((modc(length(p)-_time*1.5, 10.0)-9.0)*2.5, 0.0);
-            vec2 gp=DrawPattern(p.xz*0.5);
-            if(gp.x<1.3){glow=0.0;}
-            glow+=max(1.0-abs(dot(rd,n)) - 0.4, 0.0) * 1.0;
-            col+=vec3(0.0,0.0,1.0)*glow;
-            // https://www.geogebra.org/graphing/vxsqrnwt
-            //col*=vec3(1.0)*max(0.0,1.0-0.5*som*som);
-            //vec3 n = gn(ro+rd*t);
-            //col = vec3(1.0)*max(0.0, dot(normalize(vec3(1.0,-1.0,-1.0)),n));
         }
         else if(mr.m == 1) // Common
         {
@@ -290,16 +277,17 @@ else
             vec3 n = gn(p);
             if(CameraIndex == 0)
             {
-                col = vec3(0.75)*max(0.0, dot(normalize(vec3(1.0,-1.0,-1.0)),n));
+                col = vec3(1.0,0.8,0.6)*max(0.0, dot(normalize(vec3(1.0,-1.0,-1.0)),n));
                 col*=vec3(1.0)*max(0.0,1.0-0.5*som*som);
             }
             else
             {
-                col=vec3(0.75)*30.0/i;
+                col=vec3(1.0,0.8,0.6)*15.0/i;
             }
             
             float glow=0.0;
-            glow+=max((modc(length(p)-_time*1.5, 10.0)-9.0)*2.5, 0.0);
+            //glow+=max((modc(length(p)-_time*1.5*2.5, 10.0)-9.0)*2.5, 0.0);
+            glow+=1.0;
             vec2 gp=DrawPattern(p.xz*0.5);
             if(gp.x<1.3){glow=0.0;}
             glow+=max(1.0-abs(dot(rd,n)) - 0.4, 0.0) * 1.0;
@@ -322,6 +310,7 @@ else
             col.r=pow(col.r,2.2);
             col.g=pow(col.g,2.2);
             col.b=pow(col.b,2.2);
+            col=clamp(col,vec3(0.0),vec3(1.0));
             
             col+=glowcol;
         }
