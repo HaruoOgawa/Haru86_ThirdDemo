@@ -29,7 +29,8 @@ vec3 DrawWhite(in vec3 col)
 
 void main(){
 	vec3 col=vec3(0.0);
-	vec2 st=gl_FragCoord.xy/_resolution.xy;
+	//vec2 st=gl_FragCoord.xy/_resolution.xy;
+	vec2 st=uv*_frameResolusion;
 	
 	col=texture(_SrcTexture,st).rgb;
 	

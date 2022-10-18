@@ -425,14 +425,14 @@ void GraphicsRenderer::Draw(const std::shared_ptr<TransformComponent>& UsingCame
 		glBindFramebuffer(GL_FRAMEBUFFER, raymarching_depthBuffer);
 		glViewport(0, 0, static_cast<int>(GetScreenSize().x * frameResolusion), static_cast<int>(GetScreenSize().y * frameResolusion));
 
-		//glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		//glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
 
-		if (mgame->m_App) {
+		/*if (mgame->m_App) {
 			mgame->m_App->Draw(true);
-		}
+		}*/
 	}
 	
 	//ポリゴンオブジェクトとレイマーチングオブジェクトのカラーバッファをブレンドする
@@ -449,39 +449,43 @@ void GraphicsRenderer::Draw(const std::shared_ptr<TransformComponent>& UsingCame
 	m_Mixer->Draw(false);
 	
 	//ポリゴンオブジェクトとレイマーチングオブジェクトのデプスバッファをブレンドする
-	GraphicsMain::GetInstance()->renderingTarget = ERerderingTarget::COLOR;
-	glBindFramebuffer(GL_FRAMEBUFFER, p_r_DepthBlendingBuffer);
-	glViewport(0, 0, static_cast<int>(GetScreenSize().x * frameResolusion), static_cast<int>(GetScreenSize().y * frameResolusion));
+	//GraphicsMain::GetInstance()->renderingTarget = ERerderingTarget::COLOR;
+	//glBindFramebuffer(GL_FRAMEBUFFER, p_r_DepthBlendingBuffer);
+	//glViewport(0, 0, static_cast<int>(GetScreenSize().x * frameResolusion), static_cast<int>(GetScreenSize().y * frameResolusion));
 
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_DEPTH_TEST);
 
-	// ミックス
-	m_Mixer->Draw(true);
+	//// ミックス
+	//m_Mixer->Draw(true);
 
 	//ミキシングしたフレームバッファのポストプロセス////////////////////////////////////////
-	PostProcess::GetInstance()->DrawLatePostProcess(p_r_BlendingTexture, m_LatePostProcess_FrameBuffer);
+	PostProcess::GetInstance()->DrawLatePostProcess(p_r_BlendingTexture, 0);
+	//PostProcess::GetInstance()->DrawLatePostProcess(p_r_BlendingTexture, m_LatePostProcess_FrameBuffer);
 
+	// ↓PostProcess::DrawLatePostProcessの処理をm_MainBoardRendererにまとめれば、CPostProcessが削除できそう
+	// 容量削減/リファクタリングの段階で調整する
+	// 
 	//最終的な結果を作成する///////////////////////////////
-	GraphicsMain::GetInstance()->renderingTarget = ERerderingTarget::COLOR;
-	glBindFramebuffer(GL_FRAMEBUFFER, ResultFrameBufferIndex);
-	
-	// 最終結果前に何かしたいならコールバックを呼び出す
-	callback();
+	//GraphicsMain::GetInstance()->renderingTarget = ERerderingTarget::COLOR;
+	//glBindFramebuffer(GL_FRAMEBUFFER, ResultFrameBufferIndex);
+	//
+	//// 最終結果前に何かしたいならコールバックを呼び出す
+	//callback();
 
-	glViewport(0, 0, width, height);
+	//glViewport(0, 0, width, height);
 
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
-	glEnable(GL_DEPTH_TEST);
-	glDisable(GL_BLEND);
+	//glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//
+	//glEnable(GL_DEPTH_TEST);
+	//glDisable(GL_BLEND);
 
-	GraphicsMain::GetInstance()->m_MainBoardRenderer->Draw([this]() {
-		m_LatePostProcess_FrameTexture->SetActive(GL_TEXTURE0);
-		GraphicsMain::GetInstance()->m_MainBoardRenderer->m_material->SetTexUniform("frameTex", 0);
-	}, GL_TRIANGLES, false, 0);
-	m_LatePostProcess_FrameTexture->SetEnactive(GL_TEXTURE0);
+	//GraphicsMain::GetInstance()->m_MainBoardRenderer->Draw([this]() {
+	//	m_LatePostProcess_FrameTexture->SetActive(GL_TEXTURE0);
+	//	GraphicsMain::GetInstance()->m_MainBoardRenderer->m_material->SetTexUniform("frameTex", 0);
+	//}, GL_TRIANGLES, false, 0);
+	//m_LatePostProcess_FrameTexture->SetEnactive(GL_TEXTURE0);
 }

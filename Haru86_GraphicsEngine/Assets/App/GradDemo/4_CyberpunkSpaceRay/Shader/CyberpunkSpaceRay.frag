@@ -238,7 +238,7 @@ else
     vec3 col = vec3(0.0),ro=vec3(0.0,0.0,1.5),ta=vec3(0.0,0.0,0.0);
     if(CameraIndex == 0)
     {
-        ln = 50.0;
+        ln = 50.0*2.0;
         
         ro=vec3(0.0, 0.0, -5.5+mod(0.05*_time+1.0, 3.5));
     }
