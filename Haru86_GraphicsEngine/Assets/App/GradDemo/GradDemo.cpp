@@ -102,19 +102,19 @@ namespace app
         {
             m_SceneIndex = 4;
         }
-        /*else if (m_LocalTime >= 134.0f && m_LocalTime < 149.0f) 168.0
+        /*else if (m_LocalTime >= 134.0f && m_LocalTime < 149.0f)
         {
             m_SceneIndex = 5;
         }
-        else if (m_LocalTime >= 149.0f && m_LocalTime < 154.0f) 168 - 202
+        else if (m_LocalTime >= 149.0f && m_LocalTime < 154.0f) 149 - 164
         {
             m_SceneIndex = 6;
         }
-        else if (m_LocalTime >= 134.0f && m_LocalTime < 154.0f) 202 - 236
+        else if (m_LocalTime >= 134.0f && m_LocalTime < 154.0f)164 - 179
         {
             m_SceneIndex = 7;
         }
-        else if (m_LocalTime >= 134.0f && m_LocalTime < 271.0f) 236 - 270
+        else if (m_LocalTime >= 134.0f && m_LocalTime < 271.0f) 179 - 194   => 194 + (286-271) = 179 => 3m
         {
             m_SceneIndex = 8;
         }*/
