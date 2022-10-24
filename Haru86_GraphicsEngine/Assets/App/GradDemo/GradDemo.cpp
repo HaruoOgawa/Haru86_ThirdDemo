@@ -44,7 +44,6 @@ namespace app
             if (m_DebugTimeLock)m_LocalTime = GraphicsMain::GetInstance()->m_SecondsTimeOffset;
         }*/
 #endif
-
         m_MoonSea = std::make_shared<app::MoonSea>();
         m_EarthAndMoon = std::make_shared<app::EarthAndMoon>();
         m_MoonTravel = std::make_shared<app::MoonTravel>();
@@ -59,6 +58,8 @@ namespace app
 
     void GradDemo::Update()
     {
+        GraphicsMain::GetInstance()->m_MainCamera->m_position = glm::vec3(glm::cos(m_LocalTime) * 3.0f, 0.0f, glm::sin(m_LocalTime) * 3.0f);
+
         GraphicsRenderer::GetInstance()->SetBackgroudColor(glm::vec4(1.0f));
 
         if(m_LocalTime)

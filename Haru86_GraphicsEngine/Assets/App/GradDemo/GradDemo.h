@@ -15,7 +15,6 @@ namespace app
 
     class GradDemo
     {
-        //
         std::shared_ptr<MoonSea> m_MoonSea;
         std::shared_ptr<EarthAndMoon> m_EarthAndMoon;
         std::shared_ptr<MoonTravel> m_MoonTravel;

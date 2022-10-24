@@ -40,7 +40,7 @@ namespace app
 		}
 		else
 		{
-			m_NegativeSphereMeshRenderer->Draw([]() {},GL_TRIANGLES);
+			m_NegativeSphereMeshRenderer->Draw([]() {},GL_POINTS);
 		}
 	}
 
