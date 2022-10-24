@@ -32,6 +32,7 @@ public:
 
     bool useZTest;
     bool useAlphaTest;
+    bool IsMulMatOnVert;
     RenderingSurfaceType m_SurfaceType;
     std::function<void(void)> m_calllback;
     

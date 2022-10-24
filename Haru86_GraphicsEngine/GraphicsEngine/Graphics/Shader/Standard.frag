@@ -1,10 +1,11 @@
 R"(
 
 #version 330
+#extension GL_ARB_separate_shader_objects : enable
 
-in vec2 uv;
-in vec3 WorldVertexPos;
-in vec3 WorldNormal;
+layout(location=0) in vec2 in_uv;
+layout(location=1) in vec4 in_WorldVertexPos;
+layout(location=2) in vec4 in_WorldNormal;
 
 uniform int _UseColor;
 uniform vec4 _Color;
@@ -30,12 +31,12 @@ void main(){
 	}
 	else if(_UseMainTex == 1) // テクスチャサンプリング
 	{
-		col=texture(_MainTex,uv);
+		col=texture(_MainTex,in_uv);
 	}
 	else if(_UseMainCube == 1)
 	{
-		vec3 viewdir = -normalize(_WorldCameraPos-WorldVertexPos);
-		vec3 rpdir = normalize(reflect(viewdir,WorldNormal));
+		vec3 viewdir = -normalize(_WorldCameraPos-in_WorldVertexPos.xyz);
+		vec3 rpdir = normalize(reflect(viewdir,in_WorldNormal.xyz));
 		col.rgb=texture(_MainCube,rpdir).rgb;
 
 		//col=vec4(rpdir*0.5+0.5,1.0);
@@ -43,7 +44,7 @@ void main(){
 	else
 	{
 		col=vec4(1.0);
-		//col=vec4(uv.x,uv.y,0.0,1.0);
+		//col=vec4(in_uv.x,in_uv.y,0.0,1.0);
 	}
 
 	
@@ -59,21 +60,21 @@ void main(){
 	if(_UseLighting == 1)
 	{
 		//vec3 lightDir=normalize(_LightDir);
-		vec3 lightDir=normalize(_LightPos-WorldVertexPos);
-		float diff=max(0.0,dot(WorldNormal,lightDir));
+		vec3 lightDir=normalize(_LightPos-in_WorldVertexPos.xyz);
+		float diff=max(0.0,dot(in_WorldNormal.xyz,lightDir));
 		col.rgb*=diff;
 
 		col.rgb+=envColor.rgb;
 
-		vec3 viewDir= -1.0*normalize(WorldVertexPos-_WorldCameraPos);
+		vec3 viewDir= -1.0*normalize(in_WorldVertexPos.xyz-_WorldCameraPos);
 		vec3 halfDir=normalize(viewDir + lightDir);
-		float spec=pow( max(0.0,dot(WorldNormal,halfDir)) , 60.0);
+		float spec=pow( max(0.0,dot(in_WorldNormal.xyz,halfDir)) , 60.0);
 		// とてつもなく、少数部が細かい(桁が多い)数が来るとfloat Textureの精度が足りなくなってMSAA使用時に白いドットのノイズが出てしまうのでその対策
 		spec = min(1.0,spec);
 		col.rgb+=vec3(1.0)*spec;
 	}
 
-	//col.rgb = WorldNormal*0.5+0.5;
+	//col.rgb = in_WorldNormal.xyz*0.5+0.5;
 
 	gl_FragColor=col;
 }

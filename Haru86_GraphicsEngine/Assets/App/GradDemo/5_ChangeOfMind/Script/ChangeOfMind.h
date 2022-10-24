@@ -7,6 +7,8 @@ namespace app
 	class ChangeOfMind
 	{
 		std::shared_ptr<MeshRendererComponent> m_MeshRenderer;
+		std::shared_ptr<MeshRendererComponent> m_NegativeSphereMeshRenderer;
+		std::shared_ptr<MeshRendererComponent> m_PositiveSphereMeshRenderer;
 	public:
 		ChangeOfMind();
 		virtual ~ChangeOfMind() = default;

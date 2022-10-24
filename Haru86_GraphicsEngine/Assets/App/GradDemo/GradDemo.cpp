@@ -33,7 +33,7 @@ namespace app
     {
 #ifdef _DEBUG
         // 時間のオフセット
-        GraphicsMain::GetInstance()->m_SecondsTimeOffset = 130.0f;// シーンを飛ばすためのオフセット
+        GraphicsMain::GetInstance()->m_SecondsTimeOffset = 135.0f;// シーンを飛ばすためのオフセット
 
         // 音楽のミュート
         GraphicsMain::GetInstance()->m_SoundPlayer->Mute(true);
@@ -59,6 +59,8 @@ namespace app
 
     void GradDemo::Update()
     {
+        GraphicsRenderer::GetInstance()->SetBackgroudColor(glm::vec4(1.0f));
+
         if(m_LocalTime)
 
         m_MoonSea->Update(m_LocalTime);
