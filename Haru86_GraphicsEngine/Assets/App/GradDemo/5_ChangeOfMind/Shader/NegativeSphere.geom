@@ -14,6 +14,8 @@ layout(location=2) in vec4 in_WorldNormal[];
 layout(location=0) out vec2 out_uv;
 layout(location=1) out vec4 out_WorldVertexPos;
 layout(location=2) out vec4 out_WorldNormal;
+layout(location=3) flat out float out_Displacement;
+layout(location=4) out vec4 out_AnchorPos;
 
 uniform mat4 MVPMatrix;
 uniform mat4 MMatrix;
@@ -69,49 +71,65 @@ float fbm3(vec3 p,float num,float freq,float amp)
 // main
 void main()
 {
+	//
 	vec4 normal = in_WorldNormal[0];
 	vec4 bionormal = vec4(normalize(cross( normal.xyz , vec3(0.0, 1.0, 0.0) )), 0.0);
 	vec4 tangent = vec4(normalize(cross( normal.xyz,bionormal.xyz )), 0.0);
+	vec4 pos0 = gl_in[0].gl_Position;
+
+	//
+	float h = fbm3(pos0.xyz*0.5 + _time * 3.0 + 100.0, 5.0, 0.5, 0.25) * 1.5;
 	
+	//
+	float off = fbm3(pos0.xyz*2.0 + _time * 2.0 + 100.0, 5.0, 0.75, 0.25) * 4.0 -1.0;
+	pos0.xyz += normal.xyz * off;
+
+	// 
 	for(float n=0.0; n < 3.0; n++)
 	{
 		float ba = (2.0*pi/3.0) * n; // BaseAngle 120.0*n
 		float hr = 0.05; // hex radius
-		vec4 pos0 = gl_in[0].gl_Position;
-		vec4 pos1 = gl_in[0].gl_Position + hr * normalize( tangent*cos(ba-pi/3.0) + bionormal*sin(ba-pi/3.0) );
-		vec4 pos2 = gl_in[0].gl_Position + hr * normalize( tangent*cos(ba) + bionormal*sin(ba) );
-		vec4 pos3 = gl_in[0].gl_Position + hr * normalize( tangent*cos(ba+pi/3.0) + bionormal*sin(ba+pi/3.0) );
+		vec4 pos1 = pos0 + hr * normalize( tangent*cos(ba-pi/3.0) + bionormal*sin(ba-pi/3.0) );
+		vec4 pos2 = pos0 + hr * normalize( tangent*cos(ba) + bionormal*sin(ba) );
+		vec4 pos3 = pos0 + hr * normalize( tangent*cos(ba+pi/3.0) + bionormal*sin(ba+pi/3.0) );
 
 		// ’ê–Ê‚ð\’z
 		gl_Position = MVPMatrix * pos0;
 		out_uv = in_uv[0];
 		out_WorldVertexPos = MMatrix * pos0;
 		out_WorldNormal = MMatrix * in_WorldNormal[0];
+		out_Displacement = h;
+		out_AnchorPos = pos0;
 		EmitVertex();
 
 		gl_Position = MVPMatrix * pos1;
 		out_uv = in_uv[0];
 		out_WorldVertexPos = MMatrix * pos1;
 		out_WorldNormal = MMatrix * in_WorldNormal[0];
+		out_Displacement = h;
+		out_AnchorPos = pos0;
 		EmitVertex();
 
 		gl_Position = MVPMatrix * pos3;
 		out_uv = in_uv[0];
 		out_WorldVertexPos = MMatrix * pos3;
 		out_WorldNormal = MMatrix * in_WorldNormal[0];
+		out_Displacement = h;
+		out_AnchorPos = pos0;
 		EmitVertex();
 
 		gl_Position = MVPMatrix * pos2;
 		out_uv = in_uv[0];
 		out_WorldVertexPos = MMatrix * pos2;
 		out_WorldNormal = MMatrix * in_WorldNormal[0];
+		out_Displacement = h;
+		out_AnchorPos = pos0;
 		EmitVertex();
 
 		EndPrimitive();
 
 		// ë‚ª‚Á‚Ä‚é•”•ª‚ð\’z
-		float h = abs(sin(rand3(pos0.xyz * 100.0) * 100.0 + _time * 2.0));
-		if(h > 0.0)
+		if(h > 0.4)
 		{
 			vec4 pos4 = pos0 + h * normal;
 
@@ -119,58 +137,37 @@ void main()
 			out_uv = in_uv[0];
 			out_WorldVertexPos = MMatrix * pos4;
 			out_WorldNormal = MMatrix * in_WorldNormal[0];
+			out_Displacement = h;
+			out_AnchorPos = pos0;
 			EmitVertex();
 
 			gl_Position = MVPMatrix * pos1;
 			out_uv = in_uv[0];
 			out_WorldVertexPos = MMatrix * pos1;
 			out_WorldNormal = MMatrix * in_WorldNormal[0];
+			out_Displacement = h;
+			out_AnchorPos = pos0;
 			EmitVertex();
 
 			gl_Position = MVPMatrix * pos3;
 			out_uv = in_uv[0];
 			out_WorldVertexPos = MMatrix * pos3;
 			out_WorldNormal = MMatrix * in_WorldNormal[0];
+			out_Displacement = h;
+			out_AnchorPos = pos0;
 			EmitVertex();
 
 			gl_Position = MVPMatrix * pos2;
 			out_uv = in_uv[0];
 			out_WorldVertexPos = MMatrix * pos2;
 			out_WorldNormal = MMatrix * in_WorldNormal[0];
+			out_Displacement = h;
+			out_AnchorPos = pos0;
 			EmitVertex();
 
 			EndPrimitive();
 		}
 	}
-
-	///////////////////////////////////////////////////////////////////////////////////////////////////
-	/*gl_Position = MVPMatrix * gl_in[0].gl_Position;
-	out_uv = in_uv[0];
-	out_WorldVertexPos = MMatrix * in_WorldVertexPos[0];
-	out_WorldNormal = MMatrix * in_WorldNormal[0];
-	EmitVertex();
-	
-	EndPrimitive();*/
-
-	/*gl_Position = MVPMatrix * gl_in[0].gl_Position;
-	out_uv = in_uv[0];
-	out_WorldVertexPos = MMatrix * in_WorldVertexPos[0];
-	out_WorldNormal = MMatrix * in_WorldNormal[0];
-	EmitVertex();
-
-	gl_Position = MVPMatrix * gl_in[1].gl_Position;
-	out_uv = in_uv[1];
-	out_WorldVertexPos = MMatrix * in_WorldVertexPos[1];
-	out_WorldNormal = MMatrix * in_WorldNormal[1];
-	EmitVertex();
-
-	gl_Position = MVPMatrix * gl_in[2].gl_Position;
-	out_uv = in_uv[2];
-	out_WorldVertexPos = MMatrix * in_WorldVertexPos[2];
-	out_WorldNormal = MMatrix * in_WorldNormal[2];
-	EmitVertex();
-
-	EndPrimitive();*/
 }
 
 )"

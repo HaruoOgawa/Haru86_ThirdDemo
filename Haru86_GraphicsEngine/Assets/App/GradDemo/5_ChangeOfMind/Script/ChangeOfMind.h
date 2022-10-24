@@ -8,6 +8,7 @@ namespace app
 	{
 		std::shared_ptr<MeshRendererComponent> m_MeshRenderer;
 		std::shared_ptr<MeshRendererComponent> m_NegativeSphereMeshRenderer;
+		std::shared_ptr<MeshRendererComponent> m_NegativeSphereCoreMeshRenderer;
 		std::shared_ptr<MeshRendererComponent> m_PositiveSphereMeshRenderer;
 	public:
 		ChangeOfMind();
