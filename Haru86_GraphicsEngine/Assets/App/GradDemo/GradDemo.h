@@ -11,6 +11,7 @@ namespace app
     class EarthAndMoon;
     class MoonTravel;
     class CyberpunkSpaceRay;
+    class ChangeOfMind;
 
     class GradDemo
     {
@@ -19,6 +20,7 @@ namespace app
         std::shared_ptr<EarthAndMoon> m_EarthAndMoon;
         std::shared_ptr<MoonTravel> m_MoonTravel;
         std::shared_ptr<CyberpunkSpaceRay> m_CyberpunkSpaceRay;
+        std::shared_ptr<ChangeOfMind> m_ChangeOfMind;
 
         //
         unsigned int m_SceneIndex;

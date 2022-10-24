@@ -24,7 +24,7 @@ namespace app
 		m_MoonSeaMeshRenderer->useAlphaTest = true;
 	}
 
-	void MoonSea::Update()
+	void MoonSea::Update(float time)
 	{
 	}
 

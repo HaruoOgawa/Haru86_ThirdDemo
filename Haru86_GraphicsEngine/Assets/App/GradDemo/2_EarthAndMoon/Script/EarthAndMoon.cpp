@@ -23,7 +23,7 @@ namespace app {
 		m_MeshRenderer->useAlphaTest = true;
 	}
 
-	void EarthAndMoon::Update()
+	void EarthAndMoon::Update(float time)
 	{
 
 	}

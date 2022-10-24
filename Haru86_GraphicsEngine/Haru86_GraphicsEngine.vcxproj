@@ -408,6 +408,7 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <ClInclude Include="Assets\App\GradDemo\GradDemo.h" />
     <ClInclude Include="Assets\App\GradDemo\2_EarthAndMoon\Script\EarthAndMoon.h" />
     <ClInclude Include="Assets\App\GradDemo\4_CyberpunkSpaceRay\Script\CyberpunkSpaceRay.h" />
+    <ClInclude Include="Assets\App\GradDemo\5_ChangeOfMind\Script\ChangeOfMind.h" />
     <ClInclude Include="GraphicsEngine\Graphics\EGraphicsParam.h" />
     <ClInclude Include="GraphicsEngine\Graphics\ShaderLib.h" />
     <ClInclude Include="GraphicsEngine\Message\Console.h" />
@@ -438,6 +439,7 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <ClCompile Include="Assets\App\GradDemo\GradDemo.cpp" />
     <ClCompile Include="Assets\App\GradDemo\2_EarthAndMoon\Script\EarthAndMoon.cpp" />
     <ClCompile Include="Assets\App\GradDemo\4_CyberpunkSpaceRay\Script\CyberpunkSpaceRay.cpp" />
+    <ClCompile Include="Assets\App\GradDemo\5_ChangeOfMind\Script\ChangeOfMind.cpp" />
     <ClCompile Include="GraphicsEngine\Graphics\ShaderLib.cpp" />
     <ClCompile Include="GraphicsEngine\Graphics\ComputeBuffer.cpp" />
     <ClCompile Include="GraphicsEngine\GraphicsMain\GraphicsMain.cpp" />

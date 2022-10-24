@@ -21,7 +21,7 @@ namespace app {
 		m_MeshRenderer->useAlphaTest = true;
 	}
 
-	void CyberpunkSpaceRay::Update()
+	void CyberpunkSpaceRay::Update(float time)
 	{
 
 	}

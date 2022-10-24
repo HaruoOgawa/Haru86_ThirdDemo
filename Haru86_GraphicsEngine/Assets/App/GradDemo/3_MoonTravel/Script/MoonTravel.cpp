@@ -21,7 +21,7 @@ namespace app {
 		m_MeshRenderer->useAlphaTest = true;
 	}
 
-	void MoonTravel::Update()
+	void MoonTravel::Update(float time)
 	{
 
 	}
