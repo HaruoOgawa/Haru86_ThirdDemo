@@ -25,13 +25,16 @@ uniform vec3 _CameraPos;
 uniform float _Radius;
 uniform float _CircleSegment; // ‚Ğ‚Æ‚Ü‚¸‰~‚Ì•ªŠ„”‚Ì‚±‚ê‚¾‚¯‚Å‚¢‚¢‚©‚ÈH
 uniform float _TangentSegment; // tangent•ûŒü‚Ì•ªŠ„”
+uniform float _Offset;
 
 #define pi 3.14159265
 
 void main()
 {
+	//
 	vec4 pos0 = gl_in[0].gl_Position;
 	vec4 pos1 = gl_in[1].gl_Position;
+	
 	vec3 TangentVector = pos1.xyz - pos0.xyz;
 	vec3 tangent = normalize(TangentVector);
 	float TangentLength = length(TangentVector);
@@ -39,6 +42,11 @@ void main()
 	vec3 normal = normalize(cross(vec3(0.0, 1.0, 0.0), tangent));
 	vec3 bionormal = normalize(cross(tangent, normal));
 
+	//
+	pos0 += vec4(_Offset * (normal+bionormal), 0.0);
+	pos1 += vec4(_Offset * (normal+bionormal), 0.0);
+	
+	//
 	for(float n=0.0; n<_CircleSegment; n++)
 	{
 		float a0 = (2.0*pi/_CircleSegment) * n;
