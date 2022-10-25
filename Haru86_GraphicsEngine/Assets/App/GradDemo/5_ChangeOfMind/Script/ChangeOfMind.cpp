@@ -59,8 +59,11 @@ namespace app
 				PrimitiveType::Icosahedron,
 				RenderingSurfaceType::RASTERIZER,
 				shaderlib::ShaderLib::Standard_vert,
-				shaderlib::ShaderLib::Standard_frag
+				shaderlib::ShaderLib::Standard_frag,
+				shaderlib::ShaderLib::Line2Cylinder_geom
 			);
+
+			m_PositiveSphereFrame->IsMulMatOnVert = false;
 		}
 
 		// m_PositiveSphereCore
@@ -91,8 +94,13 @@ namespace app
 			/*m_NegativeSphereMeshRenderer->Draw([]() {},GL_POINTS);
 			m_NegativeSphereCoreMeshRenderer->Draw();*/
 
-			// スフィアーモデルをIssueのリンクをもとに改善する
-			m_PositiveSphereFrame->Draw([]() {},GL_LINES);
+			//
+			m_PositiveSphereFrame->Draw([&]() {
+				m_PositiveSphereFrame->m_material->SetFloatUniform("_Radius", 0.025f);
+				m_PositiveSphereFrame->m_material->SetFloatUniform("_CircleSegment", 6.0f);
+				m_PositiveSphereFrame->m_material->SetIntUniform("_UseColor", 1);
+				m_PositiveSphereFrame->m_material->SetVec4Uniform("_Color", glm::vec4(0.5f, 0.0f, 0.0f, 1.0f));
+			},GL_LINES);
 			//m_PositiveSphereCore->Draw();
 		}
 	}

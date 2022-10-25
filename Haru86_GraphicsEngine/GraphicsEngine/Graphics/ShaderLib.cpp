@@ -13,6 +13,10 @@ namespace shaderlib { // プリプロセッサでどれをリンクするか選ぶのもありかも？？ 
 		#include "GraphicsEngine/Graphics/Shader/DepthColor.frag"
 	};
 	
+	const std::string ShaderLib::Line2Cylinder_geom = {
+		#include "GraphicsEngine/Graphics/Shader/Line2Cylinder.geom"
+	};
+	
 #ifdef _DEBUG
 	const std::string ShaderLib::GridPlane_frag = {
 		#include "GraphicsEngine/Graphics/Shader/GridPlane.frag"
