@@ -6,10 +6,11 @@ namespace app
 {
 	class ChangeOfMind
 	{
-		std::shared_ptr<MeshRendererComponent> m_MeshRenderer;
 		std::shared_ptr<MeshRendererComponent> m_NegativeSphereMeshRenderer;
 		std::shared_ptr<MeshRendererComponent> m_NegativeSphereCoreMeshRenderer;
-		std::shared_ptr<MeshRendererComponent> m_PositiveSphereMeshRenderer;
+
+		std::shared_ptr<MeshRendererComponent> m_PositiveSphereFrame;
+		std::shared_ptr<MeshRendererComponent> m_PositiveSphereCore;
 	public:
 		ChangeOfMind();
 		virtual ~ChangeOfMind() = default;

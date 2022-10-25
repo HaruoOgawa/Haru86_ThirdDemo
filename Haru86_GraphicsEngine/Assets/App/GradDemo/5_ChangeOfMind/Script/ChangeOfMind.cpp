@@ -8,11 +8,12 @@
 namespace app
 {
 	ChangeOfMind::ChangeOfMind() :
-		m_MeshRenderer(nullptr),
 		m_NegativeSphereMeshRenderer(nullptr),
 		m_NegativeSphereCoreMeshRenderer(nullptr),
-		m_PositiveSphereMeshRenderer(nullptr)
+		m_PositiveSphereFrame(nullptr),
+		m_PositiveSphereCore(nullptr)
 	{
+		// m_NegativeSphereMeshRenderer
 		{
 			std::vector<std::vector<float>> VertexData; std::vector<int> Dimention; std::vector<unsigned short> Indices;
 			Primitive::CreateSphere(&VertexData, &Dimention, &Indices, 32.0f, 32.0f, 1.0f);
@@ -35,6 +36,7 @@ namespace app
 			m_NegativeSphereMeshRenderer->IsMulMatOnVert = false;
 		}
 
+		// m_NegativeSphereCoreMeshRenderer
 		{
 			m_NegativeSphereCoreMeshRenderer = std::make_shared<MeshRendererComponent>(
 				std::make_shared<TransformComponent>(),
@@ -45,6 +47,31 @@ namespace app
 			);
 
 			m_NegativeSphereCoreMeshRenderer->m_transform->m_scale = glm::vec3(0.5f);
+		}
+
+		// m_PositiveSphereFrame
+		{
+			std::vector<std::vector<float>> VertexData; std::vector<int> Dimention; std::vector<unsigned short> Indices;
+			Primitive::CreateSphere(&VertexData, &Dimention, &Indices, 6.0f, 6.0f, 1.0f);
+
+			m_PositiveSphereFrame = std::make_shared<MeshRendererComponent>(
+				std::make_shared<TransformComponent>(),
+				PrimitiveType::Icosahedron,
+				RenderingSurfaceType::RASTERIZER,
+				shaderlib::ShaderLib::Standard_vert,
+				shaderlib::ShaderLib::Standard_frag
+			);
+		}
+
+		// m_PositiveSphereCore
+		{
+			m_PositiveSphereCore = std::make_shared<MeshRendererComponent>(
+				std::make_shared<TransformComponent>(),
+				PrimitiveType::SPHERE,
+				RenderingSurfaceType::RASTERIZER,
+				shaderlib::ShaderLib::Standard_vert,
+				shaderlib::ShaderLib::Standard_frag
+			);
 		}
 	}
 
@@ -61,8 +88,12 @@ namespace app
 		}
 		else
 		{
-			m_NegativeSphereMeshRenderer->Draw([]() {},GL_POINTS);
-			m_NegativeSphereCoreMeshRenderer->Draw();
+			/*m_NegativeSphereMeshRenderer->Draw([]() {},GL_POINTS);
+			m_NegativeSphereCoreMeshRenderer->Draw();*/
+
+			// スフィアーモデルをIssueのリンクをもとに改善する
+			m_PositiveSphereFrame->Draw([]() {},GL_LINES);
+			//m_PositiveSphereCore->Draw();
 		}
 	}
 

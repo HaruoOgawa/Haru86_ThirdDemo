@@ -10,6 +10,7 @@ enum class PrimitiveType {
 	POINT,
 	SPHERE,
 	CUBE,
+	Icosahedron,
 	CUSTOM,
 };
 

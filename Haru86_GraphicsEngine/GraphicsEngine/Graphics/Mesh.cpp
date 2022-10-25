@@ -32,6 +32,9 @@ void Mesh::CreateMesh(PrimitiveType primType) {
 	case PrimitiveType::CUBE:
 		Primitive::CreateCube(&VertexData, &Dimention, &Indices);
 		break;
+	case PrimitiveType::Icosahedron:
+		Primitive::CreateIcosahedron(&VertexData, &Dimention, &Indices);
+		break;
 	default:
 		Primitive::CreateBoard(&VertexData, &Dimention, &Indices);
 		break;
