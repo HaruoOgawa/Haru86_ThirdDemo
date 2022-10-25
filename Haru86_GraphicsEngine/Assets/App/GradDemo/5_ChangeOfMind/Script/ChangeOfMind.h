@@ -12,6 +12,8 @@ namespace app
 		std::shared_ptr<MeshRendererComponent> m_PositiveSphereFrame;
 		std::shared_ptr<MeshRendererComponent> m_PositiveSphereCore;
 		std::shared_ptr<MeshRendererComponent> m_PositiveSphereDecolate;
+
+		std::shared_ptr<MeshRendererComponent> m_BackgroundHexRay;
 	public:
 		ChangeOfMind();
 		virtual ~ChangeOfMind() = default;

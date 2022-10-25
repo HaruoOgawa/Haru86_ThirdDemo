@@ -36,7 +36,7 @@ namespace app
         GraphicsMain::GetInstance()->m_SecondsTimeOffset = 135.0f;// シーンを飛ばすためのオフセット
 
         // 音楽のミュート
-        GraphicsMain::GetInstance()->m_SoundPlayer->Mute(true);
+        //GraphicsMain::GetInstance()->m_SoundPlayer->Mute(true);
 
         // デバッグ用
         /*{
@@ -60,7 +60,7 @@ namespace app
     {
         GraphicsMain::GetInstance()->m_MainCamera->m_position = glm::vec3(glm::cos(m_LocalTime) * 3.0f, 0.0f, glm::sin(m_LocalTime) * 3.0f);
 
-        GraphicsRenderer::GetInstance()->SetBackgroudColor(glm::vec4(1.0f));
+        //GraphicsRenderer::GetInstance()->SetBackgroudColor(glm::vec4(1.0f));
 
         if(m_LocalTime)
 

@@ -12,7 +12,8 @@ namespace app
 		m_NegativeSphereCoreMeshRenderer(nullptr),
 		m_PositiveSphereFrame(nullptr),
 		m_PositiveSphereCore(nullptr),
-		m_PositiveSphereDecolate(nullptr)
+		m_PositiveSphereDecolate(nullptr),
+		m_BackgroundHexRay(nullptr)
 	{
 		// m_NegativeSphereMeshRenderer
 		{
@@ -99,6 +100,18 @@ namespace app
 			m_PositiveSphereDecolate->IsMulMatOnVert = false;
 		}
 
+		// m_BackgroundHexRay
+		{
+			m_BackgroundHexRay = std::make_shared<MeshRendererComponent>(
+				std::make_shared<TransformComponent>(),
+				PrimitiveType::BOARD,
+				RenderingSurfaceType::RAYMARCHING,
+				shaderlib::ShaderLib::StandardRenderBoard_vert,
+				std::string(
+					#include "../Shader/BackgroundHexRay.frag"
+				)
+			);
+		}
 	}
 
 	void ChangeOfMind::Update(float time)
@@ -110,41 +123,47 @@ namespace app
 	{
 		if (IsRaymarching)
 		{
-			
+			m_BackgroundHexRay->Draw();
 		}
 		else
 		{
-			m_NegativeSphereMeshRenderer->Draw([]() {},GL_POINTS);
-			m_NegativeSphereCoreMeshRenderer->Draw([&]() {
-				m_PositiveSphereCore->m_material->SetIntUniform("_UseRim", 1);
-				m_PositiveSphereCore->m_material->SetVec4Uniform("_RimColor", glm::vec4(0.25f, 0.0f, 0.0f, 0.5f));
-				m_PositiveSphereCore->m_material->SetFloatUniform("_RimPower", 1.75f);
-				m_PositiveSphereCore->m_material->SetFloatUniform("_RimMulVal", 1.5f);
-			});
+			bool DebugDraw = (glm::mod(GraphicsMain::GetInstance()->m_SecondsTime, 2.0f) < 1.0);
 
-			//
-			/*m_PositiveSphereFrame->Draw([&]() {
-				m_PositiveSphereFrame->m_material->SetFloatUniform("_Radius", 0.025f);
-				m_PositiveSphereFrame->m_material->SetFloatUniform("_CircleSegment", 6.0f);
-				m_PositiveSphereFrame->m_material->SetIntUniform("_UseColor", 1);
-				m_PositiveSphereFrame->m_material->SetVec4Uniform("_Color", glm::vec4(0.5f, 0.0f, 0.0f, 1.0f));
-			},GL_LINES);
+			if (DebugDraw)
+			{
+				m_NegativeSphereMeshRenderer->Draw([]() {}, GL_POINTS);
+				m_NegativeSphereCoreMeshRenderer->Draw([&]() {
+					m_PositiveSphereCore->m_material->SetIntUniform("_UseRim", 1);
+					m_PositiveSphereCore->m_material->SetVec4Uniform("_RimColor", glm::vec4(0.25f, 0.0f, 0.0f, 0.5f));
+					m_PositiveSphereCore->m_material->SetFloatUniform("_RimPower", 1.75f);
+					m_PositiveSphereCore->m_material->SetFloatUniform("_RimMulVal", 1.5f);
+					});
+			}
+			else
+			{
+				m_PositiveSphereFrame->Draw([&]() {
+					m_PositiveSphereFrame->m_material->SetFloatUniform("_Radius", 0.025f);
+					m_PositiveSphereFrame->m_material->SetFloatUniform("_CircleSegment", 6.0f);
+					m_PositiveSphereFrame->m_material->SetIntUniform("_UseColor", 1);
+					m_PositiveSphereFrame->m_material->SetVec4Uniform("_Color", glm::vec4(0.615f, 0.8f, 0.878f, 1.0f));
+				},GL_LINES);
 
-			m_PositiveSphereCore->Draw([&]() {
-				m_PositiveSphereCore->m_material->SetIntUniform("_UseRim", 1);
-				m_PositiveSphereCore->m_material->SetIntUniform("_IsRimMul", 1);
-				m_PositiveSphereCore->m_material->SetVec4Uniform("_RimColor", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
-				m_PositiveSphereCore->m_material->SetFloatUniform("_RimPower", 1.75f);
-				m_PositiveSphereCore->m_material->SetFloatUniform("_RimMulVal", 1.5f);
-			});
+				m_PositiveSphereCore->Draw([&]() {
+					m_PositiveSphereCore->m_material->SetIntUniform("_UseRim", 1);
+					//m_PositiveSphereCore->m_material->SetIntUniform("_IsRimMul", 1);
+					m_PositiveSphereCore->m_material->SetVec4Uniform("_RimColor", glm::vec4(0.615f, 0.8f, 0.878f, 1.0f));
+					m_PositiveSphereCore->m_material->SetFloatUniform("_RimPower", 1.75f);
+					m_PositiveSphereCore->m_material->SetFloatUniform("_RimMulVal", 1.5f);
+				});
 
-			m_PositiveSphereDecolate->Draw([&]() {
-				m_PositiveSphereFrame->m_material->SetFloatUniform("_Radius", 0.01f);
-				m_PositiveSphereFrame->m_material->SetFloatUniform("_Offset", 0.05f);
-				m_PositiveSphereFrame->m_material->SetFloatUniform("_CircleSegment", 6.0f);
-				m_PositiveSphereFrame->m_material->SetIntUniform("_UseColor", 1);
-				m_PositiveSphereFrame->m_material->SetVec4Uniform("_Color", glm::vec4(1.0f, 1.0f, 1.0f, 0.25f));
-			},GL_LINES);*/
+				m_PositiveSphereDecolate->Draw([&]() {
+					m_PositiveSphereFrame->m_material->SetFloatUniform("_Radius", 0.01f);
+					m_PositiveSphereFrame->m_material->SetFloatUniform("_Offset", 0.05f);
+					m_PositiveSphereFrame->m_material->SetFloatUniform("_CircleSegment", 6.0f);
+					m_PositiveSphereFrame->m_material->SetIntUniform("_UseColor", 1);
+					m_PositiveSphereFrame->m_material->SetVec4Uniform("_Color", glm::vec4(0.615f, 0.8f, 0.878f, 0.25f));
+				},GL_LINES);
+			}
 		}
 	}
 
