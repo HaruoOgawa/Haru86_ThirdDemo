@@ -10,6 +10,7 @@ MeshRendererComponent::MeshRendererComponent(const std::shared_ptr<TransformComp
 	m_material(nullptr), 
 	m_transform(TRS),
 	useZTest(true), 
+	useDoubleSlided(true),
 	IsMulMatOnVert(true),
 	m_calllback(calllback)
 {
@@ -35,6 +36,7 @@ MeshRendererComponent::MeshRendererComponent(const std::shared_ptr<TransformComp
 	m_material(nullptr),
 	m_transform(TRS),
 	useZTest(true),
+	useDoubleSlided(true),
 	IsMulMatOnVert(true),
 	m_calllback(calllback)
 {
@@ -72,6 +74,16 @@ void MeshRendererComponent::Draw(std::function<void(void)> TemporaryCallBack, GL
 	else 
 	{
 		glDisable(GL_BLEND);
+	}
+
+	if (useDoubleSlided)
+	{
+		glDisable(GL_CULL_FACE);
+	}
+	else
+	{
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
 	}
 
 	m_transform->CalMatrix();

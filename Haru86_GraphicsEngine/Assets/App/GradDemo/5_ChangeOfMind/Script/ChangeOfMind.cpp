@@ -75,6 +75,9 @@ namespace app
 				shaderlib::ShaderLib::Standard_vert,
 				shaderlib::ShaderLib::Standard_frag
 			);
+
+			m_PositiveSphereCore->useDoubleSlided = false;
+			m_PositiveSphereCore->m_transform->m_scale = glm::vec3(0.75f);
 		}
 	}
 
@@ -101,7 +104,14 @@ namespace app
 				m_PositiveSphereFrame->m_material->SetIntUniform("_UseColor", 1);
 				m_PositiveSphereFrame->m_material->SetVec4Uniform("_Color", glm::vec4(0.5f, 0.0f, 0.0f, 1.0f));
 			},GL_LINES);
-			//m_PositiveSphereCore->Draw();
+
+			m_PositiveSphereCore->Draw([&]() {
+				m_PositiveSphereCore->m_material->SetIntUniform("_UseRim", 1);
+				m_PositiveSphereCore->m_material->SetIntUniform("_IsRimMul", 1);
+				m_PositiveSphereCore->m_material->SetVec4Uniform("_RimColor", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+				m_PositiveSphereCore->m_material->SetFloatUniform("_RimPower", 1.75f);
+				m_PositiveSphereCore->m_material->SetFloatUniform("_RimMulVal", 1.5f);
+			});
 		}
 	}
 

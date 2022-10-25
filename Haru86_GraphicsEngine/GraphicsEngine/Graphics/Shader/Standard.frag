@@ -21,6 +21,12 @@ uniform sampler2D _MainTex;
 uniform int _UseMainCube;
 uniform samplerCube _MainCube;
 
+uniform int _UseRim;
+uniform int _IsRimMul;
+uniform vec4 _RimColor;
+uniform float _RimPower;
+uniform float _RimMulVal;
+
 void main(){
 	vec4 col=vec4(vec3(0.0),1.0);
 
@@ -72,6 +78,25 @@ void main(){
 		// とてつもなく、少数部が細かい(桁が多い)数が来るとfloat Textureの精度が足りなくなってMSAA使用時に白いドットのノイズが出てしまうのでその対策
 		spec = min(1.0,spec);
 		col.rgb+=vec3(1.0)*spec;
+	}
+
+	// リムライティング
+	if(_UseRim == 1)
+	{
+		vec3 viewDir= -normalize(in_WorldVertexPos.xyz-_WorldCameraPos);
+		float rimval = 1.0 - dot(in_WorldNormal.xyz, viewDir);
+		rimval = pow(rimval,_RimPower);
+		rimval = max(0.0, rimval);
+		rimval*=_RimMulVal;
+
+		if(_IsRimMul == 1)
+		{
+			col *=_RimColor * rimval;
+		}
+		else
+		{
+			col=_RimColor * rimval;
+		}
 	}
 
 	//col.rgb = in_WorldNormal.xyz*0.5+0.5;
