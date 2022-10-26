@@ -29,7 +29,7 @@ in vec2 uv;
 #define rot(a) mat2(cos(a),-sin(a),sin(a),cos(a))
 #define dmin 0.0003
 #define tmax 30.0
-#define ldir vec3( -0.48666426339228763, 0.8111071056538127, 0.3244428422615251 )
+#define ldir vec3( -0.486, 0.811, 0.324 )
 
 // Gloabal Valiable
 vec3 g_ro;
@@ -117,40 +117,31 @@ mapr map(vec3 p)
     mr.m=-1;
     
     vec3 off = vec3(0.0,2.0,0.0);
+    vec2 HexDomain = vec2(0.0);
+    float h = rand(HexDomain) * 0.35; 
+    //+ -(max(0.0, distance(vec2(0.0), HexDomain)));
+    off.y+=h;
     
-    //{compm(mr,length(trs(p,vec3(1.0),vec3(0.0),vec3(0.0)))-0.5,0,true);}
     // downside
     {
-        vec2 HexDomain = vec2(0.0);
-        float d = deHexTiling(p - off, 1.0, 0.9, 0.0, HexDomain);
-        float h = rand(HexDomain) * 0.35; 
-        //+ -(max(0.0, distance(vec2(0.0), HexDomain)));
-        compm(mr, d /*max(d, p.y + h)*/, 0,true);
+        float d = deHexTiling(p - off, 0.75, 0.9, 0.0, HexDomain);
+        compm(mr, d, 0,true);
     }
     
     {
-        vec2 HexDomain = vec2(0.0);
-        float d = deHexTiling(p - off, 1.0, 0.9, 0.5, HexDomain);
-        float h = rand(HexDomain) * 0.35 ;
-        //+ -(max(0.0, distance(vec2(0.0), HexDomain)));
-        compm(mr, d /*max(d, p.y + h)*/, 0,true);
+        float d = deHexTiling(p - off, 0.75, 0.9, 0.5, HexDomain);
+        compm(mr, d, 0,true);
     }
     
     // upside
     {
-        vec2 HexDomain = vec2(0.0);
-        float d = deHexTiling(p + off, 1.0, 0.9, 0.0, HexDomain);
-        float h = rand(HexDomain) * 0.35; 
-        //+ -(max(0.0, distance(vec2(0.0), HexDomain)));
-        compm(mr, d /*max(d, p.y + h)*/, 0,true);
+        float d = deHexTiling(p + off, 0.75, 0.9, 0.0, HexDomain);
+        compm(mr, d, 0,true);
     }
     
     {
-        vec2 HexDomain = vec2(0.0);
-        float d = deHexTiling(p + off, 1.0, 0.9, 0.5, HexDomain);
-        float h = rand(HexDomain) * 0.35 ;
-        //+ -(max(0.0, distance(vec2(0.0), HexDomain)));
-        compm(mr, d /*max(d, p.y + h)*/, 0,true);
+        float d = deHexTiling(p + off, 0.75, 0.9, 0.5, HexDomain);
+        compm(mr, d, 0,true);
     }
     
     return mr;
@@ -248,11 +239,12 @@ else
     ln = 128.0;
   
     vec3 col = vec3(0.0),ro=vec3(0.0,0.0,1.5),ta=vec3(0.0,0.0,0.0);
+    float h = 0.5;
     if(CameraIndex == 0)
     {
-        float h = 0.5;
+        
         ta = vec3(0.0, h, 0.0);
-        ro = vec3(2.0,h,2.0);
+        ro = vec3(0.0,h,5.0);
     }
     
     vec3 cdir=normalize(ta-ro),cside=normalize(cross(vec3(0.0,1.0,0.0),cdir)),
@@ -273,11 +265,27 @@ else
         
         //
         float diff = max(0.0, dot(n,ldir));
-        col = vec3(1.0) * diff;
+        col = vec3(0.25) * diff;
         
         //
-        float spec=pow(clamp(dot(reflect(ldir, n), rd) , 0.0, 1.0), 10.0);
-        col += vec3(1.0) * spec; 
+        /*for(float ipn=0.0;ipn<2.0;ipn++)
+        {
+            for(float si=0.0;si<4.0;si++)
+            {
+                float xsign=(si<2.0)? 1.0:-1.0;
+                float ysign=(ipn==0.0)? 1.0:-1.0;
+                float zsign=(mod(si,2.0)==0.0)? 1.0:-1.0;
+
+                float spec=pow(clamp(
+                    dot(reflect(vec3(xsign*ldir.x,ysign*ldir.y,zsign*ldir.z), n), rd),
+                0.0, 1.0), 20.0);
+                col += vec3(1.0) * spec;
+            }
+        }*/
+        
+        float spec=pow(clamp(dot(reflect(ldir, n), rd) , 0.0, 1.0), 5.0);
+        col += vec3(1.0) * spec;
+        
          
         // 
         float glow=0.0;
@@ -290,14 +298,19 @@ else
         glow+=max(1.0-abs(dot(rd,n)) - 0.4, 0.0) * 1.0;
         vec3 glowcol=vec3(1.0,1.0,1.0)*glow*0.25;
         
-        //col+=glowcol;
+        col+=glowcol*0.05;
         
         //
         float ao = calcAo(p, n);
         col += ao * vec3(1.0) * 0.1;
         
         //col = n;
+       
+        // 中心からのフラッシュ
+        col+=vec3(1.0)*(1.0-min(1.0, 0.25*length(-p-vec3(0.0,h,0.0))));
     }
+    
+    
     
     gl_FragColor = vec4(col,1.0);
 }
