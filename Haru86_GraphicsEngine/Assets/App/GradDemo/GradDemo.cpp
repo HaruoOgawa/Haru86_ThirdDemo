@@ -9,6 +9,7 @@
 #include "3_MoonTravel/Script/MoonTravel.h"
 #include "4_CyberpunkSpaceRay/Script/CyberpunkSpaceRay.h"
 #include "5_ChangeOfMind/Script/ChangeOfMind.h"
+#include "8_FindKaguya/Script/FindKaguya.h"
 #include "9_MountFuji/Script/MountFuji.h"
 #include "GraphicsEngine/Sound/SoundPlayer.h"
 
@@ -28,6 +29,7 @@ namespace app
         m_CyberpunkSpaceRay(nullptr),
         m_ChangeOfMind(nullptr),
 
+        m_FindKaguya(nullptr),
         m_MountFuji(nullptr)
     {
     }
@@ -36,7 +38,7 @@ namespace app
     {
 #ifdef _DEBUG
         // 時間のオフセット
-        GraphicsMain::GetInstance()->m_SecondsTimeOffset = 135.0f;// シーンを飛ばすためのオフセット
+        GraphicsMain::GetInstance()->m_SecondsTimeOffset = 179.0f;// シーンを飛ばすためのオフセット
 
         // 音楽のミュート
         GraphicsMain::GetInstance()->m_SoundPlayer->Mute(true);
@@ -53,6 +55,7 @@ namespace app
         m_CyberpunkSpaceRay = std::make_shared<app::CyberpunkSpaceRay>();
         m_ChangeOfMind = std::make_shared<app::ChangeOfMind>();
 
+        m_FindKaguya = std::make_shared<app::FindKaguya>();
         m_MountFuji = std::make_shared<app::MountFuji>();
     }
 
@@ -75,6 +78,7 @@ namespace app
         m_CyberpunkSpaceRay->Update(m_LocalTime);
         m_ChangeOfMind->Update(m_LocalTime);
 
+        m_FindKaguya->Update(m_LocalTime);
         m_MountFuji->Update(m_LocalTime);
     }
 
@@ -85,6 +89,7 @@ namespace app
         if (m_SceneIndex == 3) m_MoonTravel->Draw(IsRaymarching);
         if (m_SceneIndex == 4) m_CyberpunkSpaceRay->Draw(IsRaymarching);
         if (m_SceneIndex == 5) m_ChangeOfMind->Draw(IsRaymarching);
+        if (m_SceneIndex == 8) m_FindKaguya->Draw(IsRaymarching);
         if (m_SceneIndex == 9) m_MountFuji->Draw(IsRaymarching);
 
         //text::TextObject::Draw("Haru86_");
@@ -129,11 +134,11 @@ namespace app
         else if (m_LocalTime >= 164.0f && m_LocalTime < 179.0f)164 - 179
         {
             m_SceneIndex = 7;
-        }
-        else if (m_LocalTime >= 179.0f && m_LocalTime < 194.0f) 179 - 194   => 194 + (286-271) = 179 => 3m
+        }*/
+        else if (m_LocalTime >= 179.0f && m_LocalTime < 194.0f)// 179 - 194   => 194 + (286-271) = 179 => 3m
         {
             m_SceneIndex = 8;
-        }*/
+        }
         else if (m_LocalTime >= 194.0f && m_LocalTime < 228.0f) // 3:48 = 3*60+48 = 180+48 = 228
         {
             m_SceneIndex = 9;
@@ -150,6 +155,7 @@ namespace app
         m_CyberpunkSpaceRay->UpdateTimeLine(m_LocalTime);
         m_ChangeOfMind->UpdateTimeLine(m_LocalTime);
 
+        m_FindKaguya->UpdateTimeLine(m_LocalTime);
         m_MountFuji->UpdateTimeLine(m_LocalTime);
     }
 }

@@ -24,7 +24,7 @@ namespace app
 				std::make_shared<TransformComponent>(),
 				RenderingSurfaceType::RASTERIZER,
 				VertexData, Dimention, Indices,
-				shaderlib::ShaderLib::Standard_vert,
+				shaderlib::Standard_vert,
 				std::string(
 					#include "../Shader/NegativeSphere.frag"
 				),
@@ -47,7 +47,7 @@ namespace app
 				std::string(
 					#include "../Shader/NegativeSphereCore.vert"
 				),
-				shaderlib::ShaderLib::Standard_frag
+				shaderlib::Standard_frag
 			);
 
 			m_NegativeSphereCoreMeshRenderer->m_transform->m_scale = glm::vec3(0.75f);
@@ -63,9 +63,9 @@ namespace app
 				std::make_shared<TransformComponent>(),
 				PrimitiveType::Icosahedron,
 				RenderingSurfaceType::RASTERIZER,
-				shaderlib::ShaderLib::Standard_vert,
-				shaderlib::ShaderLib::Standard_frag,
-				shaderlib::ShaderLib::Line2Cylinder_geom
+				shaderlib::Standard_vert,
+				shaderlib::Standard_frag,
+				shaderlib::Line2Cylinder_geom
 			);
 
 			m_PositiveSphereFrame->IsMulMatOnVert = false;
@@ -77,8 +77,8 @@ namespace app
 				std::make_shared<TransformComponent>(),
 				PrimitiveType::SPHERE,
 				RenderingSurfaceType::RASTERIZER,
-				shaderlib::ShaderLib::Standard_vert,
-				shaderlib::ShaderLib::Standard_frag
+				shaderlib::Standard_vert,
+				shaderlib::Standard_frag
 			);
 
 			m_PositiveSphereCore->useDoubleSlided = false;
@@ -91,9 +91,9 @@ namespace app
 				std::make_shared<TransformComponent>(),
 				PrimitiveType::Icosahedron,
 				RenderingSurfaceType::RASTERIZER,
-				shaderlib::ShaderLib::Standard_vert,
-				shaderlib::ShaderLib::Standard_frag,
-				shaderlib::ShaderLib::Line2Cylinder_geom
+				shaderlib::Standard_vert,
+				shaderlib::Standard_frag,
+				shaderlib::Line2Cylinder_geom
 			);
 
 			//m_PositiveSphereDecolate->m_transform->m_scale = glm::vec3(1.2f);
@@ -106,7 +106,7 @@ namespace app
 				std::make_shared<TransformComponent>(),
 				PrimitiveType::BOARD,
 				RenderingSurfaceType::RAYMARCHING,
-				shaderlib::ShaderLib::StandardRenderBoard_vert,
+				shaderlib::StandardRenderBoard_vert,
 				std::string(
 					#include "../Shader/BackgroundHexRay.frag"
 				)

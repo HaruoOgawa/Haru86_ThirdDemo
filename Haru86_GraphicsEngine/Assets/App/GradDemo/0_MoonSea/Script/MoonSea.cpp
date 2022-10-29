@@ -15,7 +15,7 @@ namespace app
 			std::make_shared<TransformComponent>(),
 			PrimitiveType::BOARD,
 			RenderingSurfaceType::RAYMARCHING,
-			shaderlib::ShaderLib::StandardRenderBoard_vert,
+			shaderlib::StandardRenderBoard_vert,
 			std::string(
 				#include "../Shader/MoonSea.frag"
 			)

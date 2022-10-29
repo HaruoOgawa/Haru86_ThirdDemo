@@ -12,8 +12,8 @@ PolygonRaymarchingMixer::PolygonRaymarchingMixer() {
 		std::make_shared<TransformComponent>(),
 		PrimitiveType::BOARD,
 		RenderingSurfaceType::RASTERIZER,
-		shaderlib::ShaderLib::PolygonRaymarchingMixer_vert,
-		shaderlib::ShaderLib::PolygonRaymarchingMixer_frag
+		shaderlib::PolygonRaymarchingMixer_vert,
+		shaderlib::PolygonRaymarchingMixer_frag
 	);
 }
 

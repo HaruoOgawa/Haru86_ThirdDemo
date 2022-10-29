@@ -37,16 +37,16 @@ PostProcess::PostProcess():
 		std::make_shared<TransformComponent>(),
 		PrimitiveType::BOARD,
 		RenderingSurfaceType::RASTERIZER,
-		shaderlib::ShaderLib::StandardRenderBoard_vert, 
-		shaderlib::ShaderLib::PolygonPostProcess_frag
+		shaderlib::StandardRenderBoard_vert, 
+		shaderlib::PolygonPostProcess_frag
 	);
 	
 	m_LateMeshRenderer = std::make_shared<MeshRendererComponent>(
 		std::make_shared<TransformComponent>(),
 		PrimitiveType::BOARD,
 		RenderingSurfaceType::RASTERIZER,
-		shaderlib::ShaderLib::StandardRenderBoard_vert,
-		shaderlib::ShaderLib::LatePostProcess_frag
+		shaderlib::StandardRenderBoard_vert,
+		shaderlib::LatePostProcess_frag
 	);
 }
 
