@@ -27,7 +27,9 @@ namespace app
 	{
 		if (IsRaymarching)
 		{
-			m_Voxel->Draw();
+			m_Voxel->Draw([&]() {
+				m_Voxel->m_material->SetIntUniform("_MapIndex", 0);
+			});
 		}
 	}
 

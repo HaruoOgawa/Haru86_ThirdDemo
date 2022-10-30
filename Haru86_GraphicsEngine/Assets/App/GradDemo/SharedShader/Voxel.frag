@@ -12,6 +12,7 @@ R"(
 #define main() mainImage( out vec4 fragColor, in vec2 fragCoord )
 const int _RenderingTarget = 1;
 const float _LeaveStartTime = 1.0;
+int _MapIndex;
 #else
 uniform float _time;
 uniform vec2 _resolution;
@@ -19,7 +20,7 @@ uniform float _RenderingTarget;
 uniform vec3 _WorldCameraPos;
 uniform vec3 _WorldCameraCenter;
 
-uniform float _LeaveStartTime;
+uniform int _MapIndex;
 
 in vec2 uv;
 #endif
@@ -81,8 +82,14 @@ vec2 path(in float z){
     //return vec2(0, b*1.7 + a*1.5); // Just Y.
 }
 
+//
+float rand(vec2 p)
+{
+    return fract( sin(dot(p,vec2(12.9898,78.233)))*43758.5453123 );
+}
+
 // Ray Function ///////////////////////////////////////////////////////////////
-float testmap(vec3 p)
+float UpDirMap(vec3 p)
 {
     p.xy -= path(p.z); // Perturb an object around a path.
    
@@ -96,6 +103,21 @@ float testmap(vec3 p)
     return n - p.x*p.y*p.z*.35 - .9; // Combine, and we're done.
 }
 
+float AroundMap(vec3 p)
+{
+    //p.xy -= path(p.z); // Perturb an object around a path.
+   
+    p.xz=vec2(atan(p.x,p.z)/3.0*pi,length(p.xz)-1.); // rotate
+	p = cos(p*.1575 + sin(p.zxy*.4375)); // 3D sinusoidal mutation.
+    
+    // Spherize. The result is some mutated, spherical blob-like shapes.
+    float n = dot(p, p); 
+    
+    //p = sin(p*3. + cos(p.yzx*3.)); // Finer bumps. Subtle, and almost not necessary with voxelization.
+    
+    return n - p.x*p.y*p.z*.35 - .9; // Combine, and we're done.
+}
+
 mapr map(vec3 p)
 {
     mapr mr;
@@ -103,8 +125,8 @@ mapr map(vec3 p)
     mr.hit=false;
     mr.m=-1;
     
-    //{compm(mr,length(p)-0.5,0,true);}
-    {compm(mr, testmap(p) ,0 , true);}
+    if(_MapIndex == 0){compm(mr, UpDirMap(p) ,0 , true);}
+    if(_MapIndex == 1){compm(mr, AroundMap(p) ,0 , true);}
     
     return mr;
 }
@@ -409,7 +431,7 @@ vec3 dColor(vec3 ro, vec3 rd, float t, mapr mr, vec3 lightPos,const bool IsRef)
             col = BaseColor * (diff + ambient) + vec3(0.7,0.9,1.0)*spec;
             if(!IsRef)
             {
-                col += vec3(0.2,0.0,0.0)*trans;
+                col += vec3(0.2)*trans;
                 col += DrawMarble(st_m);
                 col *= atten*ao*shade;
             }
@@ -431,16 +453,29 @@ else
 {
 #ifdef DRAW_ON_SHADERTOY
     vec2 st=(gl_FragCoord.xy*2.-_resolution.xy)/min(_resolution.x,_resolution.y);
+    _MapIndex = int(floor(mod(_time, 2.0)));
+    _MapIndex = 1;
 #else
     vec2 st=uv*2.0-1.0;
     st.x*=(_resolution.x/_resolution.y);
 #endif
     // Cemra
-    vec3 ro=vec3(0.0,0.0,1.5 + _time*10.0), ta = ro + vec3(0.0,0.0,1.0);
-    ta.xy += path(ta.z);ro.xy += path(ro.z);
+    float blurPower = 0.1;
+    float l_time = _time + (rand(st)*blurPower-blurPower);
+    vec3 ro=vec3(0.0), ta=vec3(0.0);
+    
+    if(_MapIndex == 0)
+    {
+        ro=vec3(0.0,0.0,1.5 + l_time*20.0), ta = ro + vec3(0.0,0.0,1.0);
+        ta.xy += path(ta.z);ro.xy += path(ro.z);
+    }
+    else if(_MapIndex == 1) 
+    {
+        ro=vec3(cos(_time*0.1)*5.0,-1.0,sin(_time*0.1)*5.0), ta = vec3(0.0,-2.0,0.0);
+    }
     
     vec3 lightPos = ro + vec3(0.0,1.0,5.0);
-    lightPos.xy += path(lightPos.z);
+    if(_MapIndex == 0) lightPos.xy += path(lightPos.z);
     
     float zfactor=1.0-0.45*length(st), t=0.0;
     //zfactor=1.0;
@@ -486,7 +521,15 @@ else
     //
     vec3 fog = mix(vec3(0.96), vec3(0.24), -rd.y*0.5 + 0.5);
     //vec3 fog = vec3(1.0);
-    col = mix(col, fog*sqrt(fog)*1.2, smoothstep(0.0, 0.95, t/60.0));
+    if(_MapIndex == 0)
+    {
+        col = mix(col, fog*sqrt(fog)*1.2, smoothstep(0.0, 0.95, t/60.0));
+    }
+    else if(_MapIndex == 1)
+    {
+        col = mix(col, fog*sqrt(fog)*1.2, smoothstep(0.0, 0.95, t/120.0));
+    }
+    
     
     //
     gl_FragColor = vec4(col,1.0);

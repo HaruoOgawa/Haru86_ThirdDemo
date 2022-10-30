@@ -4,6 +4,7 @@
 #include "GraphicsEngine/Graphics/ShaderLib.h"
 #include "GraphicsEngine/GraphicsMain/GraphicsMain.h"
 #include "GraphicsEngine/Graphics/Primitive.h"
+#include "../../SharedShader.h"
 
 namespace app
 {
@@ -13,7 +14,8 @@ namespace app
 		m_PositiveSphereFrame(nullptr),
 		m_PositiveSphereCore(nullptr),
 		m_PositiveSphereDecolate(nullptr),
-		m_BackgroundHexRay(nullptr)
+		m_BackgroundHexRay(nullptr),
+		m_Voxel(nullptr)
 	{
 		// m_NegativeSphereMeshRenderer
 		{
@@ -112,6 +114,17 @@ namespace app
 				)
 			);
 		}
+
+		// m_Voxel
+		{
+			m_Voxel = std::make_shared<MeshRendererComponent>(
+				std::make_shared<TransformComponent>(),
+				PrimitiveType::BOARD,
+				RenderingSurfaceType::RAYMARCHING,
+				shaderlib::StandardRenderBoard_vert,
+				shaderdshader::Voxel_frag
+				);
+		}
 	}
 
 	void ChangeOfMind::Update(float time)
@@ -123,7 +136,10 @@ namespace app
 	{
 		if (IsRaymarching)
 		{
-			m_BackgroundHexRay->Draw();
+			//m_BackgroundHexRay->Draw();
+			m_Voxel->Draw([&]() {
+				m_Voxel->m_material->SetIntUniform("_MapIndex", 1);
+			});
 		}
 		else
 		{
