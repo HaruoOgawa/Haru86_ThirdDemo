@@ -10,6 +10,8 @@ MeshRendererComponent::MeshRendererComponent(const std::shared_ptr<TransformComp
 	m_material(nullptr), 
 	m_transform(TRS),
 	useZTest(true), 
+	useDoubleSlided(true),
+	IsMulMatOnVert(true),
 	m_calllback(calllback)
 {
 	m_SurfaceType = SurfaceType;
@@ -34,6 +36,8 @@ MeshRendererComponent::MeshRendererComponent(const std::shared_ptr<TransformComp
 	m_material(nullptr),
 	m_transform(TRS),
 	useZTest(true),
+	useDoubleSlided(true),
+	IsMulMatOnVert(true),
 	m_calllback(calllback)
 {
 	m_SurfaceType = SurfaceType;
@@ -72,9 +76,20 @@ void MeshRendererComponent::Draw(std::function<void(void)> TemporaryCallBack, GL
 		glDisable(GL_BLEND);
 	}
 
+	if (useDoubleSlided)
+	{
+		glDisable(GL_CULL_FACE);
+	}
+	else
+	{
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
+	}
+
 	m_transform->CalMatrix();
 
 	m_material->SetActive();
+	m_material->SetIntUniform("_IsMulMatOnVert", (IsMulMatOnVert) ? 1 : 0);
 	m_material->SetMatrixUniform("MVPMatrix", m_transform->m_pMatrix * m_transform->m_vMatrix * m_transform->m_mMatrix);
 	m_material->SetMatrixUniform("MMatrix", m_transform->m_mMatrix);
 	m_material->SetMatrixUniform("VMatrix", m_transform->m_vMatrix);

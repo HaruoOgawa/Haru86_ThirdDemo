@@ -11,14 +11,21 @@ namespace app
     class EarthAndMoon;
     class MoonTravel;
     class CyberpunkSpaceRay;
+    class ChangeOfMind;
+
+    class FindKaguya;
+    class MountFuji;
 
     class GradDemo
     {
-        //
         std::shared_ptr<MoonSea> m_MoonSea;
         std::shared_ptr<EarthAndMoon> m_EarthAndMoon;
         std::shared_ptr<MoonTravel> m_MoonTravel;
         std::shared_ptr<CyberpunkSpaceRay> m_CyberpunkSpaceRay;
+        std::shared_ptr<ChangeOfMind> m_ChangeOfMind;
+
+        std::shared_ptr<FindKaguya> m_FindKaguya;
+        std::shared_ptr<MountFuji> m_MountFuji;
 
         //
         unsigned int m_SceneIndex;

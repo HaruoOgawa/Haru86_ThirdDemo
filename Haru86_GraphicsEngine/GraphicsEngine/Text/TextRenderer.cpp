@@ -13,8 +13,8 @@ namespace text
 			std::make_shared<TransformComponent>(),
 			PrimitiveType::BOARD,
 			RenderingSurfaceType::RASTERIZER,
-			shaderlib::ShaderLib::Standard_vert,
-			shaderlib::ShaderLib::Text_frag
+			shaderlib::Standard_vert,
+			shaderlib::Text_frag
 		);
 
 		m_TextMeshRenderer->useAlphaTest = true;

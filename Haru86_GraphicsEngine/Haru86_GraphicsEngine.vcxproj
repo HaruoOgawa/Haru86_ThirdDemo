@@ -408,6 +408,8 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <ClInclude Include="Assets\App\GradDemo\GradDemo.h" />
     <ClInclude Include="Assets\App\GradDemo\2_EarthAndMoon\Script\EarthAndMoon.h" />
     <ClInclude Include="Assets\App\GradDemo\4_CyberpunkSpaceRay\Script\CyberpunkSpaceRay.h" />
+    <ClInclude Include="Assets\App\GradDemo\5_ChangeOfMind\Script\ChangeOfMind.h" />
+    <ClInclude Include="Assets\App\GradDemo\8_FindKaguya\Script\FindKaguya.h" />
     <ClInclude Include="GraphicsEngine\Graphics\EGraphicsParam.h" />
     <ClInclude Include="GraphicsEngine\Graphics\ShaderLib.h" />
     <ClInclude Include="GraphicsEngine\Message\Console.h" />
@@ -433,12 +435,15 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <ClInclude Include="Assets\App\GradDemo\0_MoonSea\Script\MoonSea.h" />
     <ClInclude Include="Assets\App\GradDemo\1_LeaveEarth\Script\LeaveEarth.h" />
     <ClInclude Include="Assets\App\GradDemo\3_MoonTravel\Script\MoonTravel.h" />
+    <ClInclude Include="Assets\App\GradDemo\9_MountFuji\Script\MountFuji.h" />
+    <ClInclude Include="Assets\App\GradDemo\SharedShader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Assets\App\GradDemo\GradDemo.cpp" />
     <ClCompile Include="Assets\App\GradDemo\2_EarthAndMoon\Script\EarthAndMoon.cpp" />
     <ClCompile Include="Assets\App\GradDemo\4_CyberpunkSpaceRay\Script\CyberpunkSpaceRay.cpp" />
-    <ClCompile Include="GraphicsEngine\Graphics\ShaderLib.cpp" />
+    <ClCompile Include="Assets\App\GradDemo\5_ChangeOfMind\Script\ChangeOfMind.cpp" />
+    <ClCompile Include="Assets\App\GradDemo\8_FindKaguya\Script\FindKaguya.cpp" />
     <ClCompile Include="GraphicsEngine\Graphics\ComputeBuffer.cpp" />
     <ClCompile Include="GraphicsEngine\GraphicsMain\GraphicsMain.cpp" />
     <ClCompile Include="GraphicsEngine\Graphics\GraphicsRenderer.cpp" />
@@ -458,6 +463,7 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <ClCompile Include="Assets\App\GradDemo\0_MoonSea\Script\MoonSea.cpp" />
     <ClCompile Include="Assets\App\GradDemo\1_LeaveEarth\Script\LeaveEarth.cpp" />
     <ClCompile Include="Assets\App\GradDemo\3_MoonTravel\Script\MoonTravel.cpp" />
+    <ClCompile Include="Assets\App\GradDemo\9_MountFuji\Script\MountFuji.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\App\GradDemo\2_EarthAndMoon\Shader\EarthAndMoon.frag" />
@@ -465,9 +471,15 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <None Include="Assets\App\GradDemo\0_MoonSea\Shader\MoonSea.frag" />
     <None Include="Assets\App\GradDemo\3_MoonTravel\Shader\MoonTravel.frag" />
     <None Include="Assets\App\GradDemo\4_CyberpunkSpaceRay\Shader\CyberpunkSpaceRay.frag" />
+    <None Include="Assets\App\GradDemo\5_ChangeOfMind\Shader\NegativeSphere.frag" />
+    <None Include="Assets\App\GradDemo\5_ChangeOfMind\Shader\NegativeSphere.geom" />
+    <None Include="Assets\App\GradDemo\5_ChangeOfMind\Shader\NegativeSphereCore.vert" />
+    <None Include="Assets\App\GradDemo\9_MountFuji\Shader\MountFuji.frag" />
+    <None Include="Assets\App\GradDemo\SharedShader\Voxel.frag" />
     <None Include="bin\libfreetype-6.dll" />
     <None Include="bin\SDL2_ttf.dll" />
     <None Include="bin\zlib1.dll" />
+    <None Include="GraphicsEngine\Graphics\Shader\Line2Cylinder.geom" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

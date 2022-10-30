@@ -11,7 +11,7 @@ namespace app {
 			std::make_shared<TransformComponent>(),
 			PrimitiveType::BOARD,
 			RenderingSurfaceType::RAYMARCHING,
-			shaderlib::ShaderLib::StandardRenderBoard_vert,
+			shaderlib::StandardRenderBoard_vert,
 			std::string(
 #include "../Shader/CyberpunkSpaceRay.frag"
 			)
@@ -21,7 +21,7 @@ namespace app {
 		m_MeshRenderer->useAlphaTest = true;
 	}
 
-	void CyberpunkSpaceRay::Update()
+	void CyberpunkSpaceRay::Update(float time)
 	{
 
 	}

@@ -11,7 +11,7 @@ namespace app {
 		MoonTravel();
 		virtual ~MoonTravel() = default;
 
-		void Update();
+		void Update(float time);
 		void Draw(bool IsRaymarching);
 		void UpdateTimeLine(float time);
 	};
