@@ -471,7 +471,6 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <None Include="Assets\App\GradDemo\0_MoonSea\Shader\MoonSea.frag" />
     <None Include="Assets\App\GradDemo\3_MoonTravel\Shader\MoonTravel.frag" />
     <None Include="Assets\App\GradDemo\4_CyberpunkSpaceRay\Shader\CyberpunkSpaceRay.frag" />
-    <None Include="Assets\App\GradDemo\5_ChangeOfMind\Shader\BackgroundHexRay.frag" />
     <None Include="Assets\App\GradDemo\5_ChangeOfMind\Shader\NegativeSphere.frag" />
     <None Include="Assets\App\GradDemo\5_ChangeOfMind\Shader\NegativeSphere.geom" />
     <None Include="Assets\App\GradDemo\5_ChangeOfMind\Shader\NegativeSphereCore.vert" />

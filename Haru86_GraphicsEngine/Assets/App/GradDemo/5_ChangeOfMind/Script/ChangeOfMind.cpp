@@ -14,7 +14,6 @@ namespace app
 		m_PositiveSphereFrame(nullptr),
 		m_PositiveSphereCore(nullptr),
 		m_PositiveSphereDecolate(nullptr),
-		m_BackgroundHexRay(nullptr),
 		m_Voxel(nullptr)
 	{
 		// m_NegativeSphereMeshRenderer
@@ -102,19 +101,6 @@ namespace app
 			m_PositiveSphereDecolate->IsMulMatOnVert = false;
 		}
 
-		// m_BackgroundHexRay
-		{
-			m_BackgroundHexRay = std::make_shared<MeshRendererComponent>(
-				std::make_shared<TransformComponent>(),
-				PrimitiveType::BOARD,
-				RenderingSurfaceType::RAYMARCHING,
-				shaderlib::StandardRenderBoard_vert,
-				std::string(
-					#include "../Shader/BackgroundHexRay.frag"
-				)
-			);
-		}
-
 		// m_Voxel
 		{
 			m_Voxel = std::make_shared<MeshRendererComponent>(
@@ -136,7 +122,6 @@ namespace app
 	{
 		if (IsRaymarching)
 		{
-			//m_BackgroundHexRay->Draw();
 			m_Voxel->Draw([&]() {
 				m_Voxel->m_material->SetIntUniform("_MapIndex", 1);
 			});
