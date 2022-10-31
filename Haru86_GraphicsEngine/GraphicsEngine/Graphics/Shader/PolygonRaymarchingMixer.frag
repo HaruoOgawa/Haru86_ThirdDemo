@@ -23,7 +23,7 @@ void main(){
 	vec2 st=gl_FragCoord.xy/_resolution.xy;
 
 	//polygon
-	vec3 polygonCol=texture(polygon_frameTexture,st).rgb;
+	vec4 polygonCol=texture(polygon_frameTexture,st);
 	vec3 polygonDepth=texture(polygon_depthTexture,st).rgb;
 	vec3 polygonNormal=texture(polygon_normalTexture,st).rgb;
 	vec3 polygonShadowMap=texture(polygon_ShadowMapBuffer,st).rgb;
@@ -32,9 +32,19 @@ void main(){
 	vec3 raymarchingDepth=texture(raymarching_depthTexture,st).rgb;
 
 	if(_existRaymarching==1.0){
-		col=polygonCol;
+		col=polygonCol.rgb;
 	}else{
-		col=(polygonDepth.r<=raymarchingDepth.r)? polygonCol : raymarchingCol;
+		if(polygonDepth.r<=raymarchingDepth.r && polygonCol.a > 0.0)
+		{
+			//col=polygonCol.rgb;
+			col = mix(raymarchingCol, polygonCol.rgb, polygonCol.a);
+			//col = vec3(polygonCol.a);
+		}
+		else
+		{
+			col= raymarchingCol;
+		}
+		
 	}
 
 	if(_IsDepthMix==1.0){
@@ -45,7 +55,7 @@ void main(){
 	//col=raymarchingDepth;
 	//col=polygonNormal;
 	//col=polygonShadowMap;
-	//col=polygonCol;
+	//col=polygonCol.rgb;
 	//col=polygonDepth;
 
 	gl_FragColor=vec4(col,1.0);

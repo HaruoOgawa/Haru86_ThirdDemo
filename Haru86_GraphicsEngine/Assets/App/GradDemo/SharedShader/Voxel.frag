@@ -21,6 +21,7 @@ uniform vec3 _WorldCameraPos;
 uniform vec3 _WorldCameraCenter;
 
 uniform int _MapIndex;
+uniform float _Alpha;
 
 in vec2 uv;
 #endif
@@ -428,10 +429,15 @@ vec3 dColor(vec3 ro, vec3 rd, float t, mapr mr, vec3 lightPos,const bool IsRef)
             
             // Lighting Result
             vec3 BaseColor = vec3(0.1);
+            if(_MapIndex == 1) BaseColor = vec3(0.1,0.0,0.0);
+
             col = BaseColor * (diff + ambient) + vec3(0.7,0.9,1.0)*spec;
             if(!IsRef)
             {
-                col += vec3(0.2)*trans;
+                vec3 transCol = vec3(0.2); 
+                if(_MapIndex == 1) transCol = vec3(0.2,0.0,0.0); 
+
+                col += transCol*trans;
                 col += DrawMarble(st_m);
                 col *= atten*ao*shade;
             }
@@ -532,7 +538,7 @@ else
     
     
     //
-    gl_FragColor = vec4(col,1.0);
+    gl_FragColor = vec4(col,_Alpha);
 }
 
 }

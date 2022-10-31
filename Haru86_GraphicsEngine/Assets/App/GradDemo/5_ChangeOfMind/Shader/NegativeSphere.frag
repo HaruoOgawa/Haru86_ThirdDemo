@@ -22,6 +22,7 @@ uniform int _UseMainTex;
 uniform sampler2D _MainTex;
 uniform int _UseMainCube;
 uniform samplerCube _MainCube;
+uniform float _Alpha;
 
 void main(){
 	vec4 col=vec4(vec3(0.0),1.0);
@@ -78,6 +79,7 @@ void main(){
 
 	float mixval = distance(in_WorldVertexPos.xyz, in_AnchorPos.xyz) / 1.5;
 	col = mix(col, vec4(1.0 * 3.0,0.0,0.0,1.0), clamp(mixval, 0.0, 1.0));
+	col.a *= _Alpha;
 
 	gl_FragColor=col;
 }
