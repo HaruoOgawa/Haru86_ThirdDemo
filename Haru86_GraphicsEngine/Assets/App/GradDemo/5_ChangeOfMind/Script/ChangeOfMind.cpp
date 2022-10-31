@@ -11,10 +11,8 @@ namespace app
 	ChangeOfMind::ChangeOfMind() :
 		m_NegativeSphereMeshRenderer(nullptr),
 		m_NegativeSphereCoreMeshRenderer(nullptr),
-		m_PositiveSphereFrame(nullptr),
-		m_PositiveSphereCore(nullptr),
-		m_PositiveSphereDecolate(nullptr),
-		m_Voxel(nullptr)
+		m_Voxel(nullptr),
+		m_Triangle(nullptr)
 	{
 		// m_NegativeSphereMeshRenderer
 		{
@@ -55,52 +53,6 @@ namespace app
 			m_NegativeSphereCoreMeshRenderer->useDoubleSlided = false;
 		}
 
-		// m_PositiveSphereFrame
-		{
-			std::vector<std::vector<float>> VertexData; std::vector<int> Dimention; std::vector<unsigned short> Indices;
-			Primitive::CreateSphere(&VertexData, &Dimention, &Indices, 6.0f, 6.0f, 1.0f);
-
-			m_PositiveSphereFrame = std::make_shared<MeshRendererComponent>(
-				std::make_shared<TransformComponent>(),
-				PrimitiveType::Icosahedron,
-				RenderingSurfaceType::RASTERIZER,
-				shaderlib::Standard_vert,
-				shaderlib::Standard_frag,
-				shaderlib::Line2Cylinder_geom
-			);
-
-			m_PositiveSphereFrame->IsMulMatOnVert = false;
-		}
-
-		// m_PositiveSphereCore
-		{
-			m_PositiveSphereCore = std::make_shared<MeshRendererComponent>(
-				std::make_shared<TransformComponent>(),
-				PrimitiveType::SPHERE,
-				RenderingSurfaceType::RASTERIZER,
-				shaderlib::Standard_vert,
-				shaderlib::Standard_frag
-			);
-
-			m_PositiveSphereCore->useDoubleSlided = false;
-			m_PositiveSphereCore->m_transform->m_scale = glm::vec3(0.75f);
-		}
-
-		// m_PositiveSphereDecolate
-		{
-			m_PositiveSphereDecolate = std::make_shared<MeshRendererComponent>(
-				std::make_shared<TransformComponent>(),
-				PrimitiveType::Icosahedron,
-				RenderingSurfaceType::RASTERIZER,
-				shaderlib::Standard_vert,
-				shaderlib::Standard_frag,
-				shaderlib::Line2Cylinder_geom
-			);
-
-			//m_PositiveSphereDecolate->m_transform->m_scale = glm::vec3(1.2f);
-			m_PositiveSphereDecolate->IsMulMatOnVert = false;
-		}
-
 		// m_Voxel
 		{
 			m_Voxel = std::make_shared<MeshRendererComponent>(
@@ -110,6 +62,24 @@ namespace app
 				shaderlib::StandardRenderBoard_vert,
 				shaderdshader::Voxel_frag
 				);
+
+			m_Voxel->useAlphaTest = true;
+		}
+		
+		// m_Triangle
+		{
+			m_Triangle = std::make_shared<MeshRendererComponent>(
+				std::make_shared<TransformComponent>(),
+				PrimitiveType::BOARD,
+				RenderingSurfaceType::RAYMARCHING,
+				shaderlib::StandardRenderBoard_vert,
+				std::string(
+					#include "../Shader/Triangle.frag"
+				)
+			);
+
+			m_Triangle->useAlphaTest = true;
+			m_Triangle->useZTest = false;
 		}
 	}
 
@@ -120,50 +90,42 @@ namespace app
 
 	void ChangeOfMind::Draw(bool IsRaymarching)
 	{
+		bool DebugDraw = (glm::mod(GraphicsMain::GetInstance()->m_SecondsTime, 2.0f) < 1.0);
+		DebugDraw = true;
+		//DebugDraw = false;
+		float Alpha = abs(sin(GraphicsMain::GetInstance()->m_SecondsTime));
+
 		if (IsRaymarching)
 		{
-			m_Voxel->Draw([&]() {
-				m_Voxel->m_material->SetIntUniform("_MapIndex", 1);
-			});
+			//if (DebugDraw)
+			{
+				m_Voxel->Draw([=]() {
+					m_Voxel->m_material->SetIntUniform("_MapIndex", 1);
+					m_Voxel->m_material->SetFloatUniform("_Alpha", Alpha);
+				});
+			}
+			//else
+			{
+				m_Triangle->Draw([=]() {
+					m_Triangle->m_material->SetFloatUniform("_Alpha",1.0f - Alpha);
+				});
+			}
 		}
 		else
 		{
-			bool DebugDraw = (glm::mod(GraphicsMain::GetInstance()->m_SecondsTime, 2.0f) < 1.0);
+			
 
-			if (DebugDraw)
+			if (Alpha > 0.5f)
 			{
-				m_NegativeSphereMeshRenderer->Draw([]() {}, GL_POINTS);
+				m_NegativeSphereMeshRenderer->Draw([=]() {
+					m_NegativeSphereMeshRenderer->m_material->SetFloatUniform("_Alpha", Alpha);
+				}, GL_POINTS);
 				m_NegativeSphereCoreMeshRenderer->Draw([&]() {
-					m_PositiveSphereCore->m_material->SetIntUniform("_UseRim", 1);
-					m_PositiveSphereCore->m_material->SetVec4Uniform("_RimColor", glm::vec4(0.25f, 0.0f, 0.0f, 0.5f));
-					m_PositiveSphereCore->m_material->SetFloatUniform("_RimPower", 1.75f);
-					m_PositiveSphereCore->m_material->SetFloatUniform("_RimMulVal", 1.5f);
+					m_NegativeSphereCoreMeshRenderer->m_material->SetIntUniform("_UseRim", 1);
+					m_NegativeSphereCoreMeshRenderer->m_material->SetVec4Uniform("_RimColor", glm::vec4(0.25f, 0.0f, 0.0f, Alpha));
+					m_NegativeSphereCoreMeshRenderer->m_material->SetFloatUniform("_RimPower", 1.75f);
+					m_NegativeSphereCoreMeshRenderer->m_material->SetFloatUniform("_RimMulVal", 1.5f);
 					});
-			}
-			else
-			{
-				m_PositiveSphereFrame->Draw([&]() {
-					m_PositiveSphereFrame->m_material->SetFloatUniform("_Radius", 0.025f);
-					m_PositiveSphereFrame->m_material->SetFloatUniform("_CircleSegment", 6.0f);
-					m_PositiveSphereFrame->m_material->SetIntUniform("_UseColor", 1);
-					m_PositiveSphereFrame->m_material->SetVec4Uniform("_Color", glm::vec4(0.615f, 0.8f, 0.878f, 1.0f));
-				},GL_LINES);
-
-				m_PositiveSphereCore->Draw([&]() {
-					m_PositiveSphereCore->m_material->SetIntUniform("_UseRim", 1);
-					//m_PositiveSphereCore->m_material->SetIntUniform("_IsRimMul", 1);
-					m_PositiveSphereCore->m_material->SetVec4Uniform("_RimColor", glm::vec4(0.615f, 0.8f, 0.878f, 1.0f));
-					m_PositiveSphereCore->m_material->SetFloatUniform("_RimPower", 1.75f);
-					m_PositiveSphereCore->m_material->SetFloatUniform("_RimMulVal", 1.5f);
-				});
-
-				m_PositiveSphereDecolate->Draw([&]() {
-					m_PositiveSphereFrame->m_material->SetFloatUniform("_Radius", 0.01f);
-					m_PositiveSphereFrame->m_material->SetFloatUniform("_Offset", 0.05f);
-					m_PositiveSphereFrame->m_material->SetFloatUniform("_CircleSegment", 6.0f);
-					m_PositiveSphereFrame->m_material->SetIntUniform("_UseColor", 1);
-					m_PositiveSphereFrame->m_material->SetVec4Uniform("_Color", glm::vec4(0.615f, 0.8f, 0.878f, 0.25f));
-				},GL_LINES);
 			}
 		}
 	}
