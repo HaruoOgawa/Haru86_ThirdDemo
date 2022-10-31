@@ -12,6 +12,7 @@ R"(
 #define main() mainImage( out vec4 fragColor, in vec2 fragCoord )
 const int _RenderingTarget = 1;
 const float _LeaveStartTime = 1.0;
+const float _Alpha = 1.0;
 #else
 uniform float _time;
 uniform vec2 _resolution;
@@ -50,21 +51,32 @@ struct mapr // MapResult
    float i;
    float t;
    float acc;
+   vec3 vCol;
+   float flash;
 };
 
 void compm(inout mapr mr,float d,int mt,bool IsMin) // CompareMap
 {
     if(IsMin)
     {
-        if(d<mr.d) mr = mapr(d,false,mt,vec3(0.0),vec3(0.0),0.0,0.0,0.0);
+        if(d<mr.d) mr = mapr(d,false,mt,vec3(0.0),vec3(0.0),0.0,0.0,0.0,vec3(0.0),0.0);
         if(mr.d<dmin) mr.hit=true; 
     }
     else
     {
         mr.d = max(mr.d, -d);
-        /*if(d>mr.d) mr = mapr(d,false,mt,vec3(0.0),vec3(0.0),0.0,0.0,0.0);
+        /*if(d>mr.d) mr = mapr(d,false,mt,vec3(0.0),vec3(0.0),0.0,0.0,0.0,vec3(0.0),0.0);
         if(mr.d<dmin) mr.hit=true; */
     }
+}
+
+vec3 trs(vec3 p,vec3 s,vec3 r,vec3 t)
+{
+    p+=t; 
+    p.yz*=rot(s.x);p.xz*=rot(s.y);p.xy*=rot(s.z);
+    p*=s;
+    
+    return p;
 }
 
 // Noise Function /////////////////////////////////////////////////////////////
@@ -125,9 +137,9 @@ mapr map(vec3 p)
     
     {
         vec3 lp = p;
+        
         lp.xz=pmod(lp.xz,32.0);
         lp.x-=2.1;
-        //lp.xz=vec2(atan(lp.x,lp.z)/32.0*pi, length(lp.xz) );
         
         lp=abs(lp)-0.5;
         
@@ -138,22 +150,67 @@ mapr map(vec3 p)
         lp.yz*=rot(pi/2.0);
         
         lp=abs(lp)-0.25;
+        lp.z=abs(lp.z)-0.5;
+        lp.x=abs(lp.x)-0.75;
+        lp.y=abs(lp.y)-0.75;
+        
+        lp.x=abs(lp.x)-0.65;
+        
+        lp.x = dot(lp,lp);
+        
+        float k = 1.4;
+        lp=mod(lp,k)-k*0.5;
+        
+        compm(mr,Triangle(lp,vec3(1.24),1.8), 0, true);
+       
+        {compm(mr,abs(p.y)-0.5,0,false);}
+        
+        vec4 sd = tetcol(lp,vec3(1),1.8,vec3(0.));
+        float d= sd.w;
+        vec3 col = 1.-0.1*sd.xyz-0.3;
+        col *= exp(-2.5*d)*2.;
+        mr.vCol += col;
+    }
+    
+    
+    /*{
+         vec3 lp = p;
+        // lp.yz*=rot(pi/2.0);
+        lp.xz=pmod(lp.xz,32.0);
+        lp.x-=2.1;
+        
+        lp=abs(lp)-0.5;
+        
+        lp.yz*=rot(0.5);
+        lp.xy*=rot(0.15);
+        lp.xz*=rot(0.5);
+        
+        lp.xy*=rot(pi/2.0);
+        
+        lp=abs(lp)-0.25;
         lp.z=abs(lp.z)-0.25;
         lp.x=abs(lp.x)-0.75;
         lp.y=abs(lp.y)-0.25;
         
-        /*float k0=2.0,k1=2.0;
-        lp.xz=mod(lp.xz,k0)-k0*0.5;
-        lp.y=mod(lp.y,k1)-k1*0.5;*/
-        
-        //lp.xy*=rot(-pi/2.0);
+        lp.x=abs(lp.x)-1.65;
         
         compm(mr,Triangle(lp,vec3(1.24),1.8), 0, true);
        
-
-    }
+        {compm(mr,abs(p.y)-0.5,0,false);}
+    }*/
     
-     {compm(mr,abs(p.y)-0.5,0,false);}
+    {
+        
+        vec3 lp = trs(p, vec3(1.5), vec3(0.0) , vec3(0.0));
+        compm(mr,Triangle(lp,vec3(1.24),1.8), 1, true);
+        
+        vec4 sd = tetcol(lp,vec3(1),1.8,vec3(0.));
+        float d= sd.w;
+        vec3 col = 1.-0.1*sd.xyz-0.3;
+        col *= exp(-2.5*d)*2.;
+        mr.vCol += col;
+    } 
+    
     
     
     return mr;
@@ -172,14 +229,17 @@ vec3 gn(vec3 p)
 // RayCast
 mapr Raycast(vec3 ro, vec3 rd)
 {
-    mapr mr;float i=0.0,t=0.0,acc=0.0;
-    for(;++i<64.0;){mr=map(ro+rd*( t+=mr.d*0.75 ));if(mr.d<dmin||t>tmax)break;acc+=exp(-1.0*mr.d);}
+    mapr mr;float i=0.0,t=0.0,acc=0.0,flash=0.0;mr.vCol=vec3(0.0);mr.flash=0.0;
+    for(;++i<64.0;){
+        mr=map(ro+rd*( t+=mr.d*0.75 ));if(mr.d<dmin||t>tmax)break;acc+=exp(-3.0*mr.d);
+        if(mod(distance(vec3(0.0),ro+rd*t)-_time*10.0,10.0)<1.0){flash+=exp(-3.0*mr.d);}
+    }
     
-    mr.i=i; mr.t=t;mr.acc=acc;
+    mr.i=i; mr.t=t;mr.acc=acc;mr.flash=flash;
  
     return mr;
 }
-
+ 
 float calcAo(in vec3 p,in vec3 n)
 {
     float k=1.0, occ=0.0;
@@ -213,7 +273,7 @@ else
     vec3 col = vec3(0.0),cdir=normalize(ta-ro),cside=normalize(cross(vec3(0.0,1.0,0.0),cdir)),
     cup=normalize(cross(cdir,cside)),rd=normalize(st.x*cside+st.y*cup+1.0*cdir);ln = 64.0;
     mapr mr = Raycast(ro,rd);
-    if(mr.hit)
+    //if(mr.hit)
     {
         if(mr.m == 0) // Debug
         {
@@ -223,9 +283,25 @@ else
             vec3 n = gn(p);
             float ao = calcAo(p, n);
             float diff = max(0.0, dot(ldir,n));
-            col = vec3(1.0) * ao *20.0/mr.i;
+            col = vec3(0.615, 0.8, 0.88) *10.0/mr.i * mr.acc*0.1 + mr.vCol * mr.acc*0.01;
+            col += vec3(1.0)*mr.flash * 0.015;
+            
+        }
+        else if(mr.m == 1)
+        {
+            //col = vec3(0.615, 0.8, 0.88)*20.0/mr.i;
+            
+            vec3 p = ro + rd * mr.t;
+            vec3 n = gn(p);
+            float ao = calcAo(p, n);
+            float diff = max(0.0, dot(ldir,n));
+            col = vec3(0.615, 0.8, 0.88) *10.0/mr.i + mr.vCol * mr.acc*0.05;
+            col += vec3(1.0)*mr.flash * 0.015;
         }
     }
+    
+     //vec3 fog = mix(vec3(0.96), vec3(0.24), -rd.y*0.5 + 0.5);
+     //col = mix(col, fog*sqrt(fog)*1.2, smoothstep(0.0, 0.95, mr.t/60.0));
     
     gl_FragColor = vec4(col,_Alpha);
 }
