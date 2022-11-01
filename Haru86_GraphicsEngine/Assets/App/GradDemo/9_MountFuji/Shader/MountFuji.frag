@@ -219,55 +219,6 @@ float mountain(vec3 p)
     return p.y-h;
 }
 
-vec3 l = vec3(1.0);
-
-vec2 CloudMap(vec3 p)
-{
-    // 1 ////////////////////////
-    /*float s=2.,e,f,o;
-    
-    for(e=f=p.y; s<8e2; s*=1.6)
-    {
-        p.xz*=rot(s);
-        e+=abs(dot(sin(p*s)/s, 0.4*l)),
-        f+=abs(dot(sin(p.xz*s*0.5)/s, l.xz));
-    }
-    
-    o = 1.0 + (f>0.001?e:0.0-exp(-f*f));
-    
-    return vec2(max(o,0.0), min(f,max(e, 0.07)));*/
-
-    // 2 //////////////////////////
-    /*float d = abs(p.y-900.0)-40.0;
-    
-    float f = fbm2(p*0.005+vec3(0.0,0.0,-_time),5).x;
-    f=smoothstep(-0.2,0.6,f);
-    
-    d+=f*75.0;
-    
-    return vec2(d,f);*/
-    
-    // 3 ////////////////////////////
-    float d = abs(p.y)-1.0;
-    
-    float f = fbm2(p*0.5+vec3(0.0,0.0,-_time),5).x;
-    f=smoothstep(-0.2,0.6,f);
-    
-    d+=f*10.0;
-    
-    return vec2(d,f);
-}
-
-// Lighting
-vec3 sky_color(vec3 e) {
-    e.y = max(e.y,0.0);
-    vec3 ret;
-    ret.x = pow(1.0-e.y,3.0);
-    ret.y = pow(1.0-e.y, 1.2);
-    ret.z = 0.8+(1.0-e.y)*0.3;    
-    return ret;
-}
-
 // Ray Function ///////////////////////////////////////////////////////////////
 mapr map(vec3 p)
 {
@@ -276,9 +227,7 @@ mapr map(vec3 p)
     mr.hit=false;
     mr.m=-1;
     
-    //{compm(mr,length(trs(p,vec3(1.0),vec3(0.0),vec3(0.0)))-0.5,0,true);}
     {compm(mr, mountain(p), 1, true);}
-    //{compm(mr, CloudMap(p).x, 0, true);}
     
     return mr;
 }
@@ -293,87 +242,56 @@ vec3 gn(vec3 p)
     ));
 }
 
+
+vec2 CloudMap(vec3 p,int num,inout vec3 denGra)
+{
+    float f = fbm2(p*0.5+vec3(0.0,0.0,-_time),num).x;
+    f=smoothstep(-0.2,0.6,f);
+    
+    float d = p.y - f*0.1;
+    
+    denGra = vec3(0.0, sign(p.y), 0.0);
+    
+    return vec2(d,f);
+}
+
+/*vec3 gn_cloud(vec3 p, float eps) {
+    vec3 n;
+    n.y = CloudMap(p, 7).x;    
+    n.x = CloudMap(vec3(p.x+eps,p.y,p.z), 7).x - n.y;
+    n.z = CloudMap(vec3(p.x,p.y,p.z+eps), 7).x - n.y;
+    n.y = eps;
+    return normalize(n);
+}*/
+
+// Lighting //////////////////////////
+vec3 sky_color(vec3 e) {
+    e.y = max(e.y,0.0);
+    vec3 ret;
+    ret.x = pow(1.0-e.y,3.0);
+    ret.y = pow(1.0-e.y, 1.2);
+    ret.z = 0.8+(1.0-e.y)*0.3;    
+    return ret;
+}
+
+// raytrace ///////////////////////////////////
 vec4 DrawCloud(vec3 ro,vec3 rd,in vec4 col)
 {
-    // 1 ///////////////////////////////////////
-    /*float t = 2.5;
-    float dt = 0.035,d=1000.0;;
-    vec4 col = vec4(vec3(0.0), 0.0);
-    
-    for(int i=0; i<100; i++)
-    {
-        vec2 v = CloudMap(ro+rd*t);
-        float c=v.x, f=v.y;
-        d = f;
-        t+=dt*f;
-        dt*=1.03;
-        col = 0.95*col+0.09*vec4(c*c, c*c, c*c, c*c);
-    }
-
-
-    if(d<0.52)
-    {
-        // shade
-        col.rgb = 0.5*(log(1.0+col.rgb));
-        col.rgb = clamp(col.rgb, 0.0, 1.0);
-    }
-    else 
-    {
-        col.rgb=vec3(0.0);
-        col.a=0.0;
-    }
-
-    g_CloudT = t;
-
-    return col;*/
-
-    // 2 /////////////////////////////////////////////
-    /*col.a=0.0;
-    float d=0.0,t=0.0,i=0.0,h=0.0;
-    
-    for(;++i<ln;i++)
-    {
-        vec2 re=CloudMap(ro+rd*t);
-        d=re.x;
-        h=re.y;
-        
-        //if(d<dmin)break;
-        if(t>5000.0)break;
-        
-        //if(d<dmin)
-        if(d>dmin)
-        {
-            // Local Color
-            vec4 lcol = vec4(vec3(mix(0.0,1.0,h)), h*1.2);
-            lcol.a*=0.4;
-            lcol.rgb*=lcol.a;
-
-            col+=lcol*(1.0-col.a);
-        }
-        
-        //t+=d;
-        t+=max(0.05,0.1*d);
-    }
-    
-    //col.rgb=1.0-col.rgb; 
-    //col = vec4(vec3(exp(-0.1*t)), 1.0);
-    
-    g_CloudT = t;
-    g_CloudP = ro+rd*t;*/
-    
-    // 3 /////////////////////////////////////
+    col.rgb*=0.1;
     col.a=0.0;
     float d=0.0,t=0.0,i=0.0,h=0.0;
     
     for(;++i<ln;i++)
     {
-        vec2 re=CloudMap(ro+rd*t);
+        vec3 p = ro+rd*t;
+        vec3 denGra;
+        vec2 re=CloudMap(p, 5, denGra);
         d=re.x;
         h=re.y;
         
         //if(d<dmin)break;
-        if(t>50.0)break;
-        /*if(t>5000.0)break;
+        //if(t>50.0)break;
+        //if(t>5000.0)break;
         
         //if(d<dmin)
         if(d>dmin)
@@ -383,23 +301,36 @@ vec4 DrawCloud(vec3 ro,vec3 rd,in vec4 col)
             lcol.a*=0.4;
             lcol.rgb*=lcol.a;
 
-            col+=lcol*(1.0-col.a);
+            //
+             vec3 nor = normalize(denGra);
+            float dif = clamp(dot(nor,ldir), 0.0, 1.0 )/**sha*/;
+            lcol.rgb*=dif;
+            //
+            col+=lcol*(1.0-col.a) * clamp(1.3 - p.y * 0.2, 0.0, 1.0);
+            
+           
         }
-        */
+        
         //t+=d;
         t+=max(0.05,0.1*d);
     }
     
-    //col.rgb=1.0-col.rgb; 
-    col = vec4(exp(-0.05 * vec3(t) ), 1.0);
+    col.rgb = mix(sky_color(rd), col.rgb+vec3(0.5), col.a); 
+    col.rgb = smoothstep(0.0, 1.0, col.rgb);
     
+    //col.rgb=mix(col.rgb, sky_color(rd), smoothstep(0.0, 1.0, t-50.0*0.75));
+    /*col = vec4(exp(-0.025 * vec3(t) ), 1.0);
     
     col.rgb=mix(col.rgb, sky_color(rd), smoothstep(0.0, 1.0, t-50.0*0.75));
-    if(t>50.0)
+    if(t<50.0*0.75)
     {
-        //col.rgb= sky_color(rd);
-        //col.rgb=mix(col.rgb, sky_color(rd), );
-    }
+        vec3 p = ro+rd*t;
+        vec3 dist = p - ro; 
+        vec3 n = gn_cloud(p, dot(dist, dist) * (1e-1 / _resolution.x));
+        //col.rgb *= (n*0.5+0.5);
+        float diff = max(0.0, dot(n,ldir));
+        //col.rgb += vec3(1.0) * diff*0.75;
+    }*/
     
     g_CloudT = t;
     g_CloudP = ro+rd*t;
@@ -471,8 +402,6 @@ else
     {
         // sky
         col.rgb=mix(col.rgb, sky_color(rd), step(dmin,mr.d));
-
-        
     }
     
     // cloud
@@ -481,7 +410,7 @@ else
     //col = mix(col,CloudCol,clamp(CloudCol.a, 0.0, 1.0));
     
     float DepthM = t;
-    float DepthC = g_CloudT;
+    float DepthC = g_CloudT*0.85;
     //col = (DepthM < DepthC || CloudCol.r<0.1)? col : CloudCol;
     float rate = clamp((DepthM-DepthC) , 0.0 , 1.0);
     col = mix(col , CloudCol, rate);
