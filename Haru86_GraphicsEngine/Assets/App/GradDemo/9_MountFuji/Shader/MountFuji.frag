@@ -1,8 +1,7 @@
 R"(
 
 // "Mountain Peak" by Alexander Alekseev aka TDM - 2014
-// License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
-// https://www.shadertoy.com/view/mdfGzn
+// License: https://www.shadertoy.com/view/llK3WR
 
 #version 330
 // ShaderToy --> OpenGL/GLSL Convert Preprocessor /////////////////////////////
@@ -195,6 +194,9 @@ vec3 octave(vec2 uv)
 
 float mountain(vec3 p)
 {
+    //p.xz*=0.75; // éRÇÃçLÇ™ÇËãÔçá
+    //p.y*=2.5; // éRÇÃçÇÇ≥
+
     float frq=0.24,amp=1.0,h=0.0;
     vec2 uv=p.xz*frq+vec2(13.5,15.0),dsum=vec2(0.0);
     
@@ -208,13 +210,12 @@ float mountain(vec3 p)
         amp*=pow(n.x,0.27);
     }
     
-    float k=10.0;
-    vec2 lp = mod(p.xz,k)-k*0.5;
-    //float lh =  10.0*smoothstep(12.0 , 10.0,abs(dot(p.xz,p.xz))/1000.0);
-    // êLÇŒÇµÇƒéRÇ…Ç∑ÇÈ
-    h*=20.0/(1.0+dot(p.xz,p.xz)*1e-2)+2.0/(1.0+dot(lp,lp)*1e-3);
+    h*=7.0/(1.0+dot(p.xz,p.xz)*1e-2)+2.0/(1.0+dot(p,p)*1e-3);
+    //h*=30.0/(1.0+dot(p.xz,p.xz)*1e-2)+2.0/(1.0+dot(p,p)*1e-3);
     // ÉJÉãÉfÉâÇçÏê¨
-    h=min(h,17.0);
+    //h=min(h,17.0);
+    h=min(h,8.5);
+    //h=min(h,35.0);
     
     return p.y-h;
 }
@@ -245,7 +246,7 @@ vec3 gn(vec3 p)
 
 vec2 CloudMap(vec3 p,int num,inout vec3 denGra)
 {
-    float f = fbm2(p*0.5+vec3(0.0,0.0,-_time),num).x;
+    float f = fbm2(p*0.5+vec3(0.0,0.0,-_time*0.5),num).x;
     f=smoothstep(-0.2,0.6,f);
     
     float d = p.y - f*0.1;
@@ -254,15 +255,6 @@ vec2 CloudMap(vec3 p,int num,inout vec3 denGra)
     
     return vec2(d,f);
 }
-
-/*vec3 gn_cloud(vec3 p, float eps) {
-    vec3 n;
-    n.y = CloudMap(p, 7).x;    
-    n.x = CloudMap(vec3(p.x+eps,p.y,p.z), 7).x - n.y;
-    n.z = CloudMap(vec3(p.x,p.y,p.z+eps), 7).x - n.y;
-    n.y = eps;
-    return normalize(n);
-}*/
 
 // Lighting //////////////////////////
 vec3 sky_color(vec3 e) {
@@ -305,7 +297,7 @@ vec4 DrawCloud(vec3 ro,vec3 rd,in vec4 col)
              vec3 nor = normalize(denGra);
             float dif = clamp(dot(nor,ldir), 0.0, 1.0 )/**sha*/;
             lcol.rgb*=dif;
-            //
+            // â_ÇÃçÇÇ≥í≤êÆ
             col+=lcol*(1.0-col.a) * clamp(1.3 - p.y * 0.2, 0.0, 1.0);
             
            
@@ -317,20 +309,6 @@ vec4 DrawCloud(vec3 ro,vec3 rd,in vec4 col)
     
     col.rgb = mix(sky_color(rd), col.rgb+vec3(0.5), col.a); 
     col.rgb = smoothstep(0.0, 1.0, col.rgb);
-    
-    //col.rgb=mix(col.rgb, sky_color(rd), smoothstep(0.0, 1.0, t-50.0*0.75));
-    /*col = vec4(exp(-0.025 * vec3(t) ), 1.0);
-    
-    col.rgb=mix(col.rgb, sky_color(rd), smoothstep(0.0, 1.0, t-50.0*0.75));
-    if(t<50.0*0.75)
-    {
-        vec3 p = ro+rd*t;
-        vec3 dist = p - ro; 
-        vec3 n = gn_cloud(p, dot(dist, dist) * (1e-1 / _resolution.x));
-        //col.rgb *= (n*0.5+0.5);
-        float diff = max(0.0, dot(n,ldir));
-        //col.rgb += vec3(1.0) * diff*0.75;
-    }*/
     
     g_CloudT = t;
     g_CloudP = ro+rd*t;
@@ -357,8 +335,9 @@ else
     vec3 ro=vec3(0.0,0.0,1.5),ta=vec3(0.0,0.0,0.0);
     
     //
-    //ro=vec3(30.5*cos(_time*0.1),5.5,30.5*sin(_time*0.1));
-    ro=vec3(30.5*cos(2.0*0.1),5.5,30.5*sin(2.0*0.1));
+    //ro=vec3(25.5*cos(_time*0.1),5.5,25.5*sin(_time*0.1));
+    float tStep = 45.5;
+    ro=vec3(27.5*cos(tStep*0.1),3.5,27.5*sin(tStep*0.1));
     
     //
     vec3 cdir=normalize(ta-ro),cside=normalize(cross(vec3(0.0,1.0,0.0),cdir)),
@@ -391,7 +370,7 @@ else
             
             col.rgb=ret*vec3(0.5,0.59,0.75)*0.6;
             col.rgb+=vec3(0.0,0.04,0.15)*hcval;
-            col.rgb+=vec3(1.0,1.0,0.98)*diff/*+vec3(1.0)*0.5/i*/;
+            col.rgb+=vec3(1.0,1.0,0.98)*diff * min(1.0, 0.111*exp2(p.y) );
            
             // fog
             vec3 ramda=exp2(-0.0025*t*vec3(1.0,2.0,4.0));
@@ -410,7 +389,7 @@ else
     //col = mix(col,CloudCol,clamp(CloudCol.a, 0.0, 1.0));
     
     float DepthM = t;
-    float DepthC = g_CloudT*0.85;
+    float DepthC = g_CloudT*0.55;
     //col = (DepthM < DepthC || CloudCol.r<0.1)? col : CloudCol;
     float rate = clamp((DepthM-DepthC) , 0.0 , 1.0);
     col = mix(col , CloudCol, rate);
