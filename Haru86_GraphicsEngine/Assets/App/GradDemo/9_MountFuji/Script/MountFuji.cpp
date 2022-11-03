@@ -18,7 +18,7 @@ namespace app {
 		);
 
 		m_MeshRenderer->useZTest = false;
-		m_MeshRenderer->useAlphaTest = true;
+		m_MeshRenderer->useAlphaTest = false;
 	}
 
 	void MountFuji::Update(float time)
