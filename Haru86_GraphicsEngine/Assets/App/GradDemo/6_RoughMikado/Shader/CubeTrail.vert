@@ -28,6 +28,8 @@ struct STrs
 	vec4 scl;
 	vec4 tan;
 	int	 index;
+	int	  now_index;
+
 };
 
 layout(std430, binding = 0) buffer in_trs_buffer

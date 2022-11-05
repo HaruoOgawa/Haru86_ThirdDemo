@@ -11,6 +11,19 @@ namespace roughmikado
 		m_BaseTrailCS(nullptr),
 		m_LineSegment(16),
 		m_CubeNum(1024),
+#ifdef _DEBUG
+		m_TrailDebug(std::make_shared<MeshRendererComponent>(
+			std::make_shared<TransformComponent>(),
+			PrimitiveType::POINT,
+			RenderingSurfaceType::RASTERIZER,
+			shaderlib::Standard_vert,
+			shaderlib::Standard_frag,
+			std::string(
+				#include "../Shader/TrailDebug.geom"
+			)
+		)),
+#endif // _DEBUG
+
 		m_BufferIndexTrailBase(0)
 	{
 		// •Ï”‚Ì‰Šú‰»
@@ -56,6 +69,10 @@ namespace roughmikado
 			m_TrailBaseBuffer->SetData<std::vector<STrs>>(InitData);
 			m_BaseTrailCS->SetBufferToCS(m_TrailBaseBuffer, m_BufferIndexTrailBase);
 			m_InstancedCube->m_material->SetBufferToMat(m_TrailBaseBuffer, m_BufferIndexTrailBase);
+
+#ifdef _DEBUG
+			m_TrailDebug->m_material->SetBufferToMat(m_TrailBaseBuffer, m_BufferIndexTrailBase);
+#endif // _DEBUG
 		}
 	}
 
@@ -78,6 +95,11 @@ namespace roughmikado
 
 	void CubeTrail::Draw()
 	{
-		m_InstancedCube->Draw([]() {}, GL_TRIANGLES, true, 16);
+		//m_InstancedCube->Draw([]() {}, GL_TRIANGLES, true, 16);
+
+#ifdef _DEBUG
+		m_TrailDebug->Draw([]() {},GL_POINTS, true, m_LineSegment);
+#endif // _DEBUG
+
 	}
 }

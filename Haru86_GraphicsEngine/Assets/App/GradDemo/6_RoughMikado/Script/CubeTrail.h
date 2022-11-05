@@ -14,9 +14,10 @@ namespace roughmikado
 		float scl[4];
 		float tan[4];
 		int	  index;
+		int	  now_index;
 		STrs(int i):
 			pos{0.0f,0.0f,0.0f,0.0f}, rot{ 0.0f,0.0f,0.0f,0.0f }, scl{ 0.0f,0.0f,0.0f,0.0f }, tan{ 0.0f,0.0f,0.0f,0.0f },
-			index(i)
+			index(i), now_index(0)
 		{
 		}
 	};
@@ -27,6 +28,10 @@ namespace roughmikado
 		
 		std::shared_ptr<ComputeBuffer> m_TrailBaseBuffer;
 		std::shared_ptr<Material> m_BaseTrailCS;
+
+#ifdef _DEBUG
+		std::shared_ptr<MeshRendererComponent> m_TrailDebug;
+#endif // _DEBUG
 
 		int m_LineSegment;
 		int m_CubeNum;
