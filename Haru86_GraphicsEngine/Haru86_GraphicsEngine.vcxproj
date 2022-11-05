@@ -437,6 +437,7 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <ClInclude Include="Assets\App\GradDemo\3_MoonTravel\Script\MoonTravel.h" />
     <ClInclude Include="Assets\App\GradDemo\9_MountFuji\Script\MountFuji.h" />
     <ClInclude Include="Assets\App\GradDemo\SharedShader.h" />
+    <ClInclude Include="RoughMikado.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Assets\App\GradDemo\GradDemo.cpp" />
@@ -464,6 +465,7 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <ClCompile Include="Assets\App\GradDemo\1_LeaveEarth\Script\LeaveEarth.cpp" />
     <ClCompile Include="Assets\App\GradDemo\3_MoonTravel\Script\MoonTravel.cpp" />
     <ClCompile Include="Assets\App\GradDemo\9_MountFuji\Script\MountFuji.cpp" />
+    <ClCompile Include="RoughMikado.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\App\GradDemo\2_EarthAndMoon\Shader\EarthAndMoon.frag" />
