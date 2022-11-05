@@ -38,7 +38,7 @@ namespace app
     {
 #ifdef _DEBUG
         // 時間のオフセット
-        GraphicsMain::GetInstance()->m_SecondsTimeOffset = 194.0f;// シーンを飛ばすためのオフセット
+        GraphicsMain::GetInstance()->m_SecondsTimeOffset = 149.0f;// シーンを飛ばすためのオフセット
 
         // 音楽のミュート
         //GraphicsMain::GetInstance()->m_SoundPlayer->Mute(true);
@@ -54,7 +54,7 @@ namespace app
         m_MoonTravel = std::make_shared<app::MoonTravel>();
         m_CyberpunkSpaceRay = std::make_shared<app::CyberpunkSpaceRay>();
         m_ChangeOfMind = std::make_shared<app::ChangeOfMind>();
-        m_RoughMikado = std::make_shared<app::RoughMikado>();
+        m_RoughMikado = std::make_shared<roughmikado::RoughMikado>();
         m_FindKaguya = std::make_shared<app::FindKaguya>();
         m_MountFuji = std::make_shared<app::MountFuji>();
     }
@@ -147,7 +147,7 @@ namespace app
 
 #ifdef _DEBUG
 
-        Console::Log("m_LocalTime: %f\n", m_LocalTime);
+        //Console::Log("m_LocalTime: %f\n", m_LocalTime);
 #endif // _DEBUG
 
         m_MoonSea->UpdateTimeLine(m_LocalTime);

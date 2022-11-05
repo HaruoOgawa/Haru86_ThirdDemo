@@ -4,6 +4,8 @@
 #include "../Graphics/Primitive.h"
 #include "GraphicsEngine/Graphics/Texture.h"
 #include <functional>
+#include "GraphicsEngine/Component/TransformComponent.h"
+#include "GraphicsEngine/Graphics/ShaderLib.h"
 
 class GameObject;
 class Mesh;

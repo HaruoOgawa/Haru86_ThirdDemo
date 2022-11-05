@@ -1,0 +1,51 @@
+R"(
+
+#version 430
+
+// KernelIndex
+// 0 -> kernel CaAroundTrail
+uniform int _KernelIndex;
+
+#define NUMTHREAD 16
+
+// BufferIndex
+// 0 -> m_BufferIndexTrailBase(in_trs_buffer)
+struct STrs
+{
+	vec4 pos;
+	vec4 rot;
+	vec4 scl;
+	vec4 tan;
+	int	 index;
+};
+layout(std430, binding = 0) buffer in_trs_buffer
+{
+	STrs trs[];
+} out_trs_buffer;
+
+layout(local_size_x=NUMTHREAD, local_size_y=1, local_size_z=1) in;
+
+float rand(vec2 st){
+    return fract(
+        sin(dot(st.xy,vec2(12.9898,78.233)))*43758.5453123
+    );
+}
+
+void main()
+{
+	uvec3 DID = gl_GlobalInvocationID;
+
+	if(_KernelIndex == 0)
+	{
+		float id = float(DID.x);
+		vec4 randPos = vec4(
+			rand(vec2(id, 0.974)) * 2.0 - 1.0,
+			rand(vec2(id, 11.111)) * 2.0 - 1.0,
+			rand(vec2(id, 92.23535)) * 2.0 - 1.0,
+		1.0);
+
+		out_trs_buffer.trs[int(DID.x)].pos = randPos;
+	}
+}
+
+)"

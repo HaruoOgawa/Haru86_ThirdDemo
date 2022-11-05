@@ -3,12 +3,14 @@
 
 class MeshRendererComponent;
 
-namespace app
+namespace roughmikado
 {
+	class CubeTrail;
+
 	class RoughMikado
 	{
 		std::shared_ptr<MeshRendererComponent> m_TrailAura;
-		std::shared_ptr<MeshRendererComponent> m_TrailCube;
+		std::shared_ptr<CubeTrail> m_TrailCube;
 	public:
 		RoughMikado();
 		~RoughMikado() = default;
