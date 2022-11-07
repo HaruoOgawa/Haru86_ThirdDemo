@@ -44,11 +44,16 @@ void CalTrailSegment(uvec3 DID)
 	
 	if(my_segment == int(group.param.x) && int(group.param.z) == 1)
 	{
+		float offsetA = rand(vec2(100.9123, 7.71562) * float(trs.param.x)) * 2.0 * 3.1415;
+		float offsetB = rand(vec2(6.601,80.123) * float(trs.param.x)) * 2.0 * 3.1415;
+		//float r = 2.0;
+		float r = 10.0;
+
 		// ˆÚ“®‚Ì—”‚ÍgroupŠe‚És‚¤
 		trs.pos = vec4(
-			cos(_time),
-			sin(_time),
-			0.0,
+			r*cos(_time+offsetA)*cos(_time+offsetB),
+			r*cos(_time+offsetA)*sin(_time+offsetB),
+			r*sin(_time+offsetA),
 			1.0
 		);
 	}

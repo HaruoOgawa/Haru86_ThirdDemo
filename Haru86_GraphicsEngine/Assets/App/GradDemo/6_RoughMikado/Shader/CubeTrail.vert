@@ -36,26 +36,77 @@ layout(std430, binding = SegmentBufferBinding) buffer in_trs_buffer
 	STrs trs[];
 } out_trs_buffer;
 
+#define rot(a) mat2(cos(a),sin(a),-sin(a),cos(a))
+#define pi 3.14159265
+
 float rand(vec2 st){
     return fract(
         sin(dot(st.xy,vec2(12.9898,78.233)))*43758.5453123
     );
 }
 
+vec3 RandRotate(vec3 p,float id, inout vec3 normal)
+{
+	vec3 pos = p;
+	vec3 randRot = vec3(
+		(rand(vec2(6.3666, 1.010) * id) * 2.0 - 1.0) * pi,
+		(rand(vec2(888.88, 4.55) * id) * 2.0 - 1.0) * pi,
+		(rand(vec2(0.0025 , 97.52) * id) * 2.0 - 1.0) * pi
+	);
+
+	pos.yz*=rot(randRot.x);
+	pos.xz*=rot(randRot.y);
+	pos.xy*=rot(randRot.z);
+	
+	normal.yz*=rot(randRot.x);
+	normal.xz*=rot(randRot.y);
+	normal.xy*=rot(randRot.z);
+
+	return pos;
+}
+
 void main()
 {
 	vec4 pos=vec4(vertex,1.0);
+	vec3 oNormal = normal;
 
 	//
-	int id=gl_InstanceID;
-	int randID = int(floor(rand(vec2(3.53535, id))*16.0));
-	vec4 randPos = out_trs_buffer.trs[randID].pos;
+	float id=float(gl_InstanceID);
+	int NumOfPoints = _TrailNum * _LineSegment;
+	vec4 pos0,pos1;
+
+	int randIDA = int(floor(rand(vec2(3.53535, id)) * float(NumOfPoints - 1)));
+	STrs trs = out_trs_buffer.trs[randIDA];
+	int group = trs.param.x;
+	int	 my_segment = trs.param.y;
+	int	 now_segment = trs.param.z;
+	pos0 = trs.pos;
+	
+	int randIDB = (my_segment == now_segment)? randIDA : group * _LineSegment + int(mod(float(my_segment) + 1.0, float(_LineSegment)));
+	pos1 = out_trs_buffer.trs[randIDB].pos;
+
+	//
+	float PosMixVal = rand(vec2(35.3535,1.1111) * id);
+	vec4 randPos = vec4(mix(pos0.xyz, pos1.xyz, PosMixVal) ,1.0);
+
+	if(length(pos1.xyz - pos0.xyz) != 0.0)
+	{
+		vec3 tangent = normalize(pos1.xyz - pos0.xyz);
+		float randSign = sign( rand(vec2(6.666,9.999)*id)*2.0-1.0 );
+		float rOffVal = 2.5 * rand(vec2(4.545,1.91919) * id); 
+		vec3 randDir = normalize(cross(vec3(0.0, 1.0, 0.0), tangent)) * randSign * rOffVal;
+		randPos.xyz += randDir;
+	}
+	
+	//
+	pos.xyz *= 0.5;
+	pos.xyz = RandRotate(pos.xyz, id, oNormal); 
 	pos.xyz += randPos.xyz;
 
 	gl_Position=MVPMatrix*pos;
 	out_uv=vec2(0.0);
 	out_WorldVertexPos=MMatrix * pos;
-	out_WorldNormal=MMatrix * vec4(normalize(normal), 0.0);
+	out_WorldNormal=MMatrix * vec4(normalize(oNormal), 0.0);
 }
 
 )"

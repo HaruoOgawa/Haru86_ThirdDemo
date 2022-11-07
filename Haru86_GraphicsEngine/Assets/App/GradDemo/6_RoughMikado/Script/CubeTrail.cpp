@@ -7,7 +7,7 @@ namespace app
 	CubeTrail::CubeTrail():
 		m_InstancedCube(nullptr),
 		m_TrailRenderer(nullptr),
-		m_CubeNum(1024)
+		m_CubeNum(2048)
 	{
 		m_TrailRenderer = std::make_shared<TrailRenderer>(
 			std::string(
@@ -35,7 +35,11 @@ namespace app
 
 	void CubeTrail::Draw()
 	{
-		m_TrailRenderer->Draw();
-		//m_InstancedCube->Draw([]() {}, GL_TRIANGLES, true, m_CubeNum);
+		//m_TrailRenderer->Draw();
+		
+		m_InstancedCube->Draw([&]() {
+			m_InstancedCube->m_material->SetIntUniform("_TrailNum", 16);
+			m_InstancedCube->m_material->SetIntUniform("_LineSegment", 16);
+		}, GL_TRIANGLES, true, m_CubeNum);
 	}
 }
