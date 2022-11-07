@@ -48,12 +48,9 @@ void main()
 	int group = trs.param.x;
 	int	 my_segment = trs.param.y;
 	int	 now_segment = trs.param.z;
-
 	pos0 = trs.pos;
 
-	int now_LastSegment = (now_segment - 1 < 0)? (_LineSegment - 1) : (now_segment - 1);
-
-	if(my_segment == now_LastSegment) // last check
+	if(my_segment == now_segment) // last check
 	{
 		pos1 = out_trs_buffer.trs[id].pos;
 	}
@@ -63,33 +60,6 @@ void main()
 		pos1 = out_trs_buffer.trs[nextID].pos;
 	}
 	
-	//pos1 = vec4(vec3(0.0), 1.0);
-
-	//////////////////////////////////////////////////////////////////////
-	/*if(trs.my_segment == trs.now_segment)
-	{
-		pos1 = out_trs_buffer.trs[id].pos;
-	}
-	else if(trs.now_segment == _LineSegment - 1)
-	{
-		pos1 = out_trs_buffer.trs[id + 1].pos;
-	}
-	else
-	{
-		int nextID = trs.group * _LineSegment + int(mod(float(trs.my_segment) + 1.0, float(_LineSegment)));
-		pos1 = out_trs_buffer.trs[nextID].pos;
-	}*/
-
-	/*if(id != (16 -1))
-	{
-		pos1 = out_trs_buffer.trs[id + 1].pos;
-	}
-	else
-	{
-		pos1 = out_trs_buffer.trs[id].pos;
-	}*/
-	///////////////////////////////////////////////////////////////
-
 	gl_Position = MVPMatrix * pos0;
 	out_uv = in_uv[0];
 	out_WorldVertexPos = MMatrix * pos0;
