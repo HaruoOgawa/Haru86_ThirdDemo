@@ -23,6 +23,8 @@ uniform mat4 PMatrix;
 uniform float _time;
 uniform float _deltaTime;
 uniform vec3 _CameraPos;
+uniform int _TrailNum;
+uniform int _LineSegment;
 
 struct STrs
 {
@@ -30,30 +32,63 @@ struct STrs
 	vec4 rot;
 	vec4 scl;
 	vec4 tan;
-	int	 index;
-	int	  now_index;
-
+	ivec4 param; // ivec4(group, my_segment, now_segment, 0)
 };
 
-layout(std430, binding = 0) buffer in_trs_buffer
+layout(std430, binding = 1) buffer in_trs_buffer
 {
 	STrs trs[];
 } out_trs_buffer;
 
 void main()
 {
-	
 	vec4 pos0,pos1;
 	int id = in_gl_InstanceID[0];
-	pos0 = out_trs_buffer.trs[id].pos;
-	if(id != (16 -1))
+	STrs trs = out_trs_buffer.trs[id];
+	int group = trs.param.x;
+	int	 my_segment = trs.param.y;
+	int	 now_segment = trs.param.z;
+
+	pos0 = trs.pos;
+
+	int now_LastSegment = (now_segment - 1 < 0)? (_LineSegment - 1) : (now_segment - 1);
+
+	if(my_segment == now_LastSegment) // last check
+	{
+		pos1 = out_trs_buffer.trs[id].pos;
+	}
+	else
+	{
+		int nextID = group * _LineSegment + int(mod(float(my_segment) + 1.0, float(_LineSegment)));
+		pos1 = out_trs_buffer.trs[nextID].pos;
+	}
+	
+	//pos1 = vec4(vec3(0.0), 1.0);
+
+	//////////////////////////////////////////////////////////////////////
+	/*if(trs.my_segment == trs.now_segment)
+	{
+		pos1 = out_trs_buffer.trs[id].pos;
+	}
+	else if(trs.now_segment == _LineSegment - 1)
+	{
+		pos1 = out_trs_buffer.trs[id + 1].pos;
+	}
+	else
+	{
+		int nextID = trs.group * _LineSegment + int(mod(float(trs.my_segment) + 1.0, float(_LineSegment)));
+		pos1 = out_trs_buffer.trs[nextID].pos;
+	}*/
+
+	/*if(id != (16 -1))
 	{
 		pos1 = out_trs_buffer.trs[id + 1].pos;
 	}
 	else
 	{
 		pos1 = out_trs_buffer.trs[id].pos;
-	}
+	}*/
+	///////////////////////////////////////////////////////////////
 
 	gl_Position = MVPMatrix * pos0;
 	out_uv = in_uv[0];

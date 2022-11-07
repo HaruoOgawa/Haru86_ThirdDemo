@@ -480,8 +480,9 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <None Include="Assets\App\GradDemo\5_ChangeOfMind\Shader\NegativeSphereCore.vert" />
     <None Include="Assets\App\GradDemo\5_ChangeOfMind\Shader\Triangle.frag" />
     <None Include="Assets\App\GradDemo\6_RoughMikado\Shader\TrailDebug.geom" />
-    <None Include="Assets\App\GradDemo\6_RoughMikado\Shader\CubeTrail.comp" />
+    <None Include="Assets\App\GradDemo\6_RoughMikado\Shader\TrailSegment.comp" />
     <None Include="Assets\App\GradDemo\6_RoughMikado\Shader\CubeTrail.vert" />
+    <None Include="Assets\App\GradDemo\6_RoughMikado\Shader\TrailGroup.comp" />
     <None Include="Assets\App\GradDemo\9_MountFuji\Shader\MountFuji.frag" />
     <None Include="Assets\App\GradDemo\CommonShader\Voxel.frag" />
     <None Include="bin\libfreetype-6.dll" />

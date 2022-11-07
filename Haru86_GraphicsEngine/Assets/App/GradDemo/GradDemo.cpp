@@ -145,6 +145,8 @@ namespace app
             m_SceneIndex = 9;
         }
 
+        m_SceneIndex = 6; // Debug
+
 #ifdef _DEBUG
 
         //Console::Log("m_LocalTime: %f\n", m_LocalTime);

@@ -1,0 +1,63 @@
+R"(
+
+#version 430
+
+uniform float _time;
+uniform float _deltaTime;
+uniform int _TrailNum;
+uniform int _LineSegment;
+
+// ««« _LineSegment‚ð’¼Ú“n‚¹‚È‚¢‚©‚È‚Ÿ
+#define NUMTHREAD 16
+
+// BufferIndex
+// 0 -> m_BufferIndexTrailGroup(in_group_buffer)
+struct SGroup
+{
+	vec4 param; // vec4(now_segment, life, IsPermitUpdate, 0.0)
+};
+
+layout(std430, binding = 0) buffer in_group_buffer
+{
+	SGroup group[];
+} out_group_buffer;
+
+layout(local_size_x=NUMTHREAD, local_size_y=1, local_size_z=1) in;
+
+float rand(vec2 st){
+    return fract(
+        sin(dot(st.xy,vec2(12.9898,78.233)))*43758.5453123
+    );
+}
+
+// kernel 0
+void CalTrailGroup(uvec3 DID)
+{
+	int id = int(DID.x);
+	SGroup group = out_group_buffer.group[id];
+	group.param.y -= _deltaTime;
+
+	if(group.param.y <= 0.0)
+	{
+		int now_segment = int(group.param.x);
+		group.param.x  = float((now_segment  < _LineSegment - 1)? now_segment + 1 : 0);
+		group.param.y = 0.1;
+		group.param.z = 1.0;
+	}
+	else
+	{
+		group.param.z = 0.0;
+	}
+
+	//group.param.w = floor(_time);
+
+	out_group_buffer.group[id] = group;
+}
+
+void main()
+{
+	uvec3 DID = gl_GlobalInvocationID;
+	CalTrailGroup(DID);
+}
+
+)"

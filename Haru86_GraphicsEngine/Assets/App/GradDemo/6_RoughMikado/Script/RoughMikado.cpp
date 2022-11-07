@@ -18,6 +18,8 @@ namespace roughmikado
 	void RoughMikado::Update(float time)
 	{
 		GraphicsRenderer::GetInstance()->SetBackgroudColor(glm::vec4(1.0f));
+
+		m_TrailCube->Update(time);
 	}
 
 	void RoughMikado::Draw(bool IsRaymarching)

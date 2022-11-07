@@ -12,6 +12,9 @@ uniform float _deltaTime;
 uniform vec3 _CameraPos;
 uniform int _IsMulMatOnVert;
 
+uniform int _TrailNum;
+uniform int _LineSegment;
+
 layout(location=0)in vec3 vertex;
 layout(location=1)in vec3 normal;
 layout(location=2)in vec2 texcoord;
@@ -27,12 +30,10 @@ struct STrs
 	vec4 rot;
 	vec4 scl;
 	vec4 tan;
-	int	 index;
-	int	  now_index;
-
+	ivec4 param; // ivec4(group, my_segment, now_segment, 0)
 };
 
-layout(std430, binding = 0) buffer in_trs_buffer
+layout(std430, binding = 1) buffer in_trs_buffer
 {
 	STrs trs[];
 } out_trs_buffer;

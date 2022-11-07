@@ -1,0 +1,79 @@
+R"(
+
+#version 430
+
+uniform float _time;
+uniform float _deltaTime;
+uniform int _TrailNum;
+uniform int _LineSegment;
+
+// ««« _LineSegment‚ğ’¼Ú“n‚¹‚È‚¢‚©‚È‚Ÿ
+#define NUMTHREAD 16
+
+// 1 -> m_BufferIndexTrailBase(in_trs_buffer)
+struct STrs
+{
+	vec4 pos;
+	vec4 rot;
+	vec4 scl;
+	vec4 tan;
+	ivec4 param; // ivec4(group, my_segment, now_segment, 0)
+};
+
+layout(std430, binding = 1) buffer in_trs_buffer
+{
+	STrs trs[];
+} out_trs_buffer;
+
+// 0 -> m_BufferIndexTrailGroup(in_group_buffer)
+struct SGroup
+{
+	vec4 param; // vec4(now_segment, life, IsPermitUpdate, 0.0)
+};
+
+layout(std430, binding = 0) buffer in_group_buffer
+{
+	SGroup group[];
+} out_group_buffer;
+
+//
+layout(local_size_x=NUMTHREAD, local_size_y=1, local_size_z=1) in;
+
+float rand(vec2 st){
+    return fract(
+        sin(dot(st.xy,vec2(12.9898,78.233)))*43758.5453123
+    );
+}
+
+void CalTrailSegment(uvec3 DID)
+{
+	int id = int(DID.x);
+	STrs trs = out_trs_buffer.trs[id];
+	SGroup group = out_group_buffer.group[trs.param.x];
+
+	int my_segment = trs.param.y; 
+	
+	if(my_segment == int(group.param.x) && int(group.param.z) == 1)
+	{
+		// ˆÚ“®‚Ì—”‚ÍgroupŠe‚És‚¤
+		trs.pos = vec4(
+			cos(_time),
+			sin(_time),
+			0.0,
+			1.0
+		);
+	}
+
+	trs.param.z = int(group.param.x);
+	//trs.param.w = int(floor(_time));
+
+	out_trs_buffer.trs[id] = trs;
+}
+
+void main()
+{
+	uvec3 DID = gl_GlobalInvocationID;
+	CalTrailSegment(DID);
+}
+
+)"

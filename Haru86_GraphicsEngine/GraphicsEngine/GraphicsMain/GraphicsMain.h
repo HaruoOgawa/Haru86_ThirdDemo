@@ -54,8 +54,13 @@ public:
 	bool isRunning;
 	float previousTime;
 	std::shared_ptr<MeshRendererComponent> m_MainBoardRenderer;
-	
+
 	bool mouseStateBool;
+
+#ifdef _DEBUG
+	bool m_ShowDebugLog;
+#endif // _DEBUG
+
 
 	// ƒ‰ƒCƒg
 	std::shared_ptr<TransformComponent> m_GroabalLightPosition;
