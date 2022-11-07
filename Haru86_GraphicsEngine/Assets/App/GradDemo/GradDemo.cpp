@@ -49,14 +49,14 @@ namespace app
             if (m_DebugTimeLock)m_LocalTime = GraphicsMain::GetInstance()->m_SecondsTimeOffset;
         }*/
 #endif
-        m_MoonSea = std::make_shared<app::MoonSea>();
-        m_EarthAndMoon = std::make_shared<app::EarthAndMoon>();
-        m_MoonTravel = std::make_shared<app::MoonTravel>();
-        m_CyberpunkSpaceRay = std::make_shared<app::CyberpunkSpaceRay>();
-        m_ChangeOfMind = std::make_shared<app::ChangeOfMind>();
-        m_RoughMikado = std::make_shared<roughmikado::RoughMikado>();
-        m_FindKaguya = std::make_shared<app::FindKaguya>();
-        m_MountFuji = std::make_shared<app::MountFuji>();
+        m_MoonSea = std::make_shared<MoonSea>();
+        m_EarthAndMoon = std::make_shared<EarthAndMoon>();
+        m_MoonTravel = std::make_shared<MoonTravel>();
+        m_CyberpunkSpaceRay = std::make_shared<CyberpunkSpaceRay>();
+        m_ChangeOfMind = std::make_shared<ChangeOfMind>();
+        m_RoughMikado = std::make_shared<RoughMikado>();
+        m_FindKaguya = std::make_shared<FindKaguya>();
+        m_MountFuji = std::make_shared<MountFuji>();
     }
 
     void GradDemo::Load()

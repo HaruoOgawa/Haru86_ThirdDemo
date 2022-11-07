@@ -3,7 +3,7 @@
 
 class MeshRendererComponent;
 
-namespace roughmikado
+namespace app
 {
 	class CubeTrail;
 

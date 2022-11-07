@@ -1,6 +1,4 @@
 R"(
-
-#version 430
 #extension GL_ARB_separate_shader_objects : enable
 
 layout(points) in;
@@ -35,7 +33,7 @@ struct STrs
 	ivec4 param; // ivec4(group, my_segment, now_segment, 0)
 };
 
-layout(std430, binding = 1) buffer in_trs_buffer
+layout(std430, binding = SegmentBufferBinding) buffer in_trs_buffer
 {
 	STrs trs[];
 } out_trs_buffer;

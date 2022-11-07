@@ -2,9 +2,7 @@
 #include <memory>
 
 class MeshRendererComponent;
-
 namespace text {class TextObject;}
-namespace roughmikado { class RoughMikado;}
 
 namespace app
 {
@@ -13,7 +11,7 @@ namespace app
     class MoonTravel;
     class CyberpunkSpaceRay;
     class ChangeOfMind;
-   
+    class RoughMikado;
     class FindKaguya;
     class MountFuji;
 
@@ -24,11 +22,10 @@ namespace app
         std::shared_ptr<MoonTravel> m_MoonTravel;
         std::shared_ptr<CyberpunkSpaceRay> m_CyberpunkSpaceRay;
         std::shared_ptr<ChangeOfMind> m_ChangeOfMind;
-        std::shared_ptr<roughmikado::RoughMikado> m_RoughMikado;
+        std::shared_ptr<RoughMikado> m_RoughMikado;
         std::shared_ptr<FindKaguya> m_FindKaguya;
         std::shared_ptr<MountFuji> m_MountFuji;
 
-        //
         unsigned int m_SceneIndex;
         float        m_LocalTime;
     public:

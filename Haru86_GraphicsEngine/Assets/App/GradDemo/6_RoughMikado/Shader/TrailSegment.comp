@@ -1,16 +1,9 @@
 R"(
-
-#version 430
-
 uniform float _time;
 uniform float _deltaTime;
 uniform int _TrailNum;
 uniform int _LineSegment;
 
-// ««« _LineSegment‚ð’¼Ú“n‚¹‚È‚¢‚©‚È‚Ÿ
-#define NUMTHREAD 16
-
-// 1 -> m_BufferIndexTrailBase(in_trs_buffer)
 struct STrs
 {
 	vec4 pos;
@@ -20,24 +13,20 @@ struct STrs
 	ivec4 param; // ivec4(group, my_segment, now_segment, 0)
 };
 
-layout(std430, binding = 1) buffer in_trs_buffer
+layout(std430, binding = SegmentBufferBinding) buffer in_trs_buffer
 {
 	STrs trs[];
 } out_trs_buffer;
 
-// 0 -> m_BufferIndexTrailGroup(in_group_buffer)
 struct SGroup
 {
 	vec4 param; // vec4(now_segment, life, IsPermitUpdate, 0.0)
 };
 
-layout(std430, binding = 0) buffer in_group_buffer
+layout(std430, binding = GroupBufferBinding) buffer in_group_buffer
 {
 	SGroup group[];
 } out_group_buffer;
-
-//
-layout(local_size_x=NUMTHREAD, local_size_y=1, local_size_z=1) in;
 
 float rand(vec2 st){
     return fract(
@@ -69,6 +58,8 @@ void CalTrailSegment(uvec3 DID)
 
 	out_trs_buffer.trs[id] = trs;
 }
+
+layout(local_size_x=NUMTHREAD, local_size_y=1, local_size_z=1) in;
 
 void main()
 {

@@ -6,7 +6,7 @@
 #include "../../SharedShader.h"
 #include "CubeTrail.h"
 
-namespace roughmikado
+namespace app
 {
 	RoughMikado::RoughMikado():
 		m_TrailAura(nullptr),
