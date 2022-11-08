@@ -8,6 +8,9 @@ layout(location=1) in vec4 in_WorldVertexPos;
 layout(location=2) in vec4 in_WorldNormal;
 layout(location=3) flat in int  in_gl_InstanceID;
 
+uniform int _UseColor;
+uniform vec3 _Color;
+
 out vec4 out_Color;
 
 ////////////////////////
@@ -53,6 +56,7 @@ void main(){
     
     vec2 st = uv *2.0 -1.0;
     col *= smoothstep(0.0, 1.0, exp(-(4.5 + 6.0*(n*2.0-1.0)) * length(st)) );
+    if(_UseColor == 1) col.rgb *= _Color;
     col.a = (col.a >= 0.01)? min(1.0, col.a*10.0) : col.a;
     //col = vec4(vec3(0.0), 1.0);
 

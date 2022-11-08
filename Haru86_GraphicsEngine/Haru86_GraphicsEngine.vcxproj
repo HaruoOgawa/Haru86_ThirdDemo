@@ -412,6 +412,7 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <ClInclude Include="Assets\App\GradDemo\8_FindKaguya\Script\FindKaguya.h" />
     <ClInclude Include="Assets\App\GradDemo\6_RoughMikado\Script\CubeTrail.h" />
     <ClInclude Include="Assets\App\GradDemo\6_RoughMikado\Script\AuraTrail.h" />
+    <ClInclude Include="Assets\App\GradDemo\6_RoughMikado\Script\AuraCore.h" />
     <ClInclude Include="GraphicsEngine\Graphics\EGraphicsParam.h" />
     <ClInclude Include="GraphicsEngine\Graphics\ShaderLib.h" />
     <ClInclude Include="GraphicsEngine\Message\Console.h" />
@@ -450,6 +451,7 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <ClCompile Include="Assets\App\GradDemo\8_FindKaguya\Script\FindKaguya.cpp" />
     <ClCompile Include="Assets\App\GradDemo\6_RoughMikado\Script\CubeTrail.cpp" />
     <ClCompile Include="Assets\App\GradDemo\6_RoughMikado\Script\AuraTrail.cpp" />
+    <ClCompile Include="Assets\App\GradDemo\6_RoughMikado\Script\AuraCore.cpp" />
     <ClCompile Include="GraphicsEngine\Graphics\ComputeBuffer.cpp" />
     <ClCompile Include="GraphicsEngine\GraphicsMain\GraphicsMain.cpp" />
     <ClCompile Include="GraphicsEngine\Graphics\GraphicsRenderer.cpp" />

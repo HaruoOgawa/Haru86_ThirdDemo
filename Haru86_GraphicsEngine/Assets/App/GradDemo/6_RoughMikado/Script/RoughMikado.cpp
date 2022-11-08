@@ -6,16 +6,19 @@
 #include "../../SharedShader.h"
 #include "CubeTrail.h"
 #include "AuraTrail.h"
+#include "AuraCore.h"
 
 namespace app
 {
 	RoughMikado::RoughMikado():
 		m_TrailCube(nullptr),
 		m_AuraTrail(nullptr),
+		m_AuraCore(nullptr),
 		m_AuraBackRenderer(nullptr)
 	{
 		m_TrailCube = std::make_shared<CubeTrail>();
 		m_AuraTrail = std::make_shared<AuraTrail>();
+		m_AuraCore = std::make_shared<AuraCore>();
 		m_AuraBackRenderer = std::make_shared<MeshRendererComponent>(
 			std::make_shared<TransformComponent>(),
 			PrimitiveType::BOARD,
@@ -43,8 +46,9 @@ namespace app
 		}
 		else
 		{
-			//m_TrailCube->Draw();
+			m_TrailCube->Draw();
 			m_AuraTrail->Draw();
+			m_AuraCore->Draw();
 		}
 	}
 
