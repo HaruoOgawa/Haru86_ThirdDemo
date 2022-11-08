@@ -9,7 +9,7 @@ namespace app
 		m_TrailRenderer(nullptr),
 		m_CubeNum(2048)
 	{
-		m_TrailRenderer = std::make_shared<TrailRenderer>(0, 0, 1, 16, 16, 16);
+		m_TrailRenderer = std::make_shared<TrailRenderer>(0, 0, 1, 4, 32, 4);
 		m_InstancedCube = std::make_shared<MeshRendererComponent>(
 			std::make_shared<TransformComponent>(),
 			PrimitiveType::CUBE,
@@ -33,8 +33,8 @@ namespace app
 		//m_TrailRenderer->Draw();
 		
 		m_InstancedCube->Draw([&]() {
-			m_InstancedCube->m_material->SetIntUniform("_TrailNum", 16);
-			m_InstancedCube->m_material->SetIntUniform("_LineSegment", 16);
+			m_InstancedCube->m_material->SetIntUniform("_TrailNum", m_TrailRenderer->GetTrailNum());
+			m_InstancedCube->m_material->SetIntUniform("_LineSegment", m_TrailRenderer->GetLineSegment());
 			m_InstancedCube->m_material->SetFloatUniform("_Scale", 0.5f);
 			m_InstancedCube->m_material->SetFloatUniform("_rOffRange", 2.5f);
 		}, GL_TRIANGLES, true, m_CubeNum);

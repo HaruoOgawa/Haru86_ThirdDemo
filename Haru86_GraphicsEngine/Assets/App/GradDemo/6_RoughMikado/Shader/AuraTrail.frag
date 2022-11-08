@@ -56,9 +56,13 @@ void main(){
     
     vec2 st = uv *2.0 -1.0;
     col *= smoothstep(0.0, 1.0, exp(-(4.5 + 6.0*(n*2.0-1.0)) * length(st)) );
+    
+    col.a = (col.a >= 0.01)? 1.0 : 0.0;
+
+    //col.a = (col.a >= 0.01)? min(1.0, col.a*10.0) : col.a;
+    
+    col.rgb = vec3(0.0);
     if(_UseColor == 1) col.rgb *= _Color;
-    col.a = (col.a >= 0.01)? min(1.0, col.a*10.0) : col.a;
-    //col = vec4(vec3(0.0), 1.0);
 
 	out_Color=col;
 }

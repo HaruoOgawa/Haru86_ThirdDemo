@@ -7,6 +7,11 @@
 #include "GraphicsEngine/Component/TransformComponent.h"
 #include "GraphicsEngine/Graphics/ShaderLib.h"
 
+#ifdef _DEBUG
+#include "GraphicsEngine/Message/Console.h"
+#endif // _DEBUG
+
+
 class GameObject;
 class Mesh;
 class Material;

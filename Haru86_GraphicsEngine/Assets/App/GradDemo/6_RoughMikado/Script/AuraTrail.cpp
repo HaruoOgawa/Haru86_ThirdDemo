@@ -9,7 +9,7 @@ namespace app
 		m_TrailRenderer(nullptr),
 		m_AuraNum(4096)
 	{
-		m_TrailRenderer = std::make_shared<TrailRenderer>(1, 2, 3, 4, 8, 4);
+		m_TrailRenderer = std::make_shared<TrailRenderer>(1, 2, 3, 16, 16, 16);
 		m_InstancedAura = std::make_shared<MeshRendererComponent>(
 			std::make_shared<TransformComponent>(),
 			PrimitiveType::BOARD,
@@ -31,13 +31,14 @@ namespace app
 
 	void AuraTrail::Draw()
 	{
-		//m_TrailRenderer->Draw();
+		m_TrailRenderer->Draw();
 
 		m_InstancedAura->Draw([&]() {
-			m_InstancedAura->m_material->SetIntUniform("_TrailNum", 16);
-			m_InstancedAura->m_material->SetIntUniform("_LineSegment", 16);
-			m_InstancedAura->m_material->SetFloatUniform("_Scale", 0.5f);
-			m_InstancedAura->m_material->SetFloatUniform("_rOffRange", 0.5f);
+			m_InstancedAura->m_material->SetIntUniform("_TrailNum", m_TrailRenderer->GetTrailNum());
+			m_InstancedAura->m_material->SetIntUniform("_LineSegment", m_TrailRenderer->GetLineSegment());
+			m_InstancedAura->m_material->SetIntUniform("_UseToTanScale", 1);
+			m_InstancedAura->m_material->SetFloatUniform("_Scale", 0.1f);
+			m_InstancedAura->m_material->SetFloatUniform("_rOffRange", 0.0f);
 			}, GL_TRIANGLES, true, m_AuraNum);
 	}
 }

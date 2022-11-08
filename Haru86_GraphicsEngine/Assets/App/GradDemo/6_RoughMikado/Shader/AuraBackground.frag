@@ -98,7 +98,7 @@ vec3 star(vec3 rd){return vec3( smoothstep(0.8,0.95,fbm((100.0*rd.xy)/rd.z)) );}
 
 vec3 Draw3DClouds(vec3 ro,vec3 rd)
 {
-    vec3 col = vec3(0.0),skycol=mix(vec3(0.0,0.038,0.038),vec3(0.0,0.04,0.15),(rd.y*0.5+0.5));
+    vec3 col = vec3(0.0),skycol=vec3(0.0);
  
     // ‰_
     vec3 clouds = vec3(0.0);
@@ -131,7 +131,7 @@ else
     vec3 col = vec3(0.0),ro=_WorldCameraPos,ta=_WorldCameraCenter,
     cdir=normalize(ta-ro),cside=normalize(cross(vec3(0.0,1.0,0.0),cdir)),cup=normalize(cross(cdir,cside)),
     rd=normalize(st.x*cside+st.y*cup+1.0*cdir);
-    col = Draw3DClouds(ro,rd) * 0.5;
+    col = Draw3DClouds(ro,rd) * 0.25;
     
     gl_FragColor = vec4(col,1.0);
 }

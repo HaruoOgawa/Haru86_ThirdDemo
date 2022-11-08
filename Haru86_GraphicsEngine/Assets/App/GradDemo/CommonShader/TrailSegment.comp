@@ -61,7 +61,8 @@ void AuraTrail(inout STrs trs)
 
 	float offsetA = rand(vec2(100.9123, 7.71562) * float(trs.param.x)) * 2.0 * 3.1415;
 	float offsetB = rand(vec2(6.601,80.123) * float(trs.param.x)) * 2.0 * 3.1415;
-	float rc = 3.0 * r, rm = 1.0 * r, rd = 2.0 * r, u = mod(_time + offsetA, 2.0*3.1415), v = mod(_time + offsetB, 2.0*3.1415);
+	float Speed = 1.0;
+	float rc = 3.0 * r, rm = 1.0 * r, rd = 2.0 * r, u = mod(_time*Speed + offsetA, 2.0*3.1415), v = mod(_time*Speed + offsetB, 2.0*3.1415);
 
 	trs.pos = vec4(
 		hcys(u, rc, rm, rd) * hcyc(v, rc, rm, rd),
@@ -72,14 +73,14 @@ void AuraTrail(inout STrs trs)
 
 	/*float offsetA = rand(vec2(100.9123, 7.71562) * float(trs.param.x)) * 2.0 * 3.1415;
 	float offsetB = rand(vec2(6.601,80.123) * float(trs.param.x)) * 2.0 * 3.1415;
-	//float r = 2.0;
-	float r = 10.0;
+	float r = 1.0;
+	//float r = 10.0;
 
 	// ˆÚ“®‚Ì—”‚ÍgroupŠe‚És‚¤
 	trs.pos = vec4(
-		r*cos(_time+offsetA)*cos(_time+offsetB),
-		r*cos(_time+offsetA)*sin(_time+offsetB),
-		r*sin(_time+offsetA),
+		r*cos(_time*10.0+offsetA),
+		2.0*r*cos(_time*10.0+offsetA),
+		r*sin(_time*10.0+offsetA),
 		1.0
 	);*/
 }

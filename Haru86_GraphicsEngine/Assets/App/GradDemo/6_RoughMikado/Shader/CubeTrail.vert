@@ -14,6 +14,7 @@ uniform int _TrailNum;
 uniform int _LineSegment;
 uniform float _Scale;
 uniform float _rOffRange;
+uniform int _UseToTanScale;
 
 layout(location=0)in vec3 vertex;
 layout(location=1)in vec3 normal;
@@ -100,8 +101,15 @@ void main()
 		randPos.xyz += randDir;
 	}
 	
+	vec3 ToTanScale = vec3(1.0);
+	/*if(_UseToTanScale == 1)
+	{
+		vec3 tangent = normalize(pos1.xyz - pos0.xyz);
+		ToTanScale = tangent * 2.0;
+	}*/
+
 	//
-	pos.xyz *= _Scale;
+	pos.xyz *= _Scale * ToTanScale;
 	pos.xyz = RandRotate(pos.xyz, id, oNormal); 
 	pos.xyz += randPos.xyz;
 

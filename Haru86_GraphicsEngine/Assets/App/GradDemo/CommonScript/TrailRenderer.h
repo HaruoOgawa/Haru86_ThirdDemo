@@ -57,5 +57,7 @@ namespace app
 
 		int GetBufferIndexTrailGroup()const { return m_BufferIndexTrailGroup; }
 		int GetBufferIndexTrailSegment()const { return m_BufferIndexTrailSegment; }
+		int GetLineSegment()const { return m_LineSegment; }
+		int GetTrailNum()const { return m_TrailNum; }
 	};
 }
