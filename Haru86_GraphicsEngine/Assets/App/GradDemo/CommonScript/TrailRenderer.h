@@ -38,7 +38,7 @@ namespace app
 #ifdef _DEBUG
 		std::shared_ptr<MeshRendererComponent> m_TrailDebug;
 #endif // _DEBUG
-
+		int m_SegmentFuncIndex;
 		int m_NumOfThreads;
 		int m_LineSegment;
 		int m_TrailNum;
@@ -48,7 +48,7 @@ namespace app
 	private:
 		void InitBuffer();
 	public:
-		TrailRenderer(const std::string& SegmentCS, int BufferIndexTrailGroup, int BufferIndexTrailSegment, int NumOfThreads, int LineSegment, int TrailNum);
+		TrailRenderer(int SegmentFuncIndex, int BufferIndexTrailGroup, int BufferIndexTrailSegment, int NumOfThreads, int LineSegment, int TrailNum);
 		virtual ~TrailRenderer();
 
 		void Start();

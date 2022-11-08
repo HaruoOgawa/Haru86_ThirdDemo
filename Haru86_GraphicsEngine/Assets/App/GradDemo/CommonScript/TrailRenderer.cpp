@@ -8,12 +8,13 @@
 #endif // _DEBUG
 namespace app
 {
-	TrailRenderer::TrailRenderer(const std::string& SegmentCS, int BufferIndexTrailGroup, int BufferIndexTrailSegment,
+	TrailRenderer::TrailRenderer(int SegmentFuncIndex, int BufferIndexTrailGroup, int BufferIndexTrailSegment,
 		int NumOfThreads, int LineSegment, int TrailNum) :
 		m_TrailGroupBuffer(nullptr),
 		m_TrailSegmentBuffer(nullptr),
 		m_TrailGroupCS(nullptr),
 		m_TrailSegmentCS(nullptr),
+		m_SegmentFuncIndex(SegmentFuncIndex),
 		m_NumOfThreads(NumOfThreads),
 		m_LineSegment(LineSegment),
 		m_TrailNum(TrailNum),
@@ -42,7 +43,9 @@ namespace app
 			"#define NUMTHREAD " + std::to_string(m_NumOfThreads) + "\n" +
 			"#define GroupBufferBinding " + std::to_string(m_BufferIndexTrailGroup) + "\n" +
 			"#define SegmentBufferBinding " + std::to_string(m_BufferIndexTrailSegment) + "\n" +
-			SegmentCS
+			std::string(
+				#include "../CommonShader/TrailSegment.comp"
+			)
 		);
 
 #ifdef _DEBUG
@@ -124,6 +127,7 @@ namespace app
 			m_TrailSegmentCS->SetFloatUniform("_deltaTime", GraphicsMain::GetInstance()->m_DeltaTime);
 			m_TrailSegmentCS->SetIntUniform("_TrailNum", m_TrailNum);
 			m_TrailSegmentCS->SetIntUniform("_LineSegment", m_LineSegment);
+			m_TrailSegmentCS->SetIntUniform("_SegmentFuncIndex", m_SegmentFuncIndex);
 			m_TrailSegmentCS->Dispatch((m_TrailNum * m_LineSegment) / m_NumOfThreads, 1, 1);
 		}
 	}
@@ -145,6 +149,7 @@ namespace app
 			m_TrailSegmentCS->SetFloatUniform("_deltaTime", GraphicsMain::GetInstance()->m_DeltaTime);
 			m_TrailSegmentCS->SetIntUniform("_TrailNum", m_TrailNum);
 			m_TrailSegmentCS->SetIntUniform("_LineSegment", m_LineSegment);
+			m_TrailSegmentCS->SetIntUniform("_SegmentFuncIndex", m_SegmentFuncIndex);
 			m_TrailSegmentCS->Dispatch((m_TrailNum * m_LineSegment) / m_NumOfThreads, 1, 1);
 		}
 

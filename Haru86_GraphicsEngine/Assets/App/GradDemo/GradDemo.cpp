@@ -66,8 +66,8 @@ namespace app
 
     void GradDemo::Update()
     {
-        //GraphicsMain::GetInstance()->m_MainCamera->m_position = glm::vec3(glm::cos(m_LocalTime) * 3.0f, 0.0f, glm::sin(m_LocalTime) * 3.0f);
-        GraphicsMain::GetInstance()->m_MainCamera->m_center = glm::vec3(glm::cos(m_LocalTime*0.1f) * 3.0f, 0.0f, glm::sin(m_LocalTime * 0.1f) * 3.0f);
+        GraphicsMain::GetInstance()->m_MainCamera->m_position = glm::vec3(glm::cos(m_LocalTime * 0.25f) * 3.0f, 0.0f, glm::sin(m_LocalTime * 0.25f) * 3.0f);
+        //GraphicsMain::GetInstance()->m_MainCamera->m_center = glm::vec3(glm::cos(m_LocalTime*0.1f) * 3.0f, 0.0f, glm::sin(m_LocalTime * 0.1f) * 3.0f);
 
         //GraphicsRenderer::GetInstance()->SetBackgroudColor(glm::vec4(1.0f));
 

@@ -12,15 +12,17 @@ uniform int _IsMulMatOnVert;
 
 uniform int _TrailNum;
 uniform int _LineSegment;
+uniform float _Scale;
+uniform float _rOffRange;
 
 layout(location=0)in vec3 vertex;
 layout(location=1)in vec3 normal;
 layout(location=2)in vec2 texcoord;
-//layout(location=1)in vec4 tangent;
 
 layout(location=0) out vec2 out_uv;
 layout(location=1) out vec4 out_WorldVertexPos;
 layout(location=2) out vec4 out_WorldNormal;
+layout(location=3) flat out int  out_gl_InstanceID;
 
 struct STrs
 {
@@ -93,20 +95,21 @@ void main()
 	{
 		vec3 tangent = normalize(pos1.xyz - pos0.xyz);
 		float randSign = sign( rand(vec2(6.666,9.999)*id)*2.0-1.0 );
-		float rOffVal = 2.5 * rand(vec2(4.545,1.91919) * id); 
+		float rOffVal = _rOffRange * rand(vec2(4.545,1.91919) * id); 
 		vec3 randDir = normalize(cross(vec3(0.0, 1.0, 0.0), tangent)) * randSign * rOffVal;
 		randPos.xyz += randDir;
 	}
 	
 	//
-	pos.xyz *= 0.5;
+	pos.xyz *= _Scale;
 	pos.xyz = RandRotate(pos.xyz, id, oNormal); 
 	pos.xyz += randPos.xyz;
 
 	gl_Position=MVPMatrix*pos;
-	out_uv=vec2(0.0);
+	out_uv=texcoord;
 	out_WorldVertexPos=MMatrix * pos;
 	out_WorldNormal=MMatrix * vec4(normalize(oNormal), 0.0);
+	out_gl_InstanceID = int(gl_InstanceID);
 }
 
 )"

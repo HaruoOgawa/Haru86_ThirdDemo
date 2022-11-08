@@ -411,6 +411,7 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <ClInclude Include="Assets\App\GradDemo\5_ChangeOfMind\Script\ChangeOfMind.h" />
     <ClInclude Include="Assets\App\GradDemo\8_FindKaguya\Script\FindKaguya.h" />
     <ClInclude Include="Assets\App\GradDemo\6_RoughMikado\Script\CubeTrail.h" />
+    <ClInclude Include="Assets\App\GradDemo\6_RoughMikado\Script\AuraTrail.h" />
     <ClInclude Include="GraphicsEngine\Graphics\EGraphicsParam.h" />
     <ClInclude Include="GraphicsEngine\Graphics\ShaderLib.h" />
     <ClInclude Include="GraphicsEngine\Message\Console.h" />
@@ -448,6 +449,7 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <ClCompile Include="Assets\App\GradDemo\5_ChangeOfMind\Script\ChangeOfMind.cpp" />
     <ClCompile Include="Assets\App\GradDemo\8_FindKaguya\Script\FindKaguya.cpp" />
     <ClCompile Include="Assets\App\GradDemo\6_RoughMikado\Script\CubeTrail.cpp" />
+    <ClCompile Include="Assets\App\GradDemo\6_RoughMikado\Script\AuraTrail.cpp" />
     <ClCompile Include="GraphicsEngine\Graphics\ComputeBuffer.cpp" />
     <ClCompile Include="GraphicsEngine\GraphicsMain\GraphicsMain.cpp" />
     <ClCompile Include="GraphicsEngine\Graphics\GraphicsRenderer.cpp" />
@@ -481,8 +483,10 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <None Include="Assets\App\GradDemo\5_ChangeOfMind\Shader\NegativeSphere.geom" />
     <None Include="Assets\App\GradDemo\5_ChangeOfMind\Shader\NegativeSphereCore.vert" />
     <None Include="Assets\App\GradDemo\5_ChangeOfMind\Shader\Triangle.frag" />
+    <None Include="Assets\App\GradDemo\6_RoughMikado\Shader\AuraBackground.frag" />
+    <None Include="Assets\App\GradDemo\6_RoughMikado\Shader\AuraTrail.frag" />
     <None Include="Assets\App\GradDemo\CommonShader\TrailDebug.geom" />
-    <None Include="Assets\App\GradDemo\6_RoughMikado\Shader\TrailSegment.comp" />
+    <None Include="Assets\App\GradDemo\CommonShader\TrailSegment.comp" />
     <None Include="Assets\App\GradDemo\6_RoughMikado\Shader\CubeTrail.vert" />
     <None Include="Assets\App\GradDemo\CommonShader\TrailGroup.comp" />
     <None Include="Assets\App\GradDemo\9_MountFuji\Shader\MountFuji.frag" />

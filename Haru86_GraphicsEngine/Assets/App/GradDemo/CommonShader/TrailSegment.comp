@@ -3,6 +3,7 @@ uniform float _time;
 uniform float _deltaTime;
 uniform int _TrailNum;
 uniform int _LineSegment;
+uniform int _SegmentFuncIndex;
 
 struct STrs
 {
@@ -34,6 +35,38 @@ float rand(vec2 st){
     );
 }
 
+void SphereTrail(inout STrs trs)
+{
+	float offsetA = rand(vec2(100.9123, 7.71562) * float(trs.param.x)) * 2.0 * 3.1415;
+	float offsetB = rand(vec2(6.601,80.123) * float(trs.param.x)) * 2.0 * 3.1415;
+	//float r = 2.0;
+	float r = 10.0;
+
+	// 移動の乱数はgroup各に行う
+	trs.pos = vec4(
+		r*cos(_time+offsetA)*cos(_time+offsetB),
+		r*cos(_time+offsetA)*sin(_time+offsetB),
+		r*sin(_time+offsetA),
+		1.0
+	);
+}
+
+void AuraTrail(inout STrs trs)
+{
+	float offsetA = rand(vec2(100.9123, 7.71562) * float(trs.param.x)) * 2.0 * 3.1415;
+	float offsetB = rand(vec2(6.601,80.123) * float(trs.param.x)) * 2.0 * 3.1415;
+	//float r = 2.0;
+	float r = 10.0;
+
+	// 移動の乱数はgroup各に行う
+	trs.pos = vec4(
+		r*cos(_time+offsetA)*cos(_time+offsetB),
+		r*cos(_time+offsetA)*sin(_time+offsetB),
+		r*sin(_time+offsetA),
+		1.0
+	);
+}
+
 void CalTrailSegment(uvec3 DID)
 {
 	int id = int(DID.x);
@@ -44,18 +77,14 @@ void CalTrailSegment(uvec3 DID)
 	
 	if(my_segment == int(group.param.x) && int(group.param.z) == 1)
 	{
-		float offsetA = rand(vec2(100.9123, 7.71562) * float(trs.param.x)) * 2.0 * 3.1415;
-		float offsetB = rand(vec2(6.601,80.123) * float(trs.param.x)) * 2.0 * 3.1415;
-		//float r = 2.0;
-		float r = 10.0;
-
-		// 移動の乱数はgroup各に行う
-		trs.pos = vec4(
-			r*cos(_time+offsetA)*cos(_time+offsetB),
-			r*cos(_time+offsetA)*sin(_time+offsetB),
-			r*sin(_time+offsetA),
-			1.0
-		);
+		if(_SegmentFuncIndex == 0)
+		{
+			SphereTrail(trs);
+		}
+		else if(_SegmentFuncIndex == 1)
+		{
+			AuraTrail(trs);
+		}
 	}
 
 	trs.param.z = int(group.param.x);
