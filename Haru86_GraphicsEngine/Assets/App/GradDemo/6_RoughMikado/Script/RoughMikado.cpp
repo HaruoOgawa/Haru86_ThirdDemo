@@ -29,7 +29,7 @@ namespace app
 
 	void RoughMikado::Update(float time)
 	{
-		GraphicsRenderer::GetInstance()->SetBackgroudColor(glm::vec4(1.0f));
+		//GraphicsRenderer::GetInstance()->SetBackgroudColor(glm::vec4(1.0f));
 
 		m_TrailCube->Update(time);
 		m_AuraTrail->Update(time);
@@ -43,8 +43,8 @@ namespace app
 		}
 		else
 		{
-			m_TrailCube->Draw();
-			//m_AuraTrail->Draw();
+			//m_TrailCube->Draw();
+			m_AuraTrail->Draw();
 		}
 	}
 

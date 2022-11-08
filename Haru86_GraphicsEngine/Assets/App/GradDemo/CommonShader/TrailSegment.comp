@@ -51,9 +51,26 @@ void SphereTrail(inout STrs trs)
 	);
 }
 
+float hcys(float t,float rc,float rm,float rd){	return (rc-rm)*cos(t) + rd*cos( ((rc-rm)/rm) * t );}
+float hcyc(float t,float rc,float rm,float rd){	return (rc-rm)*sin(t) - rd*sin( ((rc-rm)/rm) * t );}
+
 void AuraTrail(inout STrs trs)
 {
+	float r = 1.0;
+	//float r = 10.0;
+
 	float offsetA = rand(vec2(100.9123, 7.71562) * float(trs.param.x)) * 2.0 * 3.1415;
+	float offsetB = rand(vec2(6.601,80.123) * float(trs.param.x)) * 2.0 * 3.1415;
+	float rc = 3.0 * r, rm = 1.0 * r, rd = 2.0 * r, u = mod(_time + offsetA, 2.0*3.1415), v = mod(_time + offsetB, 2.0*3.1415);
+
+	trs.pos = vec4(
+		hcys(u, rc, rm, rd) * hcyc(v, rc, rm, rd),
+		hcys(u, rc, rm, rd) * hcys(v, rc, rm, rd),
+		hcyc(u, rc, rm, rd),
+		1.0
+	);
+
+	/*float offsetA = rand(vec2(100.9123, 7.71562) * float(trs.param.x)) * 2.0 * 3.1415;
 	float offsetB = rand(vec2(6.601,80.123) * float(trs.param.x)) * 2.0 * 3.1415;
 	//float r = 2.0;
 	float r = 10.0;
@@ -64,7 +81,7 @@ void AuraTrail(inout STrs trs)
 		r*cos(_time+offsetA)*sin(_time+offsetB),
 		r*sin(_time+offsetA),
 		1.0
-	);
+	);*/
 }
 
 void CalTrailSegment(uvec3 DID)

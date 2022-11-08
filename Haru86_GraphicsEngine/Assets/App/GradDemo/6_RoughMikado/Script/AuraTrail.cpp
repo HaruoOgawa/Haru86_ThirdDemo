@@ -7,9 +7,9 @@ namespace app
 	AuraTrail::AuraTrail() :
 		m_InstancedAura(nullptr),
 		m_TrailRenderer(nullptr),
-		m_AuraNum(2048)
+		m_AuraNum(4096)
 	{
-		m_TrailRenderer = std::make_shared<TrailRenderer>(1, 2, 3, 16, 16, 16);
+		m_TrailRenderer = std::make_shared<TrailRenderer>(1, 2, 3, 4, 8, 4);
 		m_InstancedAura = std::make_shared<MeshRendererComponent>(
 			std::make_shared<TransformComponent>(),
 			PrimitiveType::BOARD,
@@ -37,7 +37,7 @@ namespace app
 			m_InstancedAura->m_material->SetIntUniform("_TrailNum", 16);
 			m_InstancedAura->m_material->SetIntUniform("_LineSegment", 16);
 			m_InstancedAura->m_material->SetFloatUniform("_Scale", 0.5f);
-			m_InstancedAura->m_material->SetFloatUniform("_rOffRange", 1.5f);
+			m_InstancedAura->m_material->SetFloatUniform("_rOffRange", 0.5f);
 			}, GL_TRIANGLES, true, m_AuraNum);
 	}
 }
