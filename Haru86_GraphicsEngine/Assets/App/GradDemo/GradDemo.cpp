@@ -41,7 +41,7 @@ namespace app
         GraphicsMain::GetInstance()->m_SecondsTimeOffset = 149.0f;// シーンを飛ばすためのオフセット
 
         // 音楽のミュート
-        //GraphicsMain::GetInstance()->m_SoundPlayer->Mute(true);
+        GraphicsMain::GetInstance()->m_SoundPlayer->Mute(true);
 
         // デバッグ用
         /*{

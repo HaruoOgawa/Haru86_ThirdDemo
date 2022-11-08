@@ -61,8 +61,14 @@ void main(){
 
     //col.a = (col.a >= 0.01)? min(1.0, col.a*10.0) : col.a;
     
-    col.rgb = vec3(0.0);
-    if(_UseColor == 1) col.rgb *= _Color;
+    if(_UseColor == 1)
+    {
+         col.rgb *= _Color;
+    }
+    else
+    {
+        col.rgb = vec3(0.0);
+    }
 
 	out_Color=col;
 }

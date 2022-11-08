@@ -24,6 +24,7 @@ layout(location=0) out vec2 out_uv;
 layout(location=1) out vec4 out_WorldVertexPos;
 layout(location=2) out vec4 out_WorldNormal;
 layout(location=3) flat out int  out_gl_InstanceID;
+layout(location=4) out vec4 out_tangent;
 
 struct STrs
 {
@@ -87,6 +88,7 @@ void main()
 	
 	int randIDB = (my_segment == now_segment)? randIDA : group * _LineSegment + int(mod(float(my_segment) + 1.0, float(_LineSegment)));
 	pos1 = out_trs_buffer.trs[randIDB].pos;
+	vec3 tangent = normalize(pos1.xyz - pos0.xyz);
 
 	//
 	float PosMixVal = rand(vec2(35.3535,1.1111) * id);
@@ -94,7 +96,7 @@ void main()
 
 	if(length(pos1.xyz - pos0.xyz) != 0.0)
 	{
-		vec3 tangent = normalize(pos1.xyz - pos0.xyz);
+		
 		float randSign = sign( rand(vec2(6.666,9.999)*id)*2.0-1.0 );
 		float rOffVal = _rOffRange * rand(vec2(4.545,1.91919) * id); 
 		vec3 randDir = normalize(cross(vec3(0.0, 1.0, 0.0), tangent)) * randSign * rOffVal;
@@ -102,14 +104,18 @@ void main()
 	}
 	
 	vec3 ToTanScale = vec3(1.0);
-	/*if(_UseToTanScale == 1)
+	if(_UseToTanScale == 1)
 	{
-		vec3 tangent = normalize(pos1.xyz - pos0.xyz);
-		ToTanScale = tangent * 2.0;
-	}*/
+		//ToTanScale = vec3(10.0, 1.0 ,1.0);
+		//ToTanScale = tangent * 5.0;
+	}
 
 	//
 	pos.xyz *= _Scale * ToTanScale;
+	if(_UseToTanScale == 1)
+	{
+		
+	}
 	pos.xyz = RandRotate(pos.xyz, id, oNormal); 
 	pos.xyz += randPos.xyz;
 
@@ -118,6 +124,7 @@ void main()
 	out_WorldVertexPos=MMatrix * pos;
 	out_WorldNormal=MMatrix * vec4(normalize(oNormal), 0.0);
 	out_gl_InstanceID = int(gl_InstanceID);
+	out_tangent = MMatrix * vec4(tangent, 0.0);
 }
 
 )"

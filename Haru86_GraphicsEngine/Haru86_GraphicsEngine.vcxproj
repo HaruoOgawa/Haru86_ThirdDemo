@@ -487,6 +487,7 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <None Include="Assets\App\GradDemo\5_ChangeOfMind\Shader\Triangle.frag" />
     <None Include="Assets\App\GradDemo\6_RoughMikado\Shader\AuraBackground.frag" />
     <None Include="Assets\App\GradDemo\6_RoughMikado\Shader\AuraTrail.frag" />
+    <None Include="Assets\App\GradDemo\6_RoughMikado\Shader\AuraTrail.geom" />
     <None Include="Assets\App\GradDemo\CommonShader\TrailDebug.geom" />
     <None Include="Assets\App\GradDemo\CommonShader\TrailSegment.comp" />
     <None Include="Assets\App\GradDemo\6_RoughMikado\Shader\CubeTrail.vert" />
