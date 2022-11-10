@@ -9,13 +9,14 @@
 namespace app
 {
 	TrailRenderer::TrailRenderer(int SegmentFuncIndex, int BufferIndexTrailGroup, int BufferIndexTrailSegment,
-		int NumOfThreads, int LineSegment, int TrailNum) :
+		int NumOfSegmentThreads, int NumOfGroupThreads, int LineSegment, int TrailNum, float ParticleLife) :
 		m_TrailGroupBuffer(nullptr),
 		m_TrailSegmentBuffer(nullptr),
 		m_TrailGroupCS(nullptr),
 		m_TrailSegmentCS(nullptr),
 		m_SegmentFuncIndex(SegmentFuncIndex),
-		m_NumOfThreads(NumOfThreads),
+		m_NumOfSegmentThreads(NumOfSegmentThreads),
+		m_NumOfGroupThreads(NumOfGroupThreads),
 		m_LineSegment(LineSegment),
 		m_TrailNum(TrailNum),
 #ifdef _DEBUG
@@ -23,7 +24,8 @@ namespace app
 #endif // _DEBUG
 
 		m_BufferIndexTrailGroup(BufferIndexTrailGroup),
-		m_BufferIndexTrailSegment(BufferIndexTrailSegment)
+		m_BufferIndexTrailSegment(BufferIndexTrailSegment),
+		m_ParticleLife(ParticleLife)
 	{
 		// ïœêîÇÃèâä˙âª
 		m_TrailGroupBuffer = std::make_shared<ComputeBuffer>(sizeof(SGroup) * m_TrailNum);
@@ -31,7 +33,7 @@ namespace app
 
 		m_TrailGroupCS = std::make_shared<Material>(RenderingSurfaceType::RASTERIZER, "", "", "", "", "",
 			"#version 430\n"
-			"#define NUMTHREAD " + std::to_string(m_NumOfThreads) + "\n" +
+			"#define NUMTHREAD " + std::to_string(m_NumOfGroupThreads) + "\n" +
 			"#define GroupBufferBinding " + std::to_string(m_BufferIndexTrailGroup) + "\n" +
 			std::string(
 				#include "../CommonShader/TrailGroup.comp"
@@ -40,7 +42,7 @@ namespace app
 
 		m_TrailSegmentCS = std::make_shared<Material>(RenderingSurfaceType::RASTERIZER, "", "", "", "", "",
 			"#version 430\n"
-			"#define NUMTHREAD " + std::to_string(m_NumOfThreads) + "\n" +
+			"#define NUMTHREAD " + std::to_string(m_NumOfSegmentThreads) + "\n" +
 			"#define GroupBufferBinding " + std::to_string(m_BufferIndexTrailGroup) + "\n" +
 			"#define SegmentBufferBinding " + std::to_string(m_BufferIndexTrailSegment) + "\n" +
 			std::string(
@@ -92,7 +94,7 @@ namespace app
 			std::vector<STrs> InitData;
 			for (int g = 0; g < m_TrailNum; g++)
 			{
-				InitGroupData.push_back(SGroup());
+				InitGroupData.push_back(SGroup(m_ParticleLife));
 				for (int s = 0; s < m_LineSegment; s++) { InitData.push_back(STrs(g, s)); }
 			}
 
@@ -116,19 +118,21 @@ namespace app
 			m_TrailGroupCS->SetActive();
 			m_TrailGroupCS->SetFloatUniform("_time", GraphicsMain::GetInstance()->m_SecondsTime);
 			m_TrailGroupCS->SetFloatUniform("_deltaTime", GraphicsMain::GetInstance()->m_DeltaTime);
+			m_TrailGroupCS->SetFloatUniform("_ParticleLife", m_ParticleLife);
 			m_TrailGroupCS->SetIntUniform("_TrailNum", m_TrailNum);
 			m_TrailGroupCS->SetIntUniform("_LineSegment", m_LineSegment);
-			m_TrailGroupCS->Dispatch(m_TrailNum / m_NumOfThreads, 1, 1);
+			m_TrailGroupCS->Dispatch(m_TrailNum / m_NumOfGroupThreads, 1, 1);
 		}
 
 		{
 			m_TrailSegmentCS->SetActive();
 			m_TrailSegmentCS->SetFloatUniform("_time", GraphicsMain::GetInstance()->m_SecondsTime);
 			m_TrailSegmentCS->SetFloatUniform("_deltaTime", GraphicsMain::GetInstance()->m_DeltaTime);
+			m_TrailSegmentCS->SetFloatUniform("_ParticleLife", m_ParticleLife);
 			m_TrailSegmentCS->SetIntUniform("_TrailNum", m_TrailNum);
 			m_TrailSegmentCS->SetIntUniform("_LineSegment", m_LineSegment);
 			m_TrailSegmentCS->SetIntUniform("_SegmentFuncIndex", m_SegmentFuncIndex);
-			m_TrailSegmentCS->Dispatch((m_TrailNum * m_LineSegment) / m_NumOfThreads, 1, 1);
+			m_TrailSegmentCS->Dispatch((m_TrailNum * m_LineSegment) / m_NumOfSegmentThreads, 1, 1);
 		}
 	}
 
@@ -138,19 +142,21 @@ namespace app
 			m_TrailGroupCS->SetActive();
 			m_TrailGroupCS->SetFloatUniform("_time", GraphicsMain::GetInstance()->m_SecondsTime);
 			m_TrailGroupCS->SetFloatUniform("_deltaTime", GraphicsMain::GetInstance()->m_DeltaTime);
+			m_TrailGroupCS->SetFloatUniform("_ParticleLife", m_ParticleLife);
 			m_TrailGroupCS->SetIntUniform("_TrailNum", m_TrailNum);
 			m_TrailGroupCS->SetIntUniform("_LineSegment", m_LineSegment);
-			m_TrailGroupCS->Dispatch((m_TrailNum) / m_NumOfThreads, 1, 1);
+			m_TrailGroupCS->Dispatch(m_TrailNum / m_NumOfGroupThreads, 1, 1);
 		}
 
 		{
 			m_TrailSegmentCS->SetActive();
 			m_TrailSegmentCS->SetFloatUniform("_time", GraphicsMain::GetInstance()->m_SecondsTime);
 			m_TrailSegmentCS->SetFloatUniform("_deltaTime", GraphicsMain::GetInstance()->m_DeltaTime);
+			m_TrailSegmentCS->SetFloatUniform("_ParticleLife", m_ParticleLife);
 			m_TrailSegmentCS->SetIntUniform("_TrailNum", m_TrailNum);
 			m_TrailSegmentCS->SetIntUniform("_LineSegment", m_LineSegment);
 			m_TrailSegmentCS->SetIntUniform("_SegmentFuncIndex", m_SegmentFuncIndex);
-			m_TrailSegmentCS->Dispatch((m_TrailNum * m_LineSegment) / m_NumOfThreads, 1, 1);
+			m_TrailSegmentCS->Dispatch((m_TrailNum * m_LineSegment) / m_NumOfSegmentThreads, 1, 1);
 		}
 
 #ifdef _DEBUG

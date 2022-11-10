@@ -94,7 +94,7 @@ void main()
 	float PosMixVal = rand(vec2(35.3535,1.1111) * id);
 	vec4 randPos = vec4(mix(pos0.xyz, pos1.xyz, PosMixVal) ,1.0);
 
-	if(length(pos1.xyz - pos0.xyz) != 0.0)
+	if(length(pos1.xyz - pos0.xyz) != 0.0 && _rOffRange != 0.0)
 	{
 		
 		float randSign = sign( rand(vec2(6.666,9.999)*id)*2.0-1.0 );

@@ -12,7 +12,8 @@ namespace app
 		std::shared_ptr<TrailRenderer> m_TrailRenderer;
 		int m_CubeNum;
 	public:
-		CubeTrail();
+		CubeTrail(int SegmentFuncIndex, int BufferIndexTrailGroup, int BufferIndexTrailSegment,
+			int NumOfSegmentThreads, int NumOfGroupThreads, int LineSegment, int TrailNum, float ParticleLife);
 		virtual ~CubeTrail() = default;
 
 		void Update(float time);

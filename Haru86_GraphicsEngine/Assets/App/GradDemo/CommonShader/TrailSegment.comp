@@ -4,6 +4,10 @@ uniform float _deltaTime;
 uniform int _TrailNum;
 uniform int _LineSegment;
 uniform int _SegmentFuncIndex;
+uniform float _Radius;
+
+#define rot(a) mat2(cos(a),sin(a),-sin(a),cos(a))
+#define pi 3.14159265
 
 struct STrs
 {
@@ -54,8 +58,47 @@ void SphereTrail(inout STrs trs)
 float hcys(float t,float rc,float rm,float rd){	return (rc-rm)*cos(t) + rd*cos( ((rc-rm)/rm) * t );}
 float hcyc(float t,float rc,float rm,float rd){	return (rc-rm)*sin(t) - rd*sin( ((rc-rm)/rm) * t );}
 
-void AuraTrail(inout STrs trs)
+void AuraTrail(inout STrs trs,float id)
 {
+	/*int group = trs.param.x;
+	float offsetA = rand(vec2(100.9123, 7.71562) * id) * 2.0 * 3.1415;
+	float offsetB = rand(vec2(6.601,80.123) * id) * 2.0 * 3.1415;
+
+	 vec3 cen = vec3(0.0); float CenterPower = (group == 3 || group == 4 || group == 5)? 10.0 : 0.75, RotDir = 1.0;
+	 if(group == 0 || group == 3)
+	 {
+		RotDir = (group == 3)? 1.0 : -1.0;
+		cen = normalize(vec3(0.0, 1.0 * ((group>=3)? -1.0 : 1.0), 0.0)) * CenterPower;
+	 }
+	 else if(group == 1 || group == 4)
+	 {
+	    RotDir = -1.0;
+		cen = normalize(vec3(-1.0, -1.0 * ((group>=3)? -1.0 : 1.0), 0.0)) * CenterPower;
+	 }
+	 else if(group == 2 || group == 5)
+	 {
+		RotDir = 1.0;
+		cen = normalize(vec3(1.0, -1.0 * ((group>=3)? -1.0 : 1.0), 0.0)) * CenterPower;
+	 }
+
+	 vec3 s3d = vec3(1.0,(group > 2)? 10.0 : 1.0, 0.0);
+
+	 // Scale
+	 trs.pos = vec4(
+		s3d.x*cos(_time * 25.0 * RotDir+offsetA) ,
+		s3d.y*sin(_time * 25.0 * RotDir+offsetA),
+		0.0,
+		1.0
+	);
+	
+	// Rotate
+	if(group != 0 && group != 3) trs.pos.xz *= rot(pi/2.0);
+	if(group != 0 && group != 3) trs.pos.xy *= rot( ((group == 1 || group == 5)? 1.0 : -1.0) * pi/4.0);
+
+	// Translate
+	trs.pos += vec4(cen, 0.0);*/
+
+	/////////////////////////////////////
 	float r = 1.0;
 	//float r = 10.0;
 
@@ -69,20 +112,7 @@ void AuraTrail(inout STrs trs)
 		hcys(u, rc, rm, rd) * hcys(v, rc, rm, rd),
 		hcyc(u, rc, rm, rd),
 		1.0
-	);
-
-	/*float offsetA = rand(vec2(100.9123, 7.71562) * float(trs.param.x)) * 2.0 * 3.1415;
-	float offsetB = rand(vec2(6.601,80.123) * float(trs.param.x)) * 2.0 * 3.1415;
-	float r = 1.0;
-	//float r = 10.0;
-
-	// à⁄ìÆÇÃóêêîÇÕgroupäeÇ…çsÇ§
-	trs.pos = vec4(
-		r*cos(_time*10.0+offsetA),
-		2.0*r*cos(_time*10.0+offsetA),
-		r*sin(_time*10.0+offsetA),
-		1.0
-	);*/
+	);	
 }
 
 void CalTrailSegment(uvec3 DID)
@@ -101,7 +131,7 @@ void CalTrailSegment(uvec3 DID)
 		}
 		else if(_SegmentFuncIndex == 1)
 		{
-			AuraTrail(trs);
+			AuraTrail(trs, float(id));
 		}
 	}
 

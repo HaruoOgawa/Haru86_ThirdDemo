@@ -1,6 +1,7 @@
 R"(
 uniform float _time;
 uniform float _deltaTime;
+uniform float _ParticleLife;
 uniform int _TrailNum;
 uniform int _LineSegment;
 
@@ -30,7 +31,7 @@ void CalTrailGroup(uvec3 DID)
 	{
 		int now_segment = int(group.param.x);
 		group.param.x  = float((now_segment  < _LineSegment - 1)? now_segment + 1 : 0);
-		group.param.y = 0.1;
+		group.param.y = _ParticleLife;
 		group.param.z = 1.0;
 	}
 	else

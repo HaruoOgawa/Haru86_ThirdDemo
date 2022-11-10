@@ -38,7 +38,7 @@ namespace app
     {
 #ifdef _DEBUG
         // 時間のオフセット
-        GraphicsMain::GetInstance()->m_SecondsTimeOffset = 149.0f;// シーンを飛ばすためのオフセット
+        GraphicsMain::GetInstance()->m_SecondsTimeOffset = 179.0f;// シーンを飛ばすためのオフセット
 
         // 音楽のミュート
         GraphicsMain::GetInstance()->m_SoundPlayer->Mute(true);
@@ -146,7 +146,7 @@ namespace app
             m_SceneIndex = 9;
         }
 
-        m_SceneIndex = 6; // Debug
+        m_SceneIndex = 8; // Debug
 
 #ifdef _DEBUG
 

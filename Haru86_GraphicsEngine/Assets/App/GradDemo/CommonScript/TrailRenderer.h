@@ -10,7 +10,7 @@ namespace app
 	struct SGroup
 	{
 		float param[4]; // vec4(now_segment, life, IsPermitUpdate, 0.0)
-		SGroup() : param{ 0.0f, 0.1f, 0.0f, 0.0f }
+		SGroup(float life) : param{ 0.0f, life, 0.0f, 0.0f }
 		{
 		}
 	};
@@ -39,7 +39,10 @@ namespace app
 		std::shared_ptr<MeshRendererComponent> m_TrailDebug;
 #endif // _DEBUG
 		int m_SegmentFuncIndex;
-		int m_NumOfThreads;
+		float m_ParticleLife;
+
+		int m_NumOfSegmentThreads;
+		int m_NumOfGroupThreads;
 		int m_LineSegment;
 		int m_TrailNum;
 		
@@ -48,7 +51,8 @@ namespace app
 	private:
 		void InitBuffer();
 	public:
-		TrailRenderer(int SegmentFuncIndex, int BufferIndexTrailGroup, int BufferIndexTrailSegment, int NumOfThreads, int LineSegment, int TrailNum);
+		TrailRenderer(int SegmentFuncIndex, int BufferIndexTrailGroup, int BufferIndexTrailSegment, 
+			int NumOfSegmentThreads,int NumOfGroupThreads, int LineSegment, int TrailNum, float ParticleLife);
 		virtual ~TrailRenderer();
 
 		void Start();
