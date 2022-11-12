@@ -12,6 +12,7 @@ namespace app
     class CyberpunkSpaceRay;
     class ChangeOfMind;
     class RoughMikado;
+    class FeatherRobe;
     class FindKaguya;
     class MountFuji;
 
@@ -23,6 +24,7 @@ namespace app
         std::shared_ptr<CyberpunkSpaceRay> m_CyberpunkSpaceRay;
         std::shared_ptr<ChangeOfMind> m_ChangeOfMind;
         std::shared_ptr<RoughMikado> m_RoughMikado;
+        std::shared_ptr<FeatherRobe> m_FeatherRobe;
         std::shared_ptr<FindKaguya> m_FindKaguya;
         std::shared_ptr<MountFuji> m_MountFuji;
 
