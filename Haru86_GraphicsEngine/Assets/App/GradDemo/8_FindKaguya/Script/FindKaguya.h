@@ -5,9 +5,11 @@ class MeshRendererComponent;
 
 namespace app
 {
+	class CubeTrail;
 	class FindKaguya
 	{
 		std::shared_ptr<MeshRendererComponent> m_Voxel;
+		std::shared_ptr<CubeTrail> m_CubeTrail;
 	public:
 		FindKaguya();
 		~FindKaguya() = default;

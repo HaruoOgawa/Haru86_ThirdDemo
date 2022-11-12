@@ -19,11 +19,13 @@ layout(location=2)in vec2 texcoord;
 layout(location=0) out vec2 out_uv;
 layout(location=1) out vec4 out_WorldVertexPos;
 layout(location=2) out vec4 out_WorldNormal;
+layout(location=3) flat out int out_gl_InstanceID;
 
 #define rot(a) mat2(cos(a),-sin(a),sin(a),cos(a))
 
 void main(){
 	vec4 pos=vec4(vertex,1.0);
+	int id=gl_InstanceID;
 
 	if(_IsMulMatOnVert == 1)
 	{
@@ -31,6 +33,7 @@ void main(){
 		out_uv=texcoord;
 		out_WorldVertexPos=MMatrix * pos;
 		out_WorldNormal=MMatrix * vec4(normalize(normal), 0.0);
+		out_gl_InstanceID = id;
 	}
 	else if(_IsMulMatOnVert == 0)
 	{
@@ -38,6 +41,7 @@ void main(){
 		out_uv=texcoord;
 		out_WorldVertexPos=pos;
 		out_WorldNormal=vec4(normalize(normal), 0.0);
+		out_gl_InstanceID = id;
 	}
 }
 

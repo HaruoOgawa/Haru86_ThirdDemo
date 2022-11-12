@@ -36,7 +36,7 @@ public:
     void SetVec4ArrayUniform(std::string uniformName, std::vector<float> val);
     void SetTexUniform(std::string uniformName, unsigned int val);
     void SetFloatVectorUniform(std::string uniformName, std::vector<float> val);
-    void SetBuffer(std::shared_ptr<class ComputeBuffer> buffer, int bufferIndex);
+    void SetBufferToMat(std::shared_ptr<class ComputeBuffer> buffer, int bufferIndex);
     void LoadTextureList(std::vector<std::string> texPathList,std::vector<std::string> texUniformNameList);
     void SetActiveTextureList();
     void SetEactiveTextureList();
@@ -46,7 +46,7 @@ public:
     void Dispatch(int xGroupNum, int yGroupNum, int zGroupNum);
     void BindComputeBuffer(CorrectionType correctionType);
     void DisBindComputeBuffer(CorrectionType correctionType);
-    void SetBuffer(std::shared_ptr<class ComputeBuffer> buffer, int bufferindex, std::shared_ptr<class Material> material);
+    void SetBufferToCS(std::shared_ptr<class ComputeBuffer> buffer, int bufferindex);
 private :
     //Color Render Buffer
     GLuint vertShaderData;

@@ -31,7 +31,12 @@ namespace text {
 		}
 
 		FT_Face face;
+#ifdef _DEBUG
+		FT_Error Error = FT_New_Face(ft, "Assets\\Font\\arial.ttf", 0, &face);
+#else
 		FT_Error Error = FT_New_Face(ft, "bin\\arial.ttf", 0, &face);
+#endif
+		
 		if (Error)
 		{
 #ifdef _DEBUG

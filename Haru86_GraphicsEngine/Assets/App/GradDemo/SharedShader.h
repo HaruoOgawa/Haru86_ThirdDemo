@@ -4,6 +4,6 @@
 namespace shaderdshader
 {
 	const std::string Voxel_frag = std::string(
-		#include "SharedShader/Voxel.frag"
+		#include "CommonShader/Voxel.frag"
 	);
 }

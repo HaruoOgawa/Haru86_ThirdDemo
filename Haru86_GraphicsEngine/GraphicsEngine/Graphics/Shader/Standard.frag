@@ -1,11 +1,14 @@
 R"(
 
-#version 330
+#version 430
 #extension GL_ARB_separate_shader_objects : enable
 
 layout(location=0) in vec2 in_uv;
 layout(location=1) in vec4 in_WorldVertexPos;
 layout(location=2) in vec4 in_WorldNormal;
+layout(location=3) flat in int  in_gl_InstanceID;
+
+out vec4 out_Color;
 
 uniform int _UseColor;
 uniform vec4 _Color;
@@ -101,7 +104,8 @@ void main(){
 
 	//col.rgb = in_WorldNormal.xyz*0.5+0.5;
 
-	gl_FragColor=col;
+	//gl_FragColor=col;
+	out_Color=col;
 }
 
 )"

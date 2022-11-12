@@ -4,6 +4,13 @@
 #include "../Graphics/Primitive.h"
 #include "GraphicsEngine/Graphics/Texture.h"
 #include <functional>
+#include "GraphicsEngine/Component/TransformComponent.h"
+#include "GraphicsEngine/Graphics/ShaderLib.h"
+
+#ifdef _DEBUG
+#include "GraphicsEngine/Message/Console.h"
+#endif // _DEBUG
+
 
 class GameObject;
 class Mesh;

@@ -38,6 +38,10 @@ GraphicsMain::GraphicsMain()
 	m_DeltaTime(0.0f),
 	previousTime(0.0f),
 	mouseStateBool(false),
+#ifdef _DEBUG
+	m_ShowDebugLog(false),
+#endif // _DEBUG
+
 	renderingTarget(ERerderingTarget::COLOR),
 	m_MainCamera(nullptr),
 	m_UsingCamera(nullptr),
@@ -131,6 +135,19 @@ void GraphicsMain::key_callback(GLFWwindow* window, int key, int scancode, int a
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
 		GraphicsMain::GetInstance()->isRunning=false;
 	}
+#ifdef _DEBUG
+	else if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
+	{
+		//Console::Log("Space Push\n");
+		GraphicsMain::GetInstance()->m_ShowDebugLog = true;
+	}
+	else if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE)
+	{
+		//Console::Log("Space Release\n");
+		GraphicsMain::GetInstance()->m_ShowDebugLog = false;
+	}
+#endif // _DEBUG
+
 }
 
 void GraphicsMain::Update() {
@@ -140,7 +157,7 @@ void GraphicsMain::Update() {
 	//m_MilliSecondsTime = glm::mod(static_cast<float>(clock()), (87.0f - 40.0f) * 1000.0f) + 40.0f * 1000.0f;
 
 	m_SecondsTime = m_MilliSecondsTime * 0.001f;
-	m_DeltaTime = (m_MilliSecondsTime - previousTime) / 1000.0f;
+	m_DeltaTime = (m_MilliSecondsTime - previousTime) * 0.001f;
 	previousTime = m_MilliSecondsTime;
 	if (m_App)m_App->Update();
 }
