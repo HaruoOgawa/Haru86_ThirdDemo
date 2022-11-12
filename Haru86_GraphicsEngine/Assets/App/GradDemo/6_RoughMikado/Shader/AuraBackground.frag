@@ -93,12 +93,30 @@ float fbm3(vec3 p,float num,float A)
     
     return w/asum;
 }
+// https://www.shadertoy.com/view/MdGSWy
+float glare(vec2 uv, vec2 pos, float size)
+{
+    vec2 main = uv-pos;
+	
+	float ang = atan(main.y, main.x) + _time*0.1;
+	float dist=length(main); dist = pow(dist,1.1);
+	float n = fbm(uv *5.0 + uv *5.0 * rot(_time*0.1)) * 1.0;
+	float f0 = 2.0/(length(uv-pos)*(1.0/(size+n)*30.0)+1.0);
+    
+    return f0+f0*(sin((ang)*8.0)*.2+dist*.1+.9)+n*exp(-5.0*dist);
+}
+
+vec3 lensflare(vec2 uv,vec2 pos, float brightness, float size)
+{   
+    vec3 c = vec3(glare(uv,pos,size*3.5));   
+    return c*brightness;
+}
 
 vec3 star(vec3 rd){return vec3( smoothstep(0.8,0.95,fbm((100.0*rd.xy)/rd.z)) );}
 
 vec3 Draw3DClouds(vec3 ro,vec3 rd)
 {
-    vec3 col = vec3(0.0),skycol=vec3(0.0);
+    vec3 col = vec3(0.0),skycol=mix(vec3(0.0,0.038,0.038),vec3(0.0,0.04,0.15),(rd.y*0.5+0.5));
  
     // ‰_
     vec3 clouds = vec3(0.0);
@@ -128,10 +146,13 @@ else
     vec2 st=uv*2.0-1.0;
     st.x*=(_resolution.x/_resolution.y);
 #endif
-    vec3 col = vec3(0.0),ro=_WorldCameraPos,ta=_WorldCameraCenter,
+    vec3 col = vec3(0.0),ro=vec3(0.0,0.0,1.5),ta=vec3(0.0,0.0,0.0),
     cdir=normalize(ta-ro),cside=normalize(cross(vec3(0.0,1.0,0.0),cdir)),cup=normalize(cross(cdir,cside)),
     rd=normalize(st.x*cside+st.y*cup+1.0*cdir);
     col = Draw3DClouds(ro,rd) * 0.25;
+    
+    col += pow(lensflare(st, vec2(0.0), 1.,1. + abs(sin(_time*.6)*0.5) + 0.15), vec3(1.5)) 
+        * vec3(0.823,0.69,0.443);
     
     gl_FragColor = vec4(col,1.0);
 }

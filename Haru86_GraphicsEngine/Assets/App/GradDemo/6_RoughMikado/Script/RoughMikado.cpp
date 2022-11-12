@@ -16,7 +16,7 @@ namespace app
 		m_AuraCore(nullptr),
 		m_AuraBackRenderer(nullptr)
 	{
-		m_TrailCube = std::make_shared<CubeTrail>(0, 0, 1, 32, 4, 32, 4, 0.1f);
+		m_TrailCube = std::make_shared<CubeTrail>(1, 0, 1, 16, 32, 16, 32, 0.05f);
 		m_AuraTrail = std::make_shared<AuraTrail>();
 		m_AuraCore = std::make_shared<AuraCore>();
 		m_AuraBackRenderer = std::make_shared<MeshRendererComponent>(
@@ -47,7 +47,7 @@ namespace app
 		else
 		{
 			m_TrailCube->Draw();
-			m_AuraTrail->Draw();
+			//m_AuraTrail->Draw();
 			//m_AuraCore->Draw();
 		}
 	}

@@ -37,8 +37,8 @@ namespace app
 		m_InstancedCube->Draw([&]() {
 			m_InstancedCube->m_material->SetIntUniform("_TrailNum", m_TrailRenderer->GetTrailNum());
 			m_InstancedCube->m_material->SetIntUniform("_LineSegment", m_TrailRenderer->GetLineSegment());
-			m_InstancedCube->m_material->SetFloatUniform("_Scale", 0.5f);
-			m_InstancedCube->m_material->SetFloatUniform("_rOffRange", 2.5f);
+			m_InstancedCube->m_material->SetFloatUniform("_Scale", 0.1f);
+			m_InstancedCube->m_material->SetFloatUniform("_rOffRange", 0.1f);
 		}, GL_TRIANGLES, true, m_CubeNum);
 	}
 }

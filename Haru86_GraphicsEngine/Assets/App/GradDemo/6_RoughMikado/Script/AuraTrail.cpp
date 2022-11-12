@@ -38,7 +38,7 @@ namespace app
 
 	void AuraTrail::Draw()
 	{
-		m_TrailRenderer->Draw();
+		//m_TrailRenderer->Draw();
 
 		m_InstancedAura->Draw([&]() {
 			m_InstancedAura->m_material->SetIntUniform("_TrailNum", m_TrailRenderer->GetTrailNum());
