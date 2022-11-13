@@ -443,6 +443,7 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <ClInclude Include="Assets\App\GradDemo\SharedShader.h" />
     <ClInclude Include="Assets\App\GradDemo\6_RoughMikado\Script\RoughMikado.h" />
     <ClInclude Include="Assets\App\GradDemo\CommonScript\TrailRenderer.h" />
+    <ClInclude Include="GraphicsEngine\Graphics\RenderBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Assets\App\GradDemo\GradDemo.cpp" />
@@ -476,6 +477,7 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <ClCompile Include="Assets\App\GradDemo\9_MountFuji\Script\MountFuji.cpp" />
     <ClCompile Include="Assets\App\GradDemo\6_RoughMikado\Script\RoughMikado.cpp" />
     <ClCompile Include="Assets\App\GradDemo\CommonScript\TrailRenderer.cpp" />
+    <ClCompile Include="GraphicsEngine\Graphics\RenderBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\App\GradDemo\2_EarthAndMoon\Shader\EarthAndMoon.frag" />
@@ -491,6 +493,7 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <None Include="Assets\App\GradDemo\6_RoughMikado\Shader\AuraTrail.frag" />
     <None Include="Assets\App\GradDemo\6_RoughMikado\Shader\AuraTrail.geom" />
     <None Include="Assets\App\GradDemo\7_FeatherRobe\Shader\FeatherRobe.frag" />
+    <None Include="Assets\App\GradDemo\CommonShader\RayTrail.frag" />
     <None Include="Assets\App\GradDemo\CommonShader\TrailDebug.geom" />
     <None Include="Assets\App\GradDemo\CommonShader\TrailSegment.comp" />
     <None Include="Assets\App\GradDemo\6_RoughMikado\Shader\CubeTrail.vert" />

@@ -23,6 +23,9 @@ uniform vec3 _WorldCameraCenter;
 uniform int _MapIndex;
 uniform float _Alpha;
 
+uniform int _UseTex;
+uniform sampler2D _BufferA;
+
 in vec2 uv;
 #endif
 
@@ -536,7 +539,11 @@ else
         col = mix(col, fog*sqrt(fog)*1.2, smoothstep(0.0, 0.95, t/120.0));
     }
     
-    
+    if(_UseTex == 1)
+    {
+        col = texture(_BufferA, uv).rgb;
+    }
+
     //
     gl_FragColor = vec4(col,_Alpha);
 }

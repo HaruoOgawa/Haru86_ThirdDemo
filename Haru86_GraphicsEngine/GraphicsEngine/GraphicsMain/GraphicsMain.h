@@ -51,6 +51,7 @@ public:
 	//
 	app::GradDemo* m_App;
 	ERerderingTarget renderingTarget;
+	unsigned int m_TargetFrameIndex;
 	bool isRunning;
 	float previousTime;
 	std::shared_ptr<MeshRendererComponent> m_MainBoardRenderer;

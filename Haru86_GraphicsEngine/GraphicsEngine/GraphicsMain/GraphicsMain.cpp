@@ -43,6 +43,7 @@ GraphicsMain::GraphicsMain()
 #endif // _DEBUG
 
 	renderingTarget(ERerderingTarget::COLOR),
+	m_TargetFrameIndex(0),
 	m_MainCamera(nullptr),
 	m_UsingCamera(nullptr),
 	m_SoundPlayer(nullptr),
