@@ -28,6 +28,8 @@ namespace app
 	void CubeTrail::Update(float time)
 	{
 		m_TrailRenderer->Update(time);
+
+		m_TrailRenderer->SetCamraPosFromBuffer();
 	}
 
 	void CubeTrail::Draw()

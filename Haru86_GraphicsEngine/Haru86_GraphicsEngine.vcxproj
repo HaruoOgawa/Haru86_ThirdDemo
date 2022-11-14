@@ -414,6 +414,7 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <ClInclude Include="Assets\App\GradDemo\6_RoughMikado\Script\AuraTrail.h" />
     <ClInclude Include="Assets\App\GradDemo\6_RoughMikado\Script\AuraCore.h" />
     <ClInclude Include="Assets\App\GradDemo\7_FeatherRobe\Script\FeatherRobe.h" />
+    <ClInclude Include="Assets\App\GradDemo\6_RoughMikado\Script\BoidsGPGPU.h" />
     <ClInclude Include="GraphicsEngine\Graphics\EGraphicsParam.h" />
     <ClInclude Include="GraphicsEngine\Graphics\ShaderLib.h" />
     <ClInclude Include="GraphicsEngine\Message\Console.h" />
@@ -455,6 +456,7 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <ClCompile Include="Assets\App\GradDemo\6_RoughMikado\Script\AuraTrail.cpp" />
     <ClCompile Include="Assets\App\GradDemo\6_RoughMikado\Script\AuraCore.cpp" />
     <ClCompile Include="Assets\App\GradDemo\7_FeatherRobe\Script\FeatherRobe.cpp" />
+    <ClCompile Include="Assets\App\GradDemo\6_RoughMikado\Script\BoidsGPGPU.cpp" />
     <ClCompile Include="GraphicsEngine\Graphics\ComputeBuffer.cpp" />
     <ClCompile Include="GraphicsEngine\GraphicsMain\GraphicsMain.cpp" />
     <ClCompile Include="GraphicsEngine\Graphics\GraphicsRenderer.cpp" />
@@ -492,6 +494,8 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <None Include="Assets\App\GradDemo\6_RoughMikado\Shader\AuraBackground.frag" />
     <None Include="Assets\App\GradDemo\6_RoughMikado\Shader\AuraTrail.frag" />
     <None Include="Assets\App\GradDemo\6_RoughMikado\Shader\AuraTrail.geom" />
+    <None Include="Assets\App\GradDemo\6_RoughMikado\Shader\BoidsData.comp" />
+    <None Include="Assets\App\GradDemo\6_RoughMikado\Shader\BoidsForce.comp" />
     <None Include="Assets\App\GradDemo\7_FeatherRobe\Shader\FeatherRobe.frag" />
     <None Include="Assets\App\GradDemo\CommonShader\RayTrail.frag" />
     <None Include="Assets\App\GradDemo\CommonShader\TrailDebug.geom" />

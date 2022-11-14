@@ -203,4 +203,29 @@ namespace app
 			}, GL_POINTS, true, m_LineSegment * m_TrailNum);
 #endif // _DEBUG
 	}
+
+	void TrailRenderer::SetCamraPosFromBuffer()
+	{
+		std::vector<SGroup> GroupData = std::vector<SGroup>(m_TrailNum, SGroup(0));
+		m_TrailGroupBuffer->GetBufferData<SGroup>(&GroupData[0], 0, m_TrailNum);
+		std::vector<STrs> TrsData = std::vector<STrs>(m_TrailNum * m_LineSegment, STrs(0, 0));
+		m_TrailSegmentBuffer->GetBufferData<STrs>(&TrsData[0], 0, m_TrailNum * m_LineSegment);
+
+		unsigned int TargetIndex = m_TrailNum / 4;
+		SGroup TargetGroup = GroupData[TargetIndex];
+		STrs TargetTrs = TrsData[static_cast<int>(TargetGroup.param[0])];
+
+		float radius = 4.0; float speed = 0.0005;
+		GraphicsMain::GetInstance()->m_MainCamera->m_center = glm::vec3(TargetTrs.pos[0], TargetTrs.pos[1], TargetTrs.pos[2]);
+		GraphicsMain::GetInstance()->m_MainCamera->m_position = 
+			GraphicsMain::GetInstance()->m_MainCamera->m_center +
+			glm::vec3(
+				glm::cos(GraphicsMain::GetInstance()->m_SecondsTime * speed),
+				glm::sin(GraphicsMain::GetInstance()->m_SecondsTime * speed),
+				glm::sin(GraphicsMain::GetInstance()->m_SecondsTime * speed)
+			) * radius;
+
+		GroupData.clear();
+		TrsData.clear();
+	}
 }

@@ -541,7 +541,7 @@ else
     
     if(_UseTex == 1)
     {
-        col = texture(_BufferA, uv).rgb;
+        //col = texture(_BufferA, uv).rgb;
     }
 
     //
