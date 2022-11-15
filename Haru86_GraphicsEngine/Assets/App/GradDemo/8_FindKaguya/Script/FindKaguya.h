@@ -3,7 +3,6 @@
 #include <vector>
 
 class MeshRendererComponent;
-namespace graphic { class RenderBuffer; }
 
 namespace app
 {
@@ -11,9 +10,6 @@ namespace app
 	class FindKaguya
 	{
 		std::shared_ptr<MeshRendererComponent> m_Voxel;
-		//std::shared_ptr<CubeTrail> m_CubeTrail;
-		std::vector<std::shared_ptr<graphic::RenderBuffer>> m_RenderBufferList;
-		std::shared_ptr<MeshRendererComponent> m_RayTrail;
 	public:
 		FindKaguya();
 		~FindKaguya() = default;

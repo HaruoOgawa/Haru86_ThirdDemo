@@ -75,9 +75,10 @@ float cube(vec3 p, vec3 s){return length(max(vec3(0.0), abs(p)-s));}
 mapr map(vec3 p)
 {
     mapr mr = mapr(1000.0, false, -1,0.0,0.0,0.0);
-    float r = 1.0;
-    for(float i=0.0; i<12.0; i++)
+    
+    for(float i=0.0; i<20.0; i++)
     {
+        float r = 0.25 + rand(vec2(99.99,4545.21) * i) *1.25 ;
         float offsetA = rand(vec2(6.621,1.11148) * i) * 2.0 * 3.1415;
         float offsetB = rand(vec2(1.9987,0.2259) * i) * 2.0 * 3.1415;
         vec3 dir = vec3(
