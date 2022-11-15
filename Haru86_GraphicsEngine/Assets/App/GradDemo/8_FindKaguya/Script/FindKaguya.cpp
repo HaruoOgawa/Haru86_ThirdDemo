@@ -1,10 +1,6 @@
 #include "FindKaguya.h"
 #include "GraphicsEngine/Component/MeshRendererComponent.h"
-#include "GraphicsEngine/Component/TransformComponent.h"
-#include "GraphicsEngine/Graphics/ShaderLib.h"
 #include "GraphicsEngine/GraphicsMain/GraphicsMain.h"
-#include "../../SharedShader.h"
-#include "../../6_RoughMikado/Script/CubeTrail.h"
 
 namespace app
 {
@@ -16,13 +12,14 @@ namespace app
 			PrimitiveType::BOARD,
 			RenderingSurfaceType::RAYMARCHING,
 			shaderlib::StandardRenderBoard_vert,
-			shaderdshader::Voxel_frag
+			std::string(
+				#include "../Shader/Voxel.frag"
+			)
 		);
 	}
 
 	void FindKaguya::Update(float time)
 	{
-		//m_CubeTrail->Update(time);
 	}
 
 	void FindKaguya::Draw(bool IsRaymarching)

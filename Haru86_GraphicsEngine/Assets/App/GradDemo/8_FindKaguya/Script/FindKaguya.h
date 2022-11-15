@@ -1,12 +1,10 @@
 #pragma once
 #include <memory>
-#include <vector>
 
 class MeshRendererComponent;
 
 namespace app
 {
-	class CubeTrail;
 	class FindKaguya
 	{
 		std::shared_ptr<MeshRendererComponent> m_Voxel;

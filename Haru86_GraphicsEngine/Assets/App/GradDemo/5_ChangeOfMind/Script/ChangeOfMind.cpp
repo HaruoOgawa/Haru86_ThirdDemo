@@ -4,7 +4,6 @@
 #include "GraphicsEngine/Graphics/ShaderLib.h"
 #include "GraphicsEngine/GraphicsMain/GraphicsMain.h"
 #include "GraphicsEngine/Graphics/Primitive.h"
-#include "../../SharedShader.h"
 
 namespace app
 {
@@ -60,8 +59,10 @@ namespace app
 				PrimitiveType::BOARD,
 				RenderingSurfaceType::RAYMARCHING,
 				shaderlib::StandardRenderBoard_vert,
-				shaderdshader::Voxel_frag
-				);
+				std::string(
+					#include "../../8_FindKaguya/Shader/Voxel.frag"
+				)
+			);
 
 			m_Voxel->useAlphaTest = true;
 		}
