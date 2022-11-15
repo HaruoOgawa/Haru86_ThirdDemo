@@ -473,6 +473,7 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <ClCompile Include="GraphicsEngine\Graphics\RenderBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\App\GradDemo\0_MoonSea\Shader\RaySpaceShip.frag" />
     <None Include="Assets\App\GradDemo\2_EarthAndMoon\Shader\EarthAndMoon.frag" />
     <None Include="Assets\App\GradDemo\1_LeaveEarth\Shader\LeaveEarth.frag" />
     <None Include="Assets\App\GradDemo\0_MoonSea\Shader\MoonSea.frag" />

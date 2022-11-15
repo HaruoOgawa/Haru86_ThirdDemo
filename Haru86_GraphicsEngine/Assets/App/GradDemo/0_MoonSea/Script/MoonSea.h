@@ -8,6 +8,7 @@ namespace app
 	class MoonSea
 	{
 		std::shared_ptr<MeshRendererComponent> m_MoonSeaMeshRenderer;
+		std::shared_ptr<MeshRendererComponent> m_RaySpaceShip;
 
 		bool								   m_IsLeaveEarth;
 	private:
