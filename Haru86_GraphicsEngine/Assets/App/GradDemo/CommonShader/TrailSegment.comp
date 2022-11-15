@@ -33,6 +33,28 @@ layout(std430, binding = GroupBufferBinding) buffer in_group_buffer
 	SGroup group[];
 } out_group_buffer;
 
+struct BoidsForce{
+	vec4 force;
+};
+
+layout(std430,binding=BufferBoidsForceBinding) buffer destBufferBoidsForce
+{
+	BoidsForce boidsForce[];
+} outBufferBoidsForce;
+
+//outBufferBoidsForce.boidsForce[]
+
+struct BoidsData {
+    vec4 position;
+    vec4 velocity;
+    vec4 viewDir;
+};
+
+layout(std430,binding=BufferBoidsDataBinding) buffer destBufferBoidsData
+{
+	BoidsData boidsData[];
+} outBufferBoidsData;
+
 float rand(vec2 st){
     return fract(
         sin(dot(st.xy,vec2(12.9898,78.233)))*43758.5453123
@@ -115,6 +137,12 @@ void AuraTrail(inout STrs trs,float id)
 	);	
 }
 
+void BoidsTrail(inout STrs trs,int id)
+{
+	BoidsData boidsData = outBufferBoidsData.boidsData[id];
+	trs.pos = boidsData.position;
+}
+
 void CalTrailSegment(uvec3 DID)
 {
 	int id = int(DID.x);
@@ -132,6 +160,10 @@ void CalTrailSegment(uvec3 DID)
 		else if(_SegmentFuncIndex == 1)
 		{
 			AuraTrail(trs, float(id));
+		}
+		else if(_SegmentFuncIndex == 2)
+		{
+			BoidsTrail(trs, id);
 		}
 	}
 

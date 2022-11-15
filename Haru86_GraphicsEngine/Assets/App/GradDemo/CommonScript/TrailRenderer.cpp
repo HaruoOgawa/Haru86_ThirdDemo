@@ -3,13 +3,14 @@
 #include "GraphicsEngine/Graphics/Material.h"
 #include "GraphicsEngine/GraphicsMain/GraphicsMain.h"
 #include "GraphicsEngine/Component/MeshRendererComponent.h"
+#include "../6_RoughMikado/Script/BoidsGPGPU.h"
 #ifdef _DEBUG
 #include "GraphicsEngine/Message/Console.h"
 #endif // _DEBUG
 namespace app
 {
 	TrailRenderer::TrailRenderer(int SegmentFuncIndex, int BufferIndexTrailGroup, int BufferIndexTrailSegment,
-		int NumOfSegmentThreads, int NumOfGroupThreads, int LineSegment, int TrailNum, float ParticleLife) :
+		int NumOfSegmentThreads, int NumOfGroupThreads, int LineSegment, int TrailNum, float ParticleLife, const std::shared_ptr<BoidsGPGPU>& BoidsGPGPU) :
 		m_TrailGroupBuffer(nullptr),
 		m_TrailSegmentBuffer(nullptr),
 		m_TrailGroupCS(nullptr),
@@ -45,6 +46,8 @@ namespace app
 			"#define NUMTHREAD " + std::to_string(m_NumOfSegmentThreads) + "\n" +
 			"#define GroupBufferBinding " + std::to_string(m_BufferIndexTrailGroup) + "\n" +
 			"#define SegmentBufferBinding " + std::to_string(m_BufferIndexTrailSegment) + "\n" +
+			"#define BufferBoidsForceBinding " + std::to_string(BoidsGPGPU->GetBufferBoidsForceBinding()) + "\n" +
+			"#define BufferBoidsDataBinding " + std::to_string(BoidsGPGPU->GetBufferBoidsDataBinding()) + "\n" +
 			std::string(
 				#include "../CommonShader/TrailSegment.comp"
 			)
@@ -66,7 +69,7 @@ namespace app
 #endif // _DEBUG
 
 		// GPGPUÇÃèÄîı
-		InitBuffer();
+		InitBuffer(BoidsGPGPU);
 
 		// èââÒGPGPUÇÃé¿çs
 		Start();
@@ -87,7 +90,7 @@ namespace app
 		}
 	}
 
-	void TrailRenderer::InitBuffer()
+	void TrailRenderer::InitBuffer(const std::shared_ptr<BoidsGPGPU>& BoidsGPGPU)
 	{
 		{
 			std::vector<SGroup> InitGroupData;
@@ -105,6 +108,8 @@ namespace app
 
 			m_TrailSegmentCS->SetBufferToCS(m_TrailSegmentBuffer, m_BufferIndexTrailSegment);
 			m_TrailSegmentCS->SetBufferToCS(m_TrailGroupBuffer, m_BufferIndexTrailGroup);
+			m_TrailSegmentCS->SetBufferToCS(BoidsGPGPU->GetBoidsDataCB(), BoidsGPGPU->GetBufferBoidsForceBinding());
+			m_TrailSegmentCS->SetBufferToCS(BoidsGPGPU->GetBoidsForce_CB(), BoidsGPGPU->GetBufferBoidsForceBinding());
 
 #ifdef _DEBUG
 			m_TrailDebug->m_material->SetBufferToMat(m_TrailSegmentBuffer, m_BufferIndexTrailSegment);
@@ -215,7 +220,7 @@ namespace app
 		SGroup TargetGroup = GroupData[TargetIndex];
 		STrs TargetTrs = TrsData[static_cast<int>(TargetGroup.param[0])];
 
-		float radius = 4.0; float speed = 0.0005;
+		float radius = 4.0; float speed = 1.0f;
 		GraphicsMain::GetInstance()->m_MainCamera->m_center = glm::vec3(TargetTrs.pos[0], TargetTrs.pos[1], TargetTrs.pos[2]);
 		GraphicsMain::GetInstance()->m_MainCamera->m_position = 
 			GraphicsMain::GetInstance()->m_MainCamera->m_center +

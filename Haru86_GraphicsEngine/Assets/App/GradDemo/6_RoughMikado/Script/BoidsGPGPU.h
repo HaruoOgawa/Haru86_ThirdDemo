@@ -47,13 +47,26 @@ namespace app
         std::shared_ptr<Material> m_BoidsDataCS;
 
         int m_BoidsNum;
+        int m_NumOfThreads;
+
+        unsigned int m_BufferBoidsForceBinding;
+        unsigned int m_BufferBoidsDataBinding;
+    private:
+        float rand(glm::vec2 st);
+        void InitBuffer();
+        void Dispatch();
     public:
-        BoidsGPGPU();
+        BoidsGPGPU(int BoidsNum, int NumOfThreads, unsigned int BufferBoidsForceBinding, unsigned int BufferBoidsDataBinding);
         virtual ~BoidsGPGPU();
 
         void Start();
-        void Update();
+        void Update(float time);
         void Draw();
-        float rand(glm::vec2 st);
+
+        unsigned int GetBufferBoidsForceBinding() const { return m_BufferBoidsForceBinding; }
+        unsigned int GetBufferBoidsDataBinding() const { return m_BufferBoidsDataBinding; }
+
+        const std::shared_ptr<ComputeBuffer>& GetBoidsForce_CB()const { return m_BoidsForce_CB; }
+        const std::shared_ptr<ComputeBuffer>& GetBoidsDataCB()const { return m_BoidsDataCB; }
 	};
 }

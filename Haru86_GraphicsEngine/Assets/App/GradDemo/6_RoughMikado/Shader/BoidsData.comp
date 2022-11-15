@@ -1,12 +1,9 @@
 R"(
-
-#version 430
-
 struct BoidsForce{
 	vec4 force;
 };
 
-layout(std430,binding=0) buffer destBufferBoidsForce
+layout(std430,binding=BufferBoidsForceBinding) buffer destBufferBoidsForce
 {
 	BoidsForce boidsForce[];
 } outBufferBoidsForce;
@@ -19,16 +16,14 @@ struct BoidsData {
     vec4 viewDir;
 };
 
-layout(std430,binding=1) buffer destBufferBoidsData
+layout(std430,binding=BufferBoidsDataBinding) buffer destBufferBoidsData
 {
 	BoidsData boidsData[];
 } outBufferBoidsData;
 
 //outBufferBoidsData.boidsData[]
 
-layout(local_size_x=256,local_size_y=1,local_size_z=1) in;
-
-
+layout(local_size_x=NUMTHREADS_X_NUM,local_size_y=1,local_size_z=1) in;
 
 uniform float _time;
 uniform float _deltaTime;
@@ -36,9 +31,6 @@ uniform float _deltaTime;
 #define BoundingSize vec3(100.0,100.0,100.0)
 
 //Boids Func////////////////////////////////////////////////////////////////////////////
-
-#define NUMTHREADS_X_NUM 256
-
 uniform int _boids_count;
 uniform float _maxBoidsDist;
 uniform float _maxBoidsField;
@@ -95,22 +87,28 @@ void main(){
 	uint DID=gl_GlobalInvocationID.x;
 	
     BoidsData boids_data=outBufferBoidsData.boidsData[DID];
-    vec4 now_pos=boids_data.position;
-    vec4 now_vel=boids_data.velocity;
+    vec3 now_pos=boids_data.position.xyz;
+    vec3 now_vel=boids_data.velocity.xyz;
 
-    vec4 force=outBufferBoidsForce.boidsForce[DID].force;
+    vec3 force=outBufferBoidsForce.boidsForce[DID].force.xyz;
     
-    vec4 nex_vel=force;
+    vec3 nex_vel=force;
 
-    vec4 next_pos=now_pos+normalize(nex_vel)*_deltaTime*50.0;
+    vec3 next_pos=now_pos+normalize(nex_vel)*_deltaTime*50.0;
    
-    boids_data.position=next_pos;
-    boids_data.velocity=nex_vel;
-    boids_data.viewDir=next_pos-now_pos;
+   next_pos =vec3(
+        (isnan(next_pos.x) || isinf(next_pos.x))?0.005:next_pos.x,
+        (isnan(next_pos.y) || isinf(next_pos.y))?0.005:next_pos.y,
+        (isnan(next_pos.z) || isinf(next_pos.z))?0.005:next_pos.z
+    );
+
+    boids_data.position=vec4(next_pos, 1.0);
+    boids_data.velocity=vec4(nex_vel, 1.0);
+    boids_data.viewDir=vec4(next_pos-now_pos, 1.0);
 
    outBufferBoidsData.boidsData[DID]=boids_data;
 
-   outBufferBoidsForce.boidsForce[DID].force=nex_vel;
+   outBufferBoidsForce.boidsForce[DID].force=vec4(nex_vel, 1.0);
 }
 
 

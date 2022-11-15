@@ -5,13 +5,13 @@
 namespace app
 {
 	CubeTrail::CubeTrail(int SegmentFuncIndex, int BufferIndexTrailGroup, int BufferIndexTrailSegment,
-		int NumOfSegmentThreads, int NumOfGroupThreads, int LineSegment, int TrailNum, float ParticleLife):
+		int NumOfSegmentThreads, int NumOfGroupThreads, int LineSegment, int TrailNum, float ParticleLife, const std::shared_ptr<BoidsGPGPU>& BoidsGPGPU):
 		m_InstancedCube(nullptr),
 		m_TrailRenderer(nullptr),
 		m_CubeNum(2048)
 	{
 		m_TrailRenderer = std::make_shared<TrailRenderer>(SegmentFuncIndex, BufferIndexTrailGroup, BufferIndexTrailSegment, NumOfSegmentThreads,
-			NumOfGroupThreads, LineSegment, TrailNum, ParticleLife);
+			NumOfGroupThreads, LineSegment, TrailNum, ParticleLife, BoidsGPGPU);
 		m_InstancedCube = std::make_shared<MeshRendererComponent>(
 			std::make_shared<TransformComponent>(),
 			PrimitiveType::CUBE,

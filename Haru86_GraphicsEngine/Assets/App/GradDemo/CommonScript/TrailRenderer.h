@@ -7,6 +7,8 @@ class Material;
 
 namespace app
 {
+	class BoidsGPGPU;
+
 	struct SGroup
 	{
 		float param[4]; // vec4(now_segment, life, IsPermitUpdate, 0.0)
@@ -49,10 +51,10 @@ namespace app
 		int m_BufferIndexTrailGroup;
 		int m_BufferIndexTrailSegment;
 	private:
-		void InitBuffer();
+		void InitBuffer(const std::shared_ptr<BoidsGPGPU>& BoidsGPGPU);
 	public:
 		TrailRenderer(int SegmentFuncIndex, int BufferIndexTrailGroup, int BufferIndexTrailSegment, 
-			int NumOfSegmentThreads,int NumOfGroupThreads, int LineSegment, int TrailNum, float ParticleLife);
+			int NumOfSegmentThreads,int NumOfGroupThreads, int LineSegment, int TrailNum, float ParticleLife, const std::shared_ptr<BoidsGPGPU>& BoidsGPGPU);
 		virtual ~TrailRenderer();
 
 		void Start();

@@ -7,6 +7,7 @@
 #include "CubeTrail.h"
 #include "AuraTrail.h"
 #include "AuraCore.h"
+#include "BoidsGPGPU.h"
 
 namespace app
 {
@@ -14,11 +15,14 @@ namespace app
 		m_TrailCube(nullptr),
 		m_AuraTrail(nullptr),
 		m_AuraCore(nullptr),
-		m_AuraBackRenderer(nullptr)
+		m_AuraBackRenderer(nullptr),
+		m_BoidsGPGPU(nullptr)
 	{
-		m_TrailCube = std::make_shared<CubeTrail>(1, 0, 1, 16, 32, 16, 32, 0.05f);
-		m_AuraTrail = std::make_shared<AuraTrail>();
-		m_AuraCore = std::make_shared<AuraCore>();
+		m_BoidsGPGPU = std::make_shared<BoidsGPGPU>(16, 16, 4, 5);
+
+		m_TrailCube = std::make_shared<CubeTrail>(2, 0, 1, 16, 32, 16, 32, 0.1f, m_BoidsGPGPU);
+		//m_AuraTrail = std::make_shared<AuraTrail>();
+		//m_AuraCore = std::make_shared<AuraCore>();
 		m_AuraBackRenderer = std::make_shared<MeshRendererComponent>(
 			std::make_shared<TransformComponent>(),
 			PrimitiveType::BOARD,
@@ -35,7 +39,8 @@ namespace app
 		//GraphicsRenderer::GetInstance()->SetBackgroudColor(glm::vec4(1.0f));
 
 		m_TrailCube->Update(time);
-		m_AuraTrail->Update(time);
+		//m_AuraTrail->Update(time);
+		m_BoidsGPGPU->Update(time);
 	}
 
 	void RoughMikado::Draw(bool IsRaymarching)

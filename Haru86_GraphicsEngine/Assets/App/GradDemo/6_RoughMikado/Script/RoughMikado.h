@@ -8,6 +8,7 @@ namespace app
 	class CubeTrail;
 	class AuraTrail;
 	class AuraCore;
+	class BoidsGPGPU;
 
 	class RoughMikado
 	{
@@ -15,6 +16,8 @@ namespace app
 		std::shared_ptr<AuraTrail> m_AuraTrail;
 		std::shared_ptr<AuraCore> m_AuraCore;
 		std::shared_ptr<MeshRendererComponent> m_AuraBackRenderer;
+
+		std::shared_ptr<BoidsGPGPU> m_BoidsGPGPU;
 	public:
 		RoughMikado();
 		~RoughMikado() = default;

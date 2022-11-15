@@ -1,12 +1,10 @@
 R"(
 
-#version 430
-
 struct BoidsForce{
 	vec4 force;
 };
 
-layout(std430,binding=0) buffer destBufferBoidsForce
+layout(std430,binding=BufferBoidsForceBinding) buffer destBufferBoidsForce
 {
 	BoidsForce boidsForce[];
 } outBufferBoidsForce;
@@ -17,12 +15,12 @@ struct BoidsData {
     vec4 viewDir;
 };
 
-layout(std430,binding=1) buffer destBufferBoidsData
+layout(std430,binding=BufferBoidsDataBinding) buffer destBufferBoidsData
 {
 	BoidsData boidsData[];
 } outBufferBoidsData;
 
-layout(local_size_x=256,local_size_y=1,local_size_z=1) in;
+layout(local_size_x=NUMTHREADS_X_NUM,local_size_y=1,local_size_z=1) in;
 
 uniform float _time;
 uniform float _deltaTime;
@@ -31,9 +29,6 @@ uniform float _adjustTime;
 #define BoundingSize vec3(100.0,100.0,100.0)
 
 //Boids Func////////////////////////////////////////////////////////////////////////////
-
-#define NUMTHREADS_X_NUM 256
-
 uniform int _boids_count;
 uniform float _maxBoidsDist;
 uniform float _maxBoidsField;
@@ -122,10 +117,10 @@ void main(){
     centerPos=vec3(cos(_time*smallT*0.001)*_centerPosPower,0.,sin(_time*smallT*0.001)*_centerPosPower);
     centerPos=vec3(0,0,_time*_centerPosPower*0.001);
 
-    float disMin=100000000.0;
-    float disMax=-10000000.0;
+    float disMin=1000.0;
+    float disMax=-1000.0;
 
-    float speed=0.005;
+    float speed=5.0;
     
     for(int i=0;i<_boids_count;i+=255){
         shared_BoidsData[GID]=outBufferBoidsData.boidsData[i+GID];
@@ -215,9 +210,9 @@ void main(){
     result_velocity=Turn(my_position.xyz,result_velocity,float(DID));
 
     outBufferBoidsForce.boidsForce[DID].force=vec4(
-        (isnan(result_velocity.x))?0.005:result_velocity.x,
-        (isnan(result_velocity.y))?0.005:result_velocity.y,
-        (isnan(result_velocity.z))?0.005:result_velocity.z,
+        (isnan(result_velocity.x) || isinf(result_velocity.x))?0.005:result_velocity.x,
+        (isnan(result_velocity.y) || isinf(result_velocity.y))?0.005:result_velocity.y,
+        (isnan(result_velocity.z) || isinf(result_velocity.z))?0.005:result_velocity.z,
         0.0
     );
 

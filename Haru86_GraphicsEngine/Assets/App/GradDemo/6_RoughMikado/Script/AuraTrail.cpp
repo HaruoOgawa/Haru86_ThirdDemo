@@ -9,7 +9,7 @@ namespace app
 		m_TrailRenderer(nullptr),
 		m_AuraNum(4096)
 	{
-		m_TrailRenderer = std::make_shared<TrailRenderer>(1, 2, 3, 16, 6, 16, 6, 0.1f/*0.01f*/);
+		//m_TrailRenderer = std::make_shared<TrailRenderer>(1, 2, 3, 16, 6, 16, 6, 0.1f/*0.01f*/);
 		m_InstancedAura = std::make_shared<MeshRendererComponent>(
 			std::make_shared<TransformComponent>(),
 			//PrimitiveType::POINT,
