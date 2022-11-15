@@ -9,6 +9,7 @@ namespace app
 	class AuraTrail;
 	class AuraCore;
 	class BoidsGPGPU;
+	class EnergyField;
 
 	class RoughMikado
 	{
@@ -18,6 +19,8 @@ namespace app
 		std::shared_ptr<MeshRendererComponent> m_AuraBackRenderer;
 
 		std::shared_ptr<BoidsGPGPU> m_BoidsGPGPU;
+
+		std::shared_ptr<EnergyField> m_EnergyField;
 	public:
 		RoughMikado();
 		~RoughMikado() = default;
