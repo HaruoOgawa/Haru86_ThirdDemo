@@ -368,6 +368,7 @@ void GraphicsRenderer::Draw(const std::shared_ptr<TransformComponent>& UsingCame
 	//ポリゴンオブジェクトのカラーマップをレンダリング///////////////////
 	GraphicsMain::GetInstance()->renderingTarget = ERerderingTarget::COLOR;
 	glBindFramebuffer(GL_FRAMEBUFFER, polygon_frameBuffer_MSAA);
+	GraphicsMain::GetInstance()->m_TargetFrameIndex = polygon_frameBuffer_MSAA;
 	glViewport(0, 0, static_cast<int>(GetScreenSize().x * frameResolusion), static_cast<int>(GetScreenSize().y * frameResolusion));
 
 	glClearColor(m_BackgroudColor.r, m_BackgroudColor.g, m_BackgroudColor.b, m_BackgroudColor.a);
@@ -386,6 +387,7 @@ void GraphicsRenderer::Draw(const std::shared_ptr<TransformComponent>& UsingCame
 	//GraphicsMain::GetInstance()->renderingTarget = ERerderingTarget::COLOR;
 	GraphicsMain::GetInstance()->renderingTarget = ERerderingTarget::DEPTH;
 	glBindFramebuffer(GL_FRAMEBUFFER, polygon_depthBuffer);
+	GraphicsMain::GetInstance()->m_TargetFrameIndex = polygon_depthBuffer;
 	glViewport(0, 0, static_cast<int>(GetScreenSize().x * frameResolusion), static_cast<int>(GetScreenSize().y * frameResolusion));
 
 	//glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -407,6 +409,7 @@ void GraphicsRenderer::Draw(const std::shared_ptr<TransformComponent>& UsingCame
 	if (IsDrawRay) {
 		GraphicsMain::GetInstance()->renderingTarget = ERerderingTarget::COLOR;
 		glBindFramebuffer(GL_FRAMEBUFFER, raymarching_frameBuffer);
+		GraphicsMain::GetInstance()->m_TargetFrameIndex = raymarching_frameBuffer;
 		glViewport(0, 0, static_cast<int>(GetScreenSize().x * frameResolusion), static_cast<int>(GetScreenSize().y * frameResolusion));
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -423,6 +426,7 @@ void GraphicsRenderer::Draw(const std::shared_ptr<TransformComponent>& UsingCame
 	if (IsDrawRay) {
 		GraphicsMain::GetInstance()->renderingTarget = ERerderingTarget::DEPTH;
 		glBindFramebuffer(GL_FRAMEBUFFER, raymarching_depthBuffer);
+		GraphicsMain::GetInstance()->m_TargetFrameIndex = raymarching_depthBuffer;
 		glViewport(0, 0, static_cast<int>(GetScreenSize().x * frameResolusion), static_cast<int>(GetScreenSize().y * frameResolusion));
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -438,6 +442,7 @@ void GraphicsRenderer::Draw(const std::shared_ptr<TransformComponent>& UsingCame
 	//ポリゴンオブジェクトとレイマーチングオブジェクトのカラーバッファをブレンドする
 	GraphicsMain::GetInstance()->renderingTarget = ERerderingTarget::COLOR;
 	glBindFramebuffer(GL_FRAMEBUFFER, p_r_BlendingBuffer);
+	GraphicsMain::GetInstance()->m_TargetFrameIndex = p_r_BlendingBuffer;
 	glViewport(0, 0, static_cast<int>(GetScreenSize().x * frameResolusion), static_cast<int>(GetScreenSize().y * frameResolusion));
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);

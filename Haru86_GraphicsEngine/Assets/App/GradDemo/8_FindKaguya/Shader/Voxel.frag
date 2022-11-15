@@ -536,7 +536,6 @@ else
         col = mix(col, fog*sqrt(fog)*1.2, smoothstep(0.0, 0.95, t/120.0));
     }
     
-    
     //
     gl_FragColor = vec4(col,_Alpha);
 }

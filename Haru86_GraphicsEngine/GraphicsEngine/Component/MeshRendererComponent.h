@@ -6,6 +6,8 @@
 #include <functional>
 #include "GraphicsEngine/Component/TransformComponent.h"
 #include "GraphicsEngine/Graphics/ShaderLib.h"
+#include "GraphicsEngine/Graphics/GraphicsRenderer.h"
+#include "GraphicsEngine/GraphicsMain/GraphicsMain.h"
 
 #ifdef _DEBUG
 #include "GraphicsEngine/Message/Console.h"

@@ -40,7 +40,7 @@ namespace app
     {
 #ifdef _DEBUG
         // 時間のオフセット
-        GraphicsMain::GetInstance()->m_SecondsTimeOffset = 164.0f;// シーンを飛ばすためのオフセット
+        //GraphicsMain::GetInstance()->m_SecondsTimeOffset = 134.0f;// シーンを飛ばすためのオフセット
 
         // 音楽のミュート
         //GraphicsMain::GetInstance()->m_SoundPlayer->Mute(true);
@@ -69,22 +69,22 @@ namespace app
 
     void GradDemo::Update()
     {
-        GraphicsMain::GetInstance()->m_MainCamera->m_position = glm::vec3(glm::cos(m_LocalTime * 0.25f) * 3.0f, 0.0f, glm::sin(m_LocalTime * 0.25f) * 3.0f);
+        //GraphicsMain::GetInstance()->m_MainCamera->m_position = glm::vec3(glm::cos(m_LocalTime * 0.25f) * 3.0f, 0.0f, glm::sin(m_LocalTime * 0.25f) * 3.0f);
         //GraphicsMain::GetInstance()->m_MainCamera->m_center = glm::vec3(glm::cos(m_LocalTime*0.1f) * 3.0f, 0.0f, glm::sin(m_LocalTime * 0.1f) * 3.0f);
 
         //GraphicsRenderer::GetInstance()->SetBackgroudColor(glm::vec4(1.0f));
 
         if(m_LocalTime)
 
-        m_MoonSea->Update(m_LocalTime);
-        m_EarthAndMoon->Update(m_LocalTime);
-        m_MoonTravel->Update(m_LocalTime);
-        m_CyberpunkSpaceRay->Update(m_LocalTime);
-        m_ChangeOfMind->Update(m_LocalTime);
-        m_RoughMikado->Update(m_LocalTime);
-        m_FeatherRobe->Update(m_LocalTime);
-        m_FindKaguya->Update(m_LocalTime);
-        m_MountFuji->Update(m_LocalTime);
+        if (m_SceneIndex == 0 || m_SceneIndex == 1) m_MoonSea->Update(m_LocalTime);
+        if (m_SceneIndex == 2) m_EarthAndMoon->Update(m_LocalTime);
+        if (m_SceneIndex == 3) m_MoonTravel->Update(m_LocalTime);
+        if (m_SceneIndex == 4) m_CyberpunkSpaceRay->Update(m_LocalTime);
+        if (m_SceneIndex == 5)  m_ChangeOfMind->Update(m_LocalTime);
+        if (m_SceneIndex == 6) m_RoughMikado->Update(m_LocalTime);
+        if (m_SceneIndex == 7) m_FeatherRobe->Update(m_LocalTime);
+        if (m_SceneIndex == 8) m_FindKaguya->Update(m_LocalTime);
+        if (m_SceneIndex == 9) m_MountFuji->Update(m_LocalTime);
     }
 
     void GradDemo::Draw(bool IsRaymarching)

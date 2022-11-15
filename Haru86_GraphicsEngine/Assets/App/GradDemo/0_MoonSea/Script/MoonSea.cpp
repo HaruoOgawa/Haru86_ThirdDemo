@@ -9,6 +9,7 @@ namespace app
 {
 	MoonSea::MoonSea():
 		m_MoonSeaMeshRenderer(nullptr),
+		m_RaySpaceShip(nullptr),
 		m_IsLeaveEarth(false)
 	{
 		m_MoonSeaMeshRenderer = std::make_shared<MeshRendererComponent>(
@@ -22,6 +23,18 @@ namespace app
 		);
 		m_MoonSeaMeshRenderer->useZTest = false;
 		m_MoonSeaMeshRenderer->useAlphaTest = true;
+		
+		m_RaySpaceShip = std::make_shared<MeshRendererComponent>(
+			std::make_shared<TransformComponent>(),
+			PrimitiveType::BOARD,
+			RenderingSurfaceType::RAYMARCHING,
+			shaderlib::StandardRenderBoard_vert,
+			std::string(
+				#include "../Shader/RaySpaceShip.frag"
+			)
+		);
+		m_RaySpaceShip->useZTest = false;
+		m_RaySpaceShip->useAlphaTest = true;
 	}
 
 	void MoonSea::Update(float time)
@@ -35,6 +48,8 @@ namespace app
 			m_MoonSeaMeshRenderer->Draw([this]() {
 				m_MoonSeaMeshRenderer->m_material->SetFloatUniform("_LeaveStartTime", 44.0f);
 			});
+
+			m_RaySpaceShip->Draw();
 		}
 	}
 
