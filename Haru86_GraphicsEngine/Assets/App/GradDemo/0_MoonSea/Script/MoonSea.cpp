@@ -11,7 +11,9 @@ namespace app
 	MoonSea::MoonSea():
 		m_MoonSeaMeshRenderer(nullptr),
 		m_RaySpaceShip(nullptr),
-		m_IsLeaveEarth(false)
+		m_IsLeaveEarth(false),
+		m_UseTextIndex(-1),
+		m_Alpha(0.0f)
 	{
 		m_MoonSeaMeshRenderer = std::make_shared<MeshRendererComponent>(
 			std::make_shared<TransformComponent>(),
@@ -54,9 +56,10 @@ namespace app
 		}
 		else
 		{
-			text::TextObject::Draw("DemoScene 64k Intro", 0.05f, 1.0f, 3.0f, glm::vec3(0.0f));
-			//text::TextObject::Draw("The Tale of the Bamboo-Cutter", 0.05f, 1.0f, 3.0f, glm::vec3(0.0f));
-			//text::TextObject::Draw("CG Engineering\n Haru86_", 0.05f, 1.0f, 3.0f, glm::vec3(0.0f));
+			if(m_UseTextIndex == 0) text::TextObject::Draw("DemoScene 64k Intro", 0.05f, 1.0f, 3.0f, glm::vec3(0.0f), glm::vec4(1.0f, 1.0f, 1.0f,m_Alpha));
+			else if (m_UseTextIndex == 1) text::TextObject::Draw("The Tale of the Bamboo-Cutter", 0.05f, 1.0f, 3.0f, glm::vec3(0.0f), glm::vec4(1.0f, 1.0f, 1.0f, m_Alpha));
+			else if (m_UseTextIndex == 2) text::TextObject::Draw("CG Engineering\nHaru86_", 0.05f, 1.0f, 3.0f, glm::vec3(0.0f), glm::vec4(1.0f, 1.0f, 1.0f, m_Alpha));
+			else if (m_UseTextIndex == 3) text::TextObject::Draw("Music melcom", 0.05f, 1.0f, 3.0f, glm::vec3(0.0f), glm::vec4(1.0f, 1.0f, 1.0f, m_Alpha));
 		}
 	}
 
@@ -67,6 +70,13 @@ namespace app
 		{
 			m_IsLeaveEarth = false;
 
+			//m_Alpha = 1.0f;
+			float pi = 3.1415f;
+			if (time >= 1.0 && time < 4.5f) { m_UseTextIndex = 0; m_Alpha = sin(glm::clamp((time>=4.0)? 4.5f - time : time - 1.0f, 0.0f, 1.0f) * pi * 0.5f); }
+			else if (time >= 4.5f && time < 8.2f) { m_UseTextIndex = 1; m_Alpha = sin(glm::clamp((time>= 7.2f)? 8.2f - time : time - 4.5f, 0.0f, 1.0f) * pi * 0.5f); }
+			else if (time >= 8.2f && time < 12.3f) { m_UseTextIndex = 2; m_Alpha = sin(glm::clamp((time>= 11.3f)? 12.3f - time : time - 8.2f, 0.0f, 1.0f) * pi * 0.5f); }
+			else if (time >= 12.3f && time < 15.5f) { m_UseTextIndex = 3; m_Alpha = sin(glm::clamp((time>= 14.5f)? 15.5f - time : time - 12.3f, 0.0f, 1.0f) * pi * 0.5f); }
+			else { m_UseTextIndex = -1; m_Alpha = 0.0f; }
 			
 		}
 		else if (SceneIndex == 1)

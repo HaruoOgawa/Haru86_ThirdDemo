@@ -11,6 +11,10 @@ namespace app
 		std::shared_ptr<MeshRendererComponent> m_RaySpaceShip;
 
 		bool								   m_IsLeaveEarth;
+
+		//
+		int									   m_UseTextIndex;
+		float								   m_Alpha;
 	private:
 	public:
 		MoonSea();
