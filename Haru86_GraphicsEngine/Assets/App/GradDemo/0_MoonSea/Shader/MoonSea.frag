@@ -440,6 +440,11 @@ else
             ro+=vec3(2.0);
         }
     }
+    else
+    {
+        ro = _WorldCameraPos;
+        ta = _WorldCameraCenter;
+    }
     
     //
     vec3 col = vec3(0.0),

@@ -4,6 +4,7 @@
 #include "GraphicsEngine/Graphics/ShaderLib.h"
 #include "GraphicsEngine/GraphicsMain/GraphicsMain.h"
 #include "GraphicsEngine/Graphics/PostProcess.h"
+#include "GraphicsEngine/Text/TextObject.h"
 
 namespace app
 {
@@ -49,7 +50,13 @@ namespace app
 				m_MoonSeaMeshRenderer->m_material->SetFloatUniform("_LeaveStartTime", 44.0f);
 			});
 
-			m_RaySpaceShip->Draw();
+			//m_RaySpaceShip->Draw();
+		}
+		else
+		{
+			text::TextObject::Draw("DemoScene 64k Intro", 0.05f, 1.0f, 3.0f, glm::vec3(0.0f));
+			//text::TextObject::Draw("The Tale of the Bamboo-Cutter", 0.05f, 1.0f, 3.0f, glm::vec3(0.0f));
+			//text::TextObject::Draw("CG Engineering\n Haru86_", 0.05f, 1.0f, 3.0f, glm::vec3(0.0f));
 		}
 	}
 
@@ -59,6 +66,8 @@ namespace app
 		if (SceneIndex == 0)
 		{
 			m_IsLeaveEarth = false;
+
+			
 		}
 		else if (SceneIndex == 1)
 		{

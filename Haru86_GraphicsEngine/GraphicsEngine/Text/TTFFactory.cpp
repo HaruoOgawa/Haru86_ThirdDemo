@@ -8,7 +8,8 @@
 #endif // _DEBUG
 
 namespace text {
-	TTFFactory::TTFFactory()
+	TTFFactory::TTFFactory():
+		m_PixelSize(48)
 	{
 	}
 
@@ -46,7 +47,7 @@ namespace text {
 			return false;
 		}
 
-		FT_Set_Pixel_Sizes(face, 0, 48);
+		FT_Set_Pixel_Sizes(face, 0, m_PixelSize);
 
 		// TrueTypeFontのロード
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -66,6 +67,8 @@ namespace text {
 			// ロードしたデータをTexMapに登録する
 			std::shared_ptr<Texture> CharTexture = std::make_shared<Texture>();
 			CharTexture->CreateForRendering(face->glyph->bitmap.width, face->glyph->bitmap.rows, GL_RED, GL_RED, GL_UNSIGNED_BYTE, face->glyph->bitmap.buffer);
+			CharTexture->SetLeftTop(face->glyph->bitmap_left, face->glyph->bitmap_top);
+			
 			m_TTFCharacterTexMap.insert({ c, CharTexture });
 		}
 

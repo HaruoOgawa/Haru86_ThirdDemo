@@ -86,6 +86,82 @@ vec3 trs(vec3 p,vec3 s,vec3 r,vec3 t)
 }
 
 ////////////////////////////////////////////////////
+// Get random value
+float random(in vec2 st)
+{
+    return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
+}
+
+// Get noise
+float noise(in vec2 st)
+{
+    // Splited integer and float values.
+    vec2 i = floor(st);
+    vec2 f = fract(st);
+
+    float a = random(i + vec2(0.0, 0.0));
+    float b = random(i + vec2(1.0, 0.0));
+    float c = random(i + vec2(0.0, 1.0));
+    float d = random(i + vec2(1.0, 1.0));
+
+    // -2.0f^3 + 3.0f^2
+    vec2 u = f * f * (3.0 - 2.0 * f);
+
+    return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+}
+
+float fbm(vec2 p)
+{
+    mat2 m=rot(35.6*pi/180.0);
+    float f=0.0,ASum=0.0;
+    for(float i=0.0;i<4.0;i++)
+    {
+        float Att = pow(0.5,i+1.0) ;
+        f+=Att*noise(p);p=2.0*m*p;
+        ASum+=Att;
+    }
+    
+    return f/ASum;
+}
+
+// https://www.shadertoy.com/view/MlfXWH
+#define EPS (2.0/_resolution.x)
+vec3 sky(vec3 rd,bool IsRef)
+{
+    //
+    vec3 col = vec3(0.0),skycol=mix(vec3(0.0,0.038,0.038),vec3(0.0,0.04,0.15),(rd.y*0.5+0.5));
+ 
+    // ¯
+    vec3 star = vec3( smoothstep(0.8,0.95,fbm((100.0*rd.xy)/rd.z)) ); 
+    
+    // ‰_
+    vec3 clouds = vec3(0.0);
+    float s = 0.25;
+    for(int i=0;i<3;i++)
+    {
+        clouds+=fbm(rd.xz/(rd.y)-s+vec2(0.0,_time*0.5));
+        s*=1.35;
+    }
+    
+    //
+    col = skycol + 0.25*clouds*max(0.0,rd.y);
+    col += star*max(0.0,rd.y)*2.0; 
+    
+    if(IsRef)
+    {
+        // ŒŽ
+        vec2 moonPos = rd.xy/rd.z+vec2(0.0,0.25);
+        float moond=length(moonPos),moonr=0.355;
+        vec3 moonCol = vec3(fbm(moonPos*10.0))
+            *smoothstep(0.37,0.35,moond);
+        moonCol+=vec3(1.0)*pow(moond*2.25,-16.0)
+        *( (moond<moonr)? 0.0:0.01 );
+        
+        col += moonCol*vec3(0.5,0.4,0.15)*2.0;
+    }
+    
+    return col;
+}
 
 mapr refmap(vec3 p)
 {
@@ -98,6 +174,8 @@ vec3 dRefColor(vec3 ro, vec3 rd, vec3 n)
     vec3 col = vec3(0.0);
     vec3 dir = reflect(-rd, n);
     
+    col = sky(reflect(-rd, n), true);
+
     return col;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -260,7 +338,7 @@ void main()
              ro = p;
              rd = reflect(rd, n);
              mapr ref_mr = ray(ro ,rd, true);
-             float metallic = 0.25;
+             float metallic = 0.75;
              vec3 refcol = dRefColor(ro, rd, n);
              col = mix(col, refcol, metallic);
          }
