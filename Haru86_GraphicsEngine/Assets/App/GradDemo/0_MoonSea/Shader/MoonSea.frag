@@ -420,7 +420,7 @@ else
     vec3 ro=vec3(0.0,h,1.5),ta=vec3(0.0,h,0.0);
     
     // ƒJƒƒ‰ƒ[ƒN
-    if(LeaveRate>=1.0)
+    /*if(LeaveRate>=1.0)
     {
         int CameraID = int(floor(mod(_time,3.0))); // 0,1,2
         
@@ -440,7 +440,7 @@ else
             ro+=vec3(2.0);
         }
     }
-    else
+    else*/
     {
         ro = _WorldCameraPos;
         ta = _WorldCameraCenter;

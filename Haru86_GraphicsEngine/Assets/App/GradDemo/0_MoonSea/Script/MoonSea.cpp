@@ -57,6 +57,11 @@ namespace app
 				m_RaySpaceShip->m_material->SetIntUniform("_IsUseShowing", 1);
 				m_RaySpaceShip->m_material->SetFloatUniform("_ShowingFinTime", 30.0f);
 				m_RaySpaceShip->m_material->SetFloatUniform("_ShowDuration", 14.0f);
+				m_RaySpaceShip->m_material->SetFloatUniform("_MoveStartTime", 31.0f);
+				m_RaySpaceShip->m_material->SetFloatUniform("_MoveTimeDuration", 11.0f);
+
+				m_RaySpaceShip->m_material->SetIntUniform("_TRSIndex", 0);
+				m_RaySpaceShip->m_material->SetIntUniform("_RefMapIndex", 0);
 			});
 		}
 		else
@@ -96,6 +101,35 @@ namespace app
 		else if (SceneIndex == 1)
 		{
 			m_IsLeaveEarth = true;
+
+			{
+				float h = time - 44.0f;
+				glm::vec3 ro = glm::vec3(0.0f, h, 1.5f), ta = glm::vec3(0.0f, h, 0.0f);
+				int CameraID = int(glm::floor(glm::mod(time, 3.0f))); // 0,1,2
+
+				if (CameraID == 0)
+				{
+					// down side camera
+					ta += 2.0f;
+					ro = glm::vec3(cos(time), ro.y, sin(time));
+				}
+				else if (CameraID == 1)
+				{
+					ro += glm::vec3(
+						0.0f,
+						0.0f,
+						1.5f
+					);
+				}
+				else if (CameraID == 2)
+				{
+					// upside camera
+					ro += glm::vec3(2.0);
+				}
+
+				GraphicsMain::GetInstance()->m_MainCamera->m_position = ro;
+				GraphicsMain::GetInstance()->m_MainCamera->m_center = ta;
+			}
 
 			if (time >= 60.0f)
 			{

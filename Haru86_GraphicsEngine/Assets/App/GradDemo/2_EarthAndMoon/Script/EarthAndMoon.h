@@ -7,6 +7,7 @@ namespace app {
 	class EarthAndMoon
 	{
 		std::shared_ptr<MeshRendererComponent> m_MeshRenderer;
+		std::shared_ptr<MeshRendererComponent> m_RaySpaceShip;
 	public:
 		EarthAndMoon();
 		virtual ~EarthAndMoon() = default;
