@@ -66,10 +66,10 @@ namespace app
 		}
 		else
 		{
-			if(m_UseTextIndex == 0) text::TextObject::Draw("DemoScene 64k Intro", 0.05f, 1.0f, 3.0f, glm::vec3(0.0f), glm::vec4(1.0f, 1.0f, 1.0f,m_Alpha));
-			else if (m_UseTextIndex == 1) text::TextObject::Draw("The Tale of the Bamboo-Cutter", 0.05f, 1.0f, 3.0f, glm::vec3(0.0f), glm::vec4(1.0f, 1.0f, 1.0f, m_Alpha));
-			else if (m_UseTextIndex == 2) text::TextObject::Draw("CG Engineering\nHaru86_", 0.05f, 1.0f, 3.0f, glm::vec3(0.0f), glm::vec4(1.0f, 1.0f, 1.0f, m_Alpha));
-			else if (m_UseTextIndex == 3) text::TextObject::Draw("Music melcom", 0.05f, 1.0f, 3.0f, glm::vec3(0.0f), glm::vec4(1.0f, 1.0f, 1.0f, m_Alpha));
+			if(m_UseTextIndex == 0) text::TextObject::Draw("DemoScene 64k Intro", 0.05f, 1.35f, 3.0f, glm::vec3(0.0f), glm::vec4(1.0f, 1.0f, 1.0f,m_Alpha));
+			else if (m_UseTextIndex == 1) text::TextObject::Draw("The Tale of\nthe Bamboo-Cutter", 0.05f, 1.35f, 3.0f, glm::vec3(0.0f), glm::vec4(1.0f, 1.0f, 1.0f, m_Alpha));
+			else if (m_UseTextIndex == 2) text::TextObject::Draw("CG Engineering\nHaru86_", 0.05f, 1.35f, 3.0f, glm::vec3(0.0f), glm::vec4(1.0f, 1.0f, 1.0f, m_Alpha));
+			else if (m_UseTextIndex == 3) text::TextObject::Draw("Music\nmelcom", 0.05f, 1.35f, 3.0f, glm::vec3(0.0f), glm::vec4(1.0f, 1.0f, 1.0f, m_Alpha));
 		}
 	}
 

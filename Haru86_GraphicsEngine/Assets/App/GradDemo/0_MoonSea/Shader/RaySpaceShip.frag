@@ -398,7 +398,7 @@ void main()
              ro = p;
              rd = reflect(rd, n);
              mapr ref_mr = ray(ro ,rd, true);
-             float metallic = 0.75;
+             float metallic = (_RefMapIndex == 0)? 0.5 : 0.75;
              vec3 refcol = dRefColor(ro, rd, n);
              col = mix(col, refcol, metallic);
          }

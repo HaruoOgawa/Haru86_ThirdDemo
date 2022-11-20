@@ -24,7 +24,7 @@ namespace text
 	{
 	}
 
-	void TextRenderer::Draw(const std::string& Text, float FontSize, float Width, float Height, const glm::vec3& Pos, const glm::vec4& Color)
+	void TextRenderer::Draw(const std::string& Text, float FontSize, float WRange, float HRange, const glm::vec3& Pos, const glm::vec4& Color)
 	{
 		const char* TextData = Text.data();
 		std::vector<std::vector<char>> StructuredText;
@@ -43,7 +43,7 @@ namespace text
 				StructuredText[PushIndex].push_back(PushText);
 			}
 		}
-
+		//Console::Log("_____________________________________\n");
 		const float NumOfRowChar = static_cast<float>(StructuredText.size());
 		for (float row = 0.0f; row < NumOfRowChar; row++)
 		{
@@ -57,22 +57,22 @@ namespace text
 				const float PixelSize = static_cast<float>(GraphicsMain::GetInstance()->m_TTFFactory->GetPixelSize());
 				const float Left = static_cast<float>(CharTex->GetLeft()) / PixelSize;
 				const float Top = static_cast<float>(CharTex->GetTop()) / PixelSize;
+				const float Width = static_cast<float>(CharTex->GetWidth()) / PixelSize;
+				const float Height = static_cast<float>(CharTex->GetHeight()) / PixelSize;
 
-				//Console::Log("Left: %f / Top: %f\n", Left, Top);
-
-				//
-				float XVal = (col - NumOfColChar * 0.5f) * FontSize * Width;
-				float YVal = (row - NumOfRowChar * 0.5f) * FontSize * Height * (-1.0f);
+				//Console::Log("Char: %c / PixelSize: %f / Left: %d / Top: %d / Width: %d / Height: %d\n", Arr[static_cast<size_t>(col)], PixelSize, CharTex->GetLeft(), CharTex->GetTop(), CharTex->GetWidth(), CharTex->GetHeight());
 
 				//
-				glm::vec3 scale = glm::vec3(
-					static_cast<float>(CharTex->GetWidth()),
-					static_cast<float>(CharTex->GetHeight()),
-					0.0f
-				) / PixelSize * FontSize;
+				glm::vec3 scale = glm::vec3(Width, Height, 0.0f) * FontSize;
 				m_TextMeshRenderer->m_transform->m_scale = scale;
 
-				m_TextMeshRenderer->m_transform->m_position = glm::vec3(XVal - Left * scale.x, YVal + Top * scale.y, 0.0f) + Pos;
+				//
+				float XVal = (col - NumOfColChar * 0.5f) * FontSize * WRange;
+				float YVal = (row - NumOfRowChar * 0.5f) * FontSize * HRange * (-1.0f);
+				float LVal = (Left * scale.x)			 ;
+				float TVal = (Top * scale.y)			 ;
+
+				m_TextMeshRenderer->m_transform->m_position = glm::vec3(XVal + LVal, YVal + TVal, 0.0f) + Pos;
 
 				//
 				m_TextMeshRenderer->Draw([&]() {
