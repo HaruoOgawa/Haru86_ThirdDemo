@@ -15,6 +15,7 @@ namespace app
 		//
 		int									   m_UseTextIndex;
 		float								   m_Alpha;
+		bool								   m_DrawRaySpaceShip;
 	private:
 	public:
 		MoonSea();

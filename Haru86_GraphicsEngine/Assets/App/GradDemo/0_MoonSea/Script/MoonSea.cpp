@@ -13,7 +13,8 @@ namespace app
 		m_RaySpaceShip(nullptr),
 		m_IsLeaveEarth(false),
 		m_UseTextIndex(-1),
-		m_Alpha(0.0f)
+		m_Alpha(0.0f),
+		m_DrawRaySpaceShip(false)
 	{
 		m_MoonSeaMeshRenderer = std::make_shared<MeshRendererComponent>(
 			std::make_shared<TransformComponent>(),
@@ -52,7 +53,11 @@ namespace app
 				m_MoonSeaMeshRenderer->m_material->SetFloatUniform("_LeaveStartTime", 44.0f);
 			});
 
-			//m_RaySpaceShip->Draw();
+			if (m_DrawRaySpaceShip) m_RaySpaceShip->Draw([&](){
+				m_RaySpaceShip->m_material->SetIntUniform("_IsUseShowing", 1);
+				m_RaySpaceShip->m_material->SetFloatUniform("_ShowingFinTime", 30.0f);
+				m_RaySpaceShip->m_material->SetFloatUniform("_ShowDuration", 14.0f);
+			});
 		}
 		else
 		{
@@ -76,6 +81,15 @@ namespace app
 			else if (time >= 4.5f && time < 8.2f) { m_UseTextIndex = 1; m_Alpha = sin(glm::clamp((time>= 7.2f)? 8.2f - time : time - 4.5f, 0.0f, 1.0f) * pi * 0.5f); }
 			else if (time >= 8.2f && time < 12.3f) { m_UseTextIndex = 2; m_Alpha = sin(glm::clamp((time>= 11.3f)? 12.3f - time : time - 8.2f, 0.0f, 1.0f) * pi * 0.5f); }
 			else if (time >= 12.3f && time < 15.5f) { m_UseTextIndex = 3; m_Alpha = sin(glm::clamp((time>= 14.5f)? 15.5f - time : time - 12.3f, 0.0f, 1.0f) * pi * 0.5f); }
+			else if (time >= 16.0f) { 
+				m_DrawRaySpaceShip = true;
+				GraphicsMain::GetInstance()->m_MainCamera->m_position = glm::vec3(
+					glm::cos(time * 0.25f) * 3.0f,
+					0.0f,
+					glm::sin(time * 0.25f) * 3.0f
+				);
+
+			}
 			else { m_UseTextIndex = -1; m_Alpha = 0.0f; }
 			
 		}
