@@ -79,11 +79,8 @@ namespace app {
 				m_MeshRenderer->m_material->SetFloatUniform("_MoveVal", (time - 61.0f)/13.0f);
 			};
 
-			GraphicsMain::GetInstance()->m_MainCamera->m_position = glm::vec3(
-				0.0,
-				0.0f,
-				3.0f
-			);
+			GraphicsMain::GetInstance()->m_MainCamera->m_position = glm::vec3(0.0f,0.0f,3.0f);
+			GraphicsMain::GetInstance()->m_MainCamera->m_center = glm::vec3(0.0f,0.0f,0.0f);
 		}
 	}
 }

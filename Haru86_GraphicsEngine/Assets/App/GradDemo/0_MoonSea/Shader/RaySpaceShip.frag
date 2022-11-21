@@ -1,6 +1,5 @@
 R"(
 
-
 #version 330
 // ShaderToy --> OpenGL/GLSL Convert Preprocessor /////////////////////////////
 //#define DRAW_ON_SHADERTOY
@@ -17,8 +16,8 @@ const int _IsUseShowing = 0;
 const float _ShowingFinTime = 30.0;
 const float _ShowDuration = 14.0;
 
-const float _MoveStartTime = 30.0;
-const float _MoveTimeDuration = 11.0;
+const float _MoveStartTime = 3.0;
+const float _MoveTimeDuration = 10.0;
 const int _TRSIndex = 1; 
 const float _GoMoonTime = 3.0;
 const int _RefMapIndex = 1;
@@ -34,6 +33,8 @@ uniform float _ShowDuration;
 
 uniform float _MoveStartTime;
 uniform float _MoveTimeDuration;
+
+uniform float _MoveH;
 
 uniform int _TRSIndex;
 uniform float _GoMoonTime;
@@ -53,6 +54,7 @@ in vec2 uv;
 vec3 g_ro;
 int CameraIndex;
 float ln; // LoopNum
+vec3 g_ShipPos;
 
 // Useful Function ////////////////////////////////////////////////////////////
 
@@ -70,6 +72,7 @@ struct mapr // MapResult
    float t;     
    float i;
    float acc;
+   vec3 jetCol;
 };
 
 void compm(inout mapr mr,float d,int mt,bool IsMin, bool IsSMin) // CompareMap
@@ -78,25 +81,24 @@ void compm(inout mapr mr,float d,int mt,bool IsMin, bool IsSMin) // CompareMap
     {
         if(!IsSMin)
         {
-            if(d<mr.d) mr = mapr(d,false,mt,0.0,0.0,0.0);
+            if(d<mr.d) mr = mapr(d,false,mt,0.0,0.0,0.0,vec3(0.0));
             if(mr.d<dmin) mr.hit=true; 
         }
         else
         {
-            if(d<mr.d) mr = mapr(smin(d, mr.d, 1.5),false,mt,0.0,0.0,0.0);
+            if(d<mr.d) mr = mapr(smin(d, mr.d, 1.5),false,mt,0.0,0.0,0.0,vec3(0.0));
             if(mr.d<dmin) mr.hit=true; 
         }
     }
     else
     {
-        if(d>mr.d) mr = mapr(d,false,mt,0.0,0.0,0.0);
+        if(d>mr.d) mr = mapr(d,false,mt,0.0,0.0,0.0,vec3(0.0));
         if(mr.d<dmin) mr.hit=true; 
     }
 }
 
 vec3 trs(vec3 p,vec3 s,vec3 r,vec3 t)
 {
-    
     p+=t;
     p.yz*=rot(r.x);p.xz*=rot(r.y);p.xy*=rot(r.z);
     p*=s;
@@ -201,7 +203,7 @@ vec3 StarSpace(vec3 ro,vec3 rd)
 
 mapr refmap(vec3 p)
 {
-    mapr mr = mapr(1000.0,false,-1,0.0,0.0,0.0);
+    mapr mr = mapr(1000.0,false,-1,0.0,0.0,0.0,vec3(0.0));
     return mr;
 }
 
@@ -216,124 +218,96 @@ vec3 dRefColor(vec3 ro, vec3 rd, vec3 n)
     return col;
 }
 
-float B(vec3 a)
-{
-    return max(max(a.x,a.y),a.z);
-}
-
-float J(vec3 a)
-{
-    return max(B(abs(a)),B(vec3(length(a.xy),length(a.yz),length(a.zx)))-.2)-1.0;
-}
-
-float K(vec3 a)
-{
-    a = abs(a);
-    return max(a.x*.87+a.y*.5, a.y) - 1.0;
-}
-
-float L(vec3 a)
-{
-    a.z -= 5.0;
-    return max(max(abs(length(a)-5.0) - .05, K(a)), a.z);
-}
-
-float body(vec3 h)
-{
-    return min(
-          max(L(h*vec3(.075, .5, -.6) + vec3(.6, -.1, 0.0))/.6,1.6-abs(h.x)),
-          L(h*vec3(1.0, .35, -.5)+vec3(.45, 0.0, .3))
-         );
-}
-
-float wind(vec3 h, vec3 f)
-{
-    return min(
+// https://www.shadertoy.com/view/4tscR8
+//spaceship distance field is the min() of many sub-distance fields
+float mav(vec2 a){return max(a.y,a.x);}
+float mav(vec3 a){return max(a.z,mav(a.xy));}
+//sub of H and I
+vec3 F(vec3 a, float b){float c=sin(b),d=cos(b);return mat3(d,-c,0,c,d,0,0,0,1)*a;}
+//sub of T,used once
+vec3 H(vec3 a){a=F(a,(floor(atan(a.y,a.x)*1.5/acos(-1.))*2.+1.)*acos(-1.)/3.);
+ return vec3(a.x,abs(a.y),a.z);}
+//
+//sub of S and T
+float R(vec3 a){vec3 b=abs(a);return max(b.y,dot(vec3(.87,.5, 0), b))- 1.;}
+//sub of T, used twice
+float S(vec3 a){return max(max(abs(length(a-vec3(0,0,5.))-5.)-.05,R(a)),a.z-2.);}
+//sub of T, used twice
+float Q(vec3 a){return max(abs(length(a*vec3(1,1,.3))-.325)-.025,-a.z);}
+//sub of T,used twice
+float P(vec3 a){vec3 b=abs(a);
+ return max(mav(b),max(max(length(b.xy),length(b.yz)),length(b.zx))-.2)-1.;}
+//t is most scene specific
+//for scene5 it is the distance field of chasing spaceships
+float T(vec3 a){
+ vec3 b=a*20.0,c=H(b*2.+vec3(0,0,2))-vec3(1.4,0,0),d=b;
+ d.y=abs(d.y);
+ return 
+      min(
           min(
-           max(K(f*1.25-vec3(.2,1.1,-2.5))/1.5,abs(h.y+2.0)-1.75),
-           L(vec3(0.0, -.05, 1.5)-f.yzx*.5)*2.0),
-          max(J(f*.7+vec3(-1.75, .35, 1.4))/.7,
-          -J(f*.8+vec3(-2.0, .4, 2.8))/.8)
-         );
-}
-
-float engine(vec3 p)
-{
-    return 1.0;
+              min(max(R(d*4.-vec3(2,5,0))*.25,abs(d.z)-1.),S(d.yzx*vec3(1,.5,.5)*1.5 + vec3(.3,0,0))/1.5),
+              max(min(.1-abs(d.x),-d.z),S(vec3(0, 0, 1) - d.xzy * vec3(1, .5, .5)))),
+          min(
+              min(max(P(c),-P(c * 1.2 + vec3(0,0, 1.5)) / 1.2),Q(c + vec3(0, 0, 1.5))),
+              Q(vec3(abs(c.xy), c.z) - vec3(.5,.5,-1.5)))*.5)*.05;
 }
 
 // M : ”òs‘D–{‘Ì
 mapr map(vec3 p)
 {
-    mapr mr = mapr(1000.0,false,-1,0.0,0.0,0.0);
-
+    mapr mr = mapr(1000.0,false,-1,0.0,0.0,0.0,vec3(0.0));
+    
     if(_TRSIndex == 0)
     {
         //
         float rate = clamp((_time-_MoveStartTime)/_MoveTimeDuration, 0.0, 1.0);
         p = mix(
-            p,
-            trs(p,vec3(1.0), vec3(6.21*0.25, sin(_time)*0.15, sin(_time)*0.15), vec3(0.0, -20.0, 0.0)),
+            trs(p, vec3(1.0), vec3(0.0, 0.0, pi*0.5), vec3(0.0)),
+            trs(p,vec3(1.0), vec3(6.21*0.25, sin(_time)*0.15, sin(_time)*0.15+pi*0.5), vec3(0.0, -0.1, 0.0)),
             rate
         );
     }
     else if(_TRSIndex == 1)
     {
         vec3 mdir = vec3(0.0);
-        if(_time>= _GoMoonTime) mdir.xz += (exp(_time-_GoMoonTime) - exp(0.01))*100.0; 
-        p = trs(p,vec3(1.0), vec3(11.7*0.25,11.7*0.25 +pi,pi*1.1 + sin(_time)*0.15), mdir);
-    }
-
-    //
-    vec3 pos = (p)*.5;
-    pos.xz *= 0.35;
-    float d = length(pos)-5.0, dbody=1000.0, dwind=1000.0;
-    float ShowingVal = 0.0;
-    if(_IsUseShowing == 1)
-    {
-        ShowingVal = max(0.0,(5.0-_time));
-    }
-    
-    if(d < 1.0){
-        float a=(floor(atan(pos.x,pos.y)/3.14159265*1.5)+.5)/3.0*3.14159265*2.0;
-        float b=sin(a);
-        float c=cos(a);
-        vec3 f=vec3(pos.x*b+pos.y*c,abs(pos.x*c-pos.y*b),pos.z) + ShowingVal;
-        vec3 h=vec3(abs(pos.x),pos.zy) + ShowingVal; // x‚ÉŠÖ‚µ‚Äfold
-        
-        dbody = body(h) * 2.0;
-        dwind = wind(h, f) * 2.0;
-        //d = min(body(h), wind(h, f))*2.0;
-        
-        compm(mr, dbody, 1, true, false);
-        compm(mr, dwind, 2, true, false);
+        if(_time>= _GoMoonTime) mdir.xz += (exp(_time-_GoMoonTime) - exp(0.001))*10.0;
+        vec3 mdir_n = normalize(mdir); 
+        float axz = 0.0;
+         axz = mix(0.0, atan(-1.0, 1.0), clamp((_time-_GoMoonTime), 0.0, 1.0));
+        p = trs(p,vec3(1.0), vec3(11.7*0.25,11.7*0.25 +pi+axz,pi*1.1 + sin(_time)*0.15+pi*0.5), mdir);
     }
     else
     {
-        compm(mr, d, 0, true, false);
+        p = trs(p, vec3(1.0), vec3(0.0, sin(_time)*0.15, sin(_time)*0.15+pi*0.5),vec3(0.0));
     }
     
+    compm(mr, T(p), 0, true, false);
+      
     return mr;
 }
 
 mapr ray(vec3 ro, vec3 rd, bool IsRef)
 {
-    float t = 0.0, i=0.0,acc = 0.0;mapr mr;
+    float t=0.0,i=0.0,acc=0.0;mapr mr;vec3 jetCol=vec3(0.0);
     for(i=0.0; i<80.0; ++i) {
+        vec3 p = ro+rd*t;
         if(!IsRef)
         {
-            mr = map(ro+rd*t);
+            mr = map(p);
         }
         else
         {
-            mr = refmap(ro+rd*t);
+            mr = refmap(p);
         }
         
         if(abs(mr.d)<(t*5.0 + 1.0)*.0001 || t>=3000.0) break;
         acc += exp(-3.0 * mr.d);
         t = min(t+mr.d, 3000.0);
+        
+        vec3 jDir = g_ShipPos - p;
+        jetCol += exp(-1.0*length(jDir)) * vec3(0.33,0.33,0.88);
     }
-    mr.i=i;mr.t=t;mr.acc=acc;
+    mr.i=i;mr.t=t;mr.acc=acc;mr.jetCol=jetCol;
     return mr;
 }
 
@@ -347,31 +321,25 @@ vec3 gn(vec3 p)
     ));
 }
 
-/*vec3 dRefColor(vec3 ro, vec3 rd, vec3 n)
-{
-    vec3 col = vec3(0.0);
-    vec3 dir = reflect(-rd, n);
-    col = texture(iChannel0, dir).rgb;
-    
-    return col;
-}*/
-
 void main()
 {
 #ifdef DRAW_ON_SHADERTOY
     vec2 st=(gl_FragCoord.xy*2.-_resolution.xy)/min(_resolution.x,_resolution.y);
-    //vec3 ro= 30.0 * vec3(cos(_time),sin(_time),sin(_time)),ta=vec3(0.0,0.0,0.0);
+    vec3 ro= 0.25 * vec3(0.0,0.0,1.0),ta=vec3(0.0,0.0,0.0);
+    
+    //vec3 ro= 0.25 * vec3(cos(_time),0.0,sin(_time)),ta=vec3(0.0,0.0,0.0);
     //vec3 ro= 30.0 * vec3(cos(_time),0.0,sin(_time)),ta=vec3(0.0,0.0,0.0);
-    vec3 ro= 10.0 * vec3(0.0,0.0,3.0),ta=vec3(0.0,0.0,0.0);
+    
 #else
     vec2 st=uv*2.0-1.0;st.x*=(_resolution.x/_resolution.y);
     vec3 ro= _WorldCameraPos,ta=_WorldCameraCenter;
-    ro *= 10.0;
+    if(_MoveH > 0.0) { ro.y -= _MoveH; ta.y -= _MoveH; }
+   ro *= 0.1;
 #endif
     //vec3 ro= 30.0 * vec3(cos(_time),0.0,sin(_time)),ta=vec3(0.0,0.0,0.0);
     vec3 cdir=normalize(ta-ro),cside=normalize(cross(vec3(0.0,1.0,0.0),cdir)),cup=normalize(cross(cdir,cside)),
     rd=normalize(st.x*cside+st.y*cup+1.0*cdir),col = vec3(0.0);
-    
+    g_ShipPos = vec3(0.0);
     //col = texture(iChannel0, rd).rgb;
     
     float ShowingTime = max(0.0, _time - (_ShowingFinTime-_ShowDuration));
@@ -382,7 +350,7 @@ void main()
     if(_IsUseShowing == 1 && p.z < 10.0*2.0-ShowingTime*10.0){ISDraw = false;}
     float Alpha = 0.0;
 
-    if(mr.hit && ISDraw)
+    if(mr.hit && ISDraw && mr.m == 0)
     {
          //vec3 BaseCol = (mr.m == 2)? vec3(0.1) : vec3(0.1); 
          vec3 BaseCol = vec3(1.0);
@@ -398,11 +366,11 @@ void main()
              ro = p;
              rd = reflect(rd, n);
              mapr ref_mr = ray(ro ,rd, true);
-             float metallic = (_RefMapIndex == 0)? 0.5 : 0.75;
+             float metallic = (_RefMapIndex == 0)? 0.5 : 0.5;
              vec3 refcol = dRefColor(ro, rd, n);
              col = mix(col, refcol, metallic);
          }
-
+         col += mr.jetCol*0.05;
          Alpha = 1.0;
          
         if(_IsUseShowing == 1 && p.z > 10.0*2.0-ShowingTime*10.0 && p.z < (10.0*2.0+2.0)-ShowingTime*10.0)
@@ -418,8 +386,11 @@ void main()
         
         Alpha = clamp(col.b, 0.0, 1.0);
     }
-
+    
+    
+    
     gl_FragColor = vec4(col, Alpha);
 }
+
 
 )"

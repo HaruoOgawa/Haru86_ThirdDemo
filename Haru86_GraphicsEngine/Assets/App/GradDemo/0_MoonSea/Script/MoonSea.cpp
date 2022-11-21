@@ -14,7 +14,8 @@ namespace app
 		m_IsLeaveEarth(false),
 		m_UseTextIndex(-1),
 		m_Alpha(0.0f),
-		m_DrawRaySpaceShip(false)
+		m_DrawRaySpaceShip(false),
+		m_MoveH(0.0f)
 	{
 		m_MoonSeaMeshRenderer = std::make_shared<MeshRendererComponent>(
 			std::make_shared<TransformComponent>(),
@@ -60,8 +61,10 @@ namespace app
 				m_RaySpaceShip->m_material->SetFloatUniform("_MoveStartTime", 31.0f);
 				m_RaySpaceShip->m_material->SetFloatUniform("_MoveTimeDuration", 11.0f);
 
+				m_RaySpaceShip->m_material->SetFloatUniform("_MoveH", m_MoveH);
+
 				m_RaySpaceShip->m_material->SetIntUniform("_TRSIndex", 0);
-				m_RaySpaceShip->m_material->SetIntUniform("_RefMapIndex", 0);
+				m_RaySpaceShip->m_material->SetIntUniform("_RefMapIndex", 1);
 			});
 		}
 		else
@@ -103,8 +106,9 @@ namespace app
 			m_IsLeaveEarth = true;
 
 			{
-				float h = time - 44.0f;
-				glm::vec3 ro = glm::vec3(0.0f, h, 1.5f), ta = glm::vec3(0.0f, h, 0.0f);
+				m_MoveH = time - 44.0f;
+				//float h = 0.0f;
+				glm::vec3 ro = glm::vec3(0.0f, m_MoveH, 1.5f), ta = glm::vec3(0.0f, m_MoveH, 0.0f);
 				int CameraID = int(glm::floor(glm::mod(time, 3.0f))); // 0,1,2
 
 				if (CameraID == 0)
