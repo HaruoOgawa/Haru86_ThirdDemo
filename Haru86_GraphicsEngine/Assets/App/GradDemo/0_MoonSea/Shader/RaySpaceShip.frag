@@ -10,6 +10,7 @@ R"(
 #define gl_FragColor fragColor
 #define _time iTime
 #define main() mainImage( out vec4 fragColor, in vec2 fragCoord )
+#define _BufferA iChannel0
 const int _RenderingTarget = 1;
 const float _LeaveStartTime = 1.0;
 const int _IsUseShowing = 0;
@@ -18,9 +19,9 @@ const float _ShowDuration = 14.0;
 
 const float _MoveStartTime = 3.0;
 const float _MoveTimeDuration = 10.0;
-const int _TRSIndex = 1; 
+const int _TRSIndex = 0; 
 const float _GoMoonTime = 3.0;
-const int _RefMapIndex = 1;
+int _RefMapIndex = 0;
 #else
 uniform float _time;
 uniform vec2 _resolution;
@@ -38,7 +39,8 @@ uniform float _MoveH;
 
 uniform int _TRSIndex;
 uniform float _GoMoonTime;
-uniform int _RefMapIndex;
+uniform int _RefMapIndex ; // 0 ~ -1
+uniform sampler2D _BufferA;
 
 in vec2 uv;
 #endif
@@ -324,9 +326,10 @@ vec3 gn(vec3 p)
 void main()
 {
 #ifdef DRAW_ON_SHADERTOY
+    vec2 uv = gl_FragCoord.xy/_resolution.xy;
     vec2 st=(gl_FragCoord.xy*2.-_resolution.xy)/min(_resolution.x,_resolution.y);
     vec3 ro= 0.25 * vec3(0.0,0.0,1.0),ta=vec3(0.0,0.0,0.0);
-    
+    if(_time>=_MoveStartTime) _RefMapIndex = 1;
     //vec3 ro= 0.25 * vec3(cos(_time),0.0,sin(_time)),ta=vec3(0.0,0.0,0.0);
     //vec3 ro= 30.0 * vec3(cos(_time),0.0,sin(_time)),ta=vec3(0.0,0.0,0.0);
     
@@ -387,10 +390,21 @@ void main()
         Alpha = clamp(col.b, 0.0, 1.0);
     }
     
+    /*if(_RefMapIndex == 1) 
+    {
+        vec4 BufCol = texture(_BufferA,uv);
+        Alpha = BufCol.a;
+        //Alpha = (BufCol.b < 0.25)? 0.0: 1.0;
+        col += BufCol.rgb;
+    }*/
     
-    
+     //vec3 BufCol = texture(_BufferA,uv).rgb;
+     //col = BufCol; Alpha = 1.0;
+
     gl_FragColor = vec4(col, Alpha);
 }
+
+
 
 
 )"
