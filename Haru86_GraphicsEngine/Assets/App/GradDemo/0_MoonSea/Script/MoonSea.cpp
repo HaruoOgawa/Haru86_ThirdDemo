@@ -185,6 +185,7 @@ namespace app
 			}
 			else if (time >= 31.0f) 
 			{
+				m_DrawRaySpaceShip = true;
 				m_IsDrawShipTrail = true;
 				m_RefMapIndex = 1;
 			}
@@ -204,21 +205,20 @@ namespace app
 				if (CameraID == 0)
 				{
 					// down side camera
-					ta += 2.0f;
-					ro = glm::vec3(cos(time), ro.y, sin(time));
+					float r = 0.5f;
+					ta += 4.0f;
+					ro = glm::vec3(cos(time) * r, ro.y, sin(time) * r);
 				}
 				else if (CameraID == 1)
 				{
-					ro += glm::vec3(
-						0.0f,
-						0.0f,
-						1.5f
-					);
+					float r = 10.0f;
+					ro = glm::vec3(cos(time) * r, 0.0f, sin(time) * r);
 				}
 				else if (CameraID == 2)
 				{
 					// upside camera
-					ro += glm::vec3(2.0);
+					float r = 0.5f;
+					ro += glm::vec3(cos(time) * r, 2.0, sin(time) * r);
 				}
 
 				GraphicsMain::GetInstance()->m_MainCamera->m_position = ro;
