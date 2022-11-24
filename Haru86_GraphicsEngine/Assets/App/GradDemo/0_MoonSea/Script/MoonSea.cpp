@@ -20,7 +20,8 @@ namespace app
 		m_ShipTrailRenderer(nullptr),
 		m_ShipTrailResultRenderer(nullptr),
 		m_IsDrawShipTrail(false),
-		m_RefMapIndex(0)
+		m_RefMapIndex(0),
+		m_CorrectionValue(0.1f)
 	{
 		m_MoonSeaMeshRenderer = std::make_shared<MeshRendererComponent>(
 			std::make_shared<TransformComponent>(),
@@ -143,6 +144,8 @@ namespace app
 					m_RaySpaceShip->m_material->SetIntUniform("_TRSIndex", 0);
 					m_RaySpaceShip->m_material->SetIntUniform("_RefMapIndex", m_RefMapIndex);
 
+					m_RaySpaceShip->m_material->SetFloatUniform("_CorrectionValue", m_CorrectionValue);
+
 					if (m_IsDrawShipTrail)
 					{
 						m_RenderBufferList[0]->GetFrameTexture()->SetActive(GL_TEXTURE0);
@@ -175,12 +178,26 @@ namespace app
 			else if (time >= 4.5f && time < 8.2f) { m_UseTextIndex = 1; m_Alpha = sin(glm::clamp((time>= 7.2f)? 8.2f - time : time - 4.5f, 0.0f, 1.0f) * pi * 0.5f); }
 			else if (time >= 8.2f && time < 12.3f) { m_UseTextIndex = 2; m_Alpha = sin(glm::clamp((time>= 11.3f)? 12.3f - time : time - 8.2f, 0.0f, 1.0f) * pi * 0.5f); }
 			else if (time >= 12.3f && time < 15.5f) { m_UseTextIndex = 3; m_Alpha = sin(glm::clamp((time>= 14.5f)? 15.5f - time : time - 12.3f, 0.0f, 1.0f) * pi * 0.5f); }
-			else if (time >= 16.0f && time < 31.0f) {
+			else if (time >= 16.0f && time < 19.75f || time >= 23.5f && time < 27.25f) {
 				m_DrawRaySpaceShip = true;
+				float r = 1.0f;
+				float s = 0.25f;
+				m_CorrectionValue = 0.1f;
 				GraphicsMain::GetInstance()->m_MainCamera->m_position = glm::vec3(
-					glm::cos(time * 0.25f) * 3.0f,
+					glm::cos(time * s) * r,
+					r,
+					glm::sin(time * s) * r
+				);
+
+			}
+			else if (time >= 19.75f && time < 23.5f || time >= 27.25f && time < 31.0f) {
+				m_DrawRaySpaceShip = true;
+				m_CorrectionValue = 0.1f;
+				float rate = glm::clamp( (time - ((time < 23.5f) ? 19.75f : 27.25f))/3.75f, 0.0f, 1.0f);
+				GraphicsMain::GetInstance()->m_MainCamera->m_position = glm::vec3(
 					0.0f,
-					glm::sin(time * 0.25f) * 3.0f
+					-1.0f,
+					1.0f + 2.0f * rate
 				);
 			}
 			else if (time >= 31.0f) 
@@ -188,6 +205,13 @@ namespace app
 				m_DrawRaySpaceShip = true;
 				m_IsDrawShipTrail = true;
 				m_RefMapIndex = 1;
+				m_CorrectionValue = 0.1f;
+
+				GraphicsMain::GetInstance()->m_MainCamera->m_position = glm::vec3(
+					glm::cos(-time) * 3.0f,
+					0.0f,
+					glm::sin(-time) * 3.0f
+				);
 			}
 			else { m_UseTextIndex = -1; m_Alpha = 0.0f; }
 			

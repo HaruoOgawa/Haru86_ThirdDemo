@@ -51,6 +51,7 @@ namespace app {
 				m_RaySpaceShip->m_material->SetIntUniform("_TRSIndex", 1);
 				m_RaySpaceShip->m_material->SetFloatUniform("_GoMoonTime", 72.0f);
 				m_RaySpaceShip->m_material->SetIntUniform("_RefMapIndex", 1);
+				m_RaySpaceShip->m_material->SetFloatUniform("_CorrectionValue", 0.1f);
 			});
 		}
 	}

@@ -26,6 +26,7 @@ namespace app
 		float								   m_MoveH;
 		bool								   m_IsDrawShipTrail;
 		int									   m_RefMapIndex;
+		float								   m_CorrectionValue;
 	private:
 	public:
 		MoonSea();

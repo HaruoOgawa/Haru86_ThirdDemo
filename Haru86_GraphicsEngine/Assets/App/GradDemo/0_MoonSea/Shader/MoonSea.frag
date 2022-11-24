@@ -521,12 +521,13 @@ else
     float h=max(0.0,_time-_LeaveStartTime/*+0.25*/),
     LeaveRate=clamp(_time-_LeaveStartTime,0.0,1.0);
     
-    //
-    vec3 ro=vec3(0.0,h,1.5),ta=vec3(0.0,h,0.0);
+    // 
+    vec3 ro=_WorldCameraPos,ta=_WorldCameraCenter;
     
     // ƒJƒƒ‰ƒ[ƒN
     if(LeaveRate>=1.0)
     {
+        ro=vec3(0.0,h,1.5),ta=vec3(0.0,h,0.0);
         int CameraID = int(floor(mod(_time,3.0))); // 0,1,2
         
         if(CameraID == 0)
