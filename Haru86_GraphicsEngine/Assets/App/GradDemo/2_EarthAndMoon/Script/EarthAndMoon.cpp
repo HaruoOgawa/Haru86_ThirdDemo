@@ -7,7 +7,8 @@
 
 namespace app {
 	EarthAndMoon::EarthAndMoon():
-		m_MeshRenderer(nullptr)
+		m_MeshRenderer(nullptr),
+		m_RaySpaceShip(nullptr)
 	{
 		m_MeshRenderer = std::make_shared<MeshRendererComponent>(
 			std::make_shared<TransformComponent>(),
@@ -21,6 +22,18 @@ namespace app {
 
 		m_MeshRenderer->useZTest = false;
 		m_MeshRenderer->useAlphaTest = true;
+
+		m_RaySpaceShip = std::make_shared<MeshRendererComponent>(
+			std::make_shared<TransformComponent>(),
+			PrimitiveType::BOARD,
+			RenderingSurfaceType::RAYMARCHING,
+			shaderlib::StandardRenderBoard_vert,
+			std::string(
+				#include "../../0_MoonSea/Shader/RaySpaceShip.frag"
+			)
+		);
+		m_RaySpaceShip->useZTest = false;
+		m_RaySpaceShip->useAlphaTest = true;
 	}
 
 	void EarthAndMoon::Update(float time)
@@ -33,6 +46,13 @@ namespace app {
 		if (IsRaymarching)
 		{
 			m_MeshRenderer->Draw();
+
+			m_RaySpaceShip->Draw([&]() {
+				m_RaySpaceShip->m_material->SetIntUniform("_TRSIndex", 1);
+				m_RaySpaceShip->m_material->SetFloatUniform("_GoMoonTime", 72.0f);
+				m_RaySpaceShip->m_material->SetIntUniform("_RefMapIndex", 1);
+				m_RaySpaceShip->m_material->SetFloatUniform("_CorrectionValue", 0.1f);
+			});
 		}
 	}
 
@@ -59,6 +79,9 @@ namespace app {
 			m_MeshRenderer->m_calllback = [=]() {
 				m_MeshRenderer->m_material->SetFloatUniform("_MoveVal", (time - 61.0f)/13.0f);
 			};
+
+			GraphicsMain::GetInstance()->m_MainCamera->m_position = glm::vec3(0.0f,0.0f,3.0f);
+			GraphicsMain::GetInstance()->m_MainCamera->m_center = glm::vec3(0.0f,0.0f,0.0f);
 		}
 	}
 }

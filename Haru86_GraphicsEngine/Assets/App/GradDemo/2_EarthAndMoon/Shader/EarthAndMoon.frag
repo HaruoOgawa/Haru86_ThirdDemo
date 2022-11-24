@@ -205,7 +205,7 @@ else
     //vec2 st = (gl_FragCoord.xy*2.0-_resolution.xy)/min(_resolution.x,_resolution.y);
     vec2 st=uv*2.0-1.0;
     st.x*=(_resolution.x/_resolution.y);
-    float r=0.75,offset=0.25,h=0.95,tof=-1.0+_MoveVal;  /*tof=mod(_time*0.1,1.0)-0.5;*/
+    float r=0.75,offset=0.25,h=0.95,tof=-1.1+_MoveVal;  /*tof=mod(_time*0.1,1.0)-0.5;*/
     vec3 col = vec3(0.0),
         ro=vec3(r*cos(1.71+tof),h,r*sin(1.71+tof)),
         ta=vec3(r*cos(1.71+offset+tof),0.85*h,r*sin(1.71+offset+tof)), 

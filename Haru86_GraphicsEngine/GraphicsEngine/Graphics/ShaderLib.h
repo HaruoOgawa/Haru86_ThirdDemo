@@ -48,6 +48,10 @@ namespace shaderlib { // プリプロセッサでどれをリンクするか選ぶのもありかも？？ 
 		#include "GraphicsEngine/Graphics/Shader/PolygonRaymarchingMixer.frag"
 	};
 
+	const std::string Text_vert = {
+		#include "GraphicsEngine/Graphics/Shader/Text.vert"
+	};
+	
 	const std::string Text_frag = {
 		#include "GraphicsEngine/Graphics/Shader/Text.frag"
 	};

@@ -41,6 +41,7 @@ public:
 
     bool useZTest;
     bool useAlphaTest;
+    bool useAddBlend;
     bool useDoubleSlided;
     bool IsMulMatOnVert;
     RenderingSurfaceType m_SurfaceType;

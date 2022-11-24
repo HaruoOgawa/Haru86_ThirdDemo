@@ -3,9 +3,11 @@
 #include "GraphicsEngine/GraphicsMain/GraphicsMain.h"
 
 Texture::Texture()
-	:mTextureID(-1)
-	, mWidth(0)
-	, mHeight(0)
+	:mTextureID(-1),
+	 mWidth(0),
+	 mHeight(0),
+	 m_Left(0),
+	 m_Top(0)
 {
 }
 

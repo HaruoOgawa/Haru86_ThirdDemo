@@ -8,7 +8,8 @@
 #endif // _DEBUG
 
 namespace text {
-	TTFFactory::TTFFactory()
+	TTFFactory::TTFFactory():
+		m_PixelSize(48)
 	{
 	}
 
@@ -32,9 +33,9 @@ namespace text {
 
 		FT_Face face;
 #ifdef _DEBUG
-		FT_Error Error = FT_New_Face(ft, "Assets\\Font\\arial.ttf", 0, &face);
+		FT_Error Error = FT_New_Face(ft, "Assets\\Font\\georgiai.ttf", 0, &face);
 #else
-		FT_Error Error = FT_New_Face(ft, "bin\\arial.ttf", 0, &face);
+		FT_Error Error = FT_New_Face(ft, "bin\\georgiai.ttf", 0, &face);
 #endif
 		
 		if (Error)
@@ -46,7 +47,7 @@ namespace text {
 			return false;
 		}
 
-		FT_Set_Pixel_Sizes(face, 0, 48);
+		FT_Set_Pixel_Sizes(face, 0, m_PixelSize);
 
 		// TrueTypeFontのロード
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -66,6 +67,8 @@ namespace text {
 			// ロードしたデータをTexMapに登録する
 			std::shared_ptr<Texture> CharTexture = std::make_shared<Texture>();
 			CharTexture->CreateForRendering(face->glyph->bitmap.width, face->glyph->bitmap.rows, GL_RED, GL_RED, GL_UNSIGNED_BYTE, face->glyph->bitmap.buffer);
+			CharTexture->SetLeftTop(face->glyph->bitmap_left, face->glyph->bitmap_top);
+			
 			m_TTFCharacterTexMap.insert({ c, CharTexture });
 		}
 

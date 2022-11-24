@@ -11,9 +11,8 @@ uniform float _frameResolusion;
 
 void main(void){
 	vec4 col=vec4(0.,0.,0.,1.);
-	col.rgb=texture(frameTex,uv*_frameResolusion);
+	col.rgb=texture(frameTex,uv);
 	gl_FragColor=col;
 }
-
 
 )"

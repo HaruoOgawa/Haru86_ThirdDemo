@@ -12,7 +12,8 @@ MeshRendererComponent::MeshRendererComponent(const std::shared_ptr<TransformComp
 	useZTest(true), 
 	useDoubleSlided(true),
 	IsMulMatOnVert(true),
-	m_calllback(calllback)
+	m_calllback(calllback),
+	useAddBlend(false)
 {
 	m_SurfaceType = SurfaceType;
 	m_mesh = std::make_shared<Mesh>((primType));
@@ -70,6 +71,11 @@ void MeshRendererComponent::Draw(std::function<void(void)> TemporaryCallBack, GL
 	{
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	}
+	else if (useAddBlend)
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_ONE, GL_ONE);
 	}
 	else 
 	{

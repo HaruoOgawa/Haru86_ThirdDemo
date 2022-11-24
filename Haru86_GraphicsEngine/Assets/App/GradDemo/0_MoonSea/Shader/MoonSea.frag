@@ -115,6 +115,79 @@ float fbm3(vec3 p,float num,float A)
     return w/asum;
 }
 
+float hash(vec3 p)
+{
+    p=50.0*fract( p*0.3183099 + vec3(0.71,0.113,0.419));
+    return -1.0+2.0*fract( p.x*p.y*p.z*(p.x+p.y+p.z) );
+}
+
+vec4 noised(in vec3 x)
+{
+    vec3 p=floor(x);
+    vec3 w=fract(x);
+    
+    vec3 u=w*w*w*(w*(w*6.0-15.0)+10.0);
+    vec3 du=30.0*w*w*(w*(w-2.0)+1.0);
+    
+    float a = hash( p+vec3(0,0,0) );
+    float b = hash( p+vec3(1,0,0) );
+    float c = hash( p+vec3(0,1,0) );
+    float d = hash( p+vec3(1,1,0) );
+    float e = hash( p+vec3(0,0,1) );
+    float f = hash( p+vec3(1,0,1) );
+    float g = hash( p+vec3(0,1,1) );
+    float h = hash( p+vec3(1,1,1) );
+    
+    float k0 = a;
+    float k1 = b-a;
+    float k2 = c-a;
+    float k3 = e-a;
+    float k4 = a-b-c+d;
+    float k5 = a-c-e+g;
+    float k6 = a-b-e+f;
+    float k7 =-a+b+c-d+e-f-g+h;
+    
+    return vec4( -1.0+2.0*(k0 + k1*u.x + k2*u.y + k3*u.z + k4*u.x*u.y + k5*u.y*u.z + k6*u.z*u.x + k7*u.x*u.y*u.z),
+                 2.0* du * vec3( k1 + k4*u.y + k6*u.z + k7*u.y*u.z,
+                                 k2 + k5*u.z + k4*u.x + k7*u.z*u.x,
+                                 k3 + k6*u.x + k5*u.y + k7*u.x*u.y ) );
+}
+
+const mat3 m3  = mat3( 0.00,  0.80,  0.60,
+                      -0.80,  0.36, -0.48,
+                      -0.60, -0.48,  0.64 );
+const mat3 m3i = mat3( 0.00, -0.80, -0.60,
+                       0.80,  0.36, -0.48,
+                       0.60, -0.48,  0.64 );
+
+vec4 fbm2(in vec3 x,int octaves)
+{
+    float f=1.9;
+    float s=0.55;
+    float a=0.0;
+    float b=0.5;
+    vec3 d=vec3(0.0);
+    mat3 m=mat3(
+        1.0,0.0,0.0,
+        0.0,1.0,0.0,
+        0.0,0.0,1.0
+    );
+    
+    for(int i=0;i<octaves;i++)
+    {
+        vec4 n=noised(x);
+        a+=b*n.x;
+        d+=b*m*n.yzw;
+        b*=s;
+        x=f*m3*x;
+        m=f*m3i*m;
+    }
+    
+    a=a*0.5+0.5;
+    
+    return vec4(a,d);
+}
+
 vec3 trs(vec3 p,vec3 s,vec3 r,vec3 t)
 {
     p+=t; 
@@ -306,6 +379,18 @@ vec3 sky(vec3 rd,bool IsRef)
 #define ln 64.0
 #define ldir normalize(vec3(1.0,1.0,-1.0))
 
+vec2 CloudMap(vec3 p,int num,inout vec3 denGra)
+{
+    float f = fbm2(p*0.5+vec3(-_time*0.25,0.0,0.0),num).x;
+    f=smoothstep(-0.2,0.6,f);
+    
+    float d = p.y - f*0.1;
+    
+    denGra = vec3(0.0, sign(p.y), 0.0);
+    
+    return vec2(d,f);
+}
+
 vec3 getSeaColor(vec3 p,vec3 n,vec3 l,vec3 eye,vec3 dist)
 {
     // îΩéÀÇ∆ã¸ê‹
@@ -328,22 +413,42 @@ vec3 getSeaColor(vec3 p,vec3 n,vec3 l,vec3 eye,vec3 dist)
     return col;
 }
 
-//
-vec3 Draw3DClouds(vec3 ro,vec3 rd)
+vec4 DrawCloud(vec3 ro,vec3 rd,in vec4 col)
 {
-    vec3 col = vec3(0.0),skycol=mix(vec3(0.0,0.038,0.038),vec3(0.0,0.04,0.15),(rd.y*0.5+0.5));
- 
-    // â_
-    vec3 clouds = vec3(0.0);
-    float s = 0.25;
-    for(int i=0;i<3;i++)
+    col.rgb*=0.1;
+    col.a=0.0;
+    float d=0.0,t=0.0,i=0.0,h=0.0;
+    vec3 skycol=mix(vec3(0.0,0.038,0.038),vec3(0.0,0.04,0.15),(mod(rd.y, 1.0)*0.5+0.5));
+    
+    for(;++i<ln;i++)
     {
-        clouds+=fbm3(rd*5.0+vec3(0.0,_time,0.0),5.0,1.0);
-        s*=1.35;
+        vec3 p = ro+rd*t;
+        vec3 denGra;
+        vec2 re=CloudMap(p, 5, denGra);
+        d=re.x;
+        h=re.y;
+        if(d>dmin)
+        {
+            // Local Color
+            vec4 lcol = vec4(vec3(mix(0.0,1.0,h)), h*1.2);
+            lcol.a*=0.4;
+            lcol.rgb*=lcol.a;
+
+            //
+             vec3 nor = normalize(denGra);
+            float dif = clamp(dot(nor,ldir), 0.0, 1.0 )/**sha*/;
+            lcol.rgb*=dif;
+            // â_ÇÃçÇÇ≥í≤êÆ
+            col+=lcol*(1.0-col.a) /** clamp(1.3 - p.y * 0.2, 0.0, 1.0)*/;
+        }
+        
+        //t+=d;
+        t+=max(0.05,0.1*d);
     }
     
-    //
-    col = skycol + 0.1*clouds;
+    col.rgb = mix(skycol, col.rgb+vec3(0.5), col.a); 
+    col.rgb = smoothstep(0.0, 1.0, col.rgb);
+    
     return col;
 }
 
@@ -416,12 +521,13 @@ else
     float h=max(0.0,_time-_LeaveStartTime/*+0.25*/),
     LeaveRate=clamp(_time-_LeaveStartTime,0.0,1.0);
     
-    //
-    vec3 ro=vec3(0.0,h,1.5),ta=vec3(0.0,h,0.0);
+    // 
+    vec3 ro=_WorldCameraPos,ta=_WorldCameraCenter;
     
     // ÉJÉÅÉâÉèÅ[ÉN
     if(LeaveRate>=1.0)
     {
+        ro=vec3(0.0,h,1.5),ta=vec3(0.0,h,0.0);
         int CameraID = int(floor(mod(_time,3.0))); // 0,1,2
         
         if(CameraID == 0)
@@ -442,8 +548,8 @@ else
     }
     
     //
-    vec3 col = vec3(0.0),
-    cdir=normalize(ta-ro),cside=normalize(cross(vec3(0.0,1.0,0.0),cdir)),cup=normalize(cross(cdir,cside)),
+    vec4 col = vec4(vec3(0.0), 1.0);
+    vec3 cdir=normalize(ta-ro),cside=normalize(cross(vec3(0.0,1.0,0.0),cdir)),cup=normalize(cross(cdir,cside)),
     rd=normalize(st.x*cside+st.y*cup+1.0*cdir);
     float i=0.0,t=0.0,acc=0.0; mapr mr;
     
@@ -452,13 +558,13 @@ else
         for(;++i<ln;){mr=map(ro+rd*(t+=mr.d));if(mr.d<dmin)break;acc+=exp(-3.0*mr.d);}
 
         // îwåiÇÃñÈãÛ
-        col = sky(rd,false);
-        col = smoothstep(0.0,1.0,col);
-        col*=1.2;
+        col.rgb = sky(rd,false);
+        col.rgb = smoothstep(0.0,1.0,col.rgb);
+        col.rgb*=1.2;
 
         //
         vec3 mooncol = pow(vec3(1.0),vec3(2.2));
-        col += mooncol*( (mr.d<dmin)? 1.0 : acc )*0.02;
+        col.rgb += mooncol*( (mr.d<dmin)? 1.0 : acc )*0.02;
         //col += mooncol*acc*0.2;
 
         if(mr.m==0)
@@ -468,7 +574,7 @@ else
             //vec3 n = gn(p);
             //vec3 pn = n*0.5+0.5;
             //col = vec3(1.0-fbm(5.0*pn.xy/pn.z) )+vec3(0.5,0.4,0.15);
-            col = vec3(1.0-fbm3(7.5*p,4.0,1.0))+vec3(0.5,0.4,0.15);
+            col.rgb = vec3(1.0-fbm3(7.5*p,4.0,1.0))+vec3(0.5,0.4,0.15);
         }
 
         // Sea
@@ -483,15 +589,15 @@ else
 
             if(IsSea)
             {
-                col = vec3(1.0)*max(0.0,dot(n,ldir));
+                col.rgb = vec3(1.0)*max(0.0,dot(n,ldir));
                 vec3 SeaCol = getSeaColor(p,n,ldir,rd,dist);
-                col=SeaCol;
+                col.rgb=SeaCol;
             }
         }
     }
     
     // â_Ç∆êØ
-    vec3 StarCloudCol = vec3(0.0);
+    vec4 StarCloudCol = vec4(vec3(0.0), 1.0);
     if(_time >= _LeaveStartTime)
     {
         // 43sÇ©ÇÁÉXÉ^Å[Ég
@@ -499,15 +605,15 @@ else
         // 1s ~ 10s : CloudÇ∆StarSpaceÇÃê¸å`ï‚äÆ
         // 10s ~ 13s : StarSpaceÇæÇØÇï`âÊ 
         float cs_mixrate = clamp((_time-_LeaveStartTime-1.0-5.0)/9.0,0.0,1.0);
-        vec3 CloudCol = Draw3DClouds(ro,rd);
-        vec3 StarCol = StarSpace(ro,rd);
+        vec4 CloudCol = DrawCloud(ro, rd, col);
+        vec4 StarCol = vec4(StarSpace(ro,rd), 1.0);
         StarCloudCol = mix(CloudCol,StarCol,cs_mixrate);
     }
     
     //
     col = mix(col,StarCloudCol,LeaveRate);
     
-    gl_FragColor = vec4(col,1.0);
+    gl_FragColor = col;
 }
 
 }

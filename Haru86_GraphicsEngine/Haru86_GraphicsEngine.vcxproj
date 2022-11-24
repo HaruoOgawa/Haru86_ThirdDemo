@@ -307,7 +307,7 @@ xcopy "$(ProjectDir)GraphicsEngine\Library\GLEW\x64\bin\glew32d.dll" "$(OutDir)b
 xcopy "$(ProjectDir)GraphicsEngine\Library\GLFW\x64\lib\glfw3.dll" "$(OutDir)bin" /i /s /y
 xcopy "$(ProjectDir)GraphicsEngine\Library\FreeType\lib\freetype.dll" "$(OutDir)bin" /i /s /y 
 xcopy "$(ProjectDir)Assets\Sound\melcom-cyberpunk.mp3" "$(OutDir)bin" /i /s /y
-xcopy "$(ProjectDir)Assets\Font\arial.ttf" "$(OutDir)bin" /i /s /y
+xcopy "$(ProjectDir)Assets\Font\georgiai.ttf" "$(OutDir)bin" /i /s /y
 del /Q $(OutDir)Haru86_GraphicsEngine.pdb</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -337,7 +337,7 @@ xcopy "$(ProjectDir)GraphicsEngine\Library\GLEW\x64\bin\glew32d.dll" "$(OutDir)b
 xcopy "$(ProjectDir)GraphicsEngine\Library\GLFW\x64\lib\glfw3.dll" "$(OutDir)bin" /i /s /y
 xcopy "$(ProjectDir)GraphicsEngine\Library\FreeType\lib\freetype.dll" "$(OutDir)bin" /i /s /y 
 xcopy "$(ProjectDir)Assets\Sound\melcom-cyberpunk.mp3" "$(OutDir)bin" /i /s /y
-xcopy "$(ProjectDir)Assets\Font\arial.ttf" "$(OutDir)bin" /i /s /y
+xcopy "$(ProjectDir)Assets\Font\georgiai.ttf" "$(OutDir)bin" /i /s /y
 del /Q $(OutDir)Haru86_GraphicsEngine.pdb
 </Command>
     </PostBuildEvent>
@@ -369,7 +369,7 @@ xcopy "$(ProjectDir)GraphicsEngine\Library\GLEW\x64\bin\glew32d.dll" "$(OutDir)b
 xcopy "$(ProjectDir)GraphicsEngine\Library\GLFW\x64\lib\glfw3.dll" "$(OutDir)bin" /i /s /y
 xcopy "$(ProjectDir)GraphicsEngine\Library\FreeType\lib\freetype.dll" "$(OutDir)bin" /i /s /y 
 xcopy "$(ProjectDir)Assets\Sound\melcom-cyberpunk.mp3" "$(OutDir)bin" /i /s /y
-xcopy "$(ProjectDir)Assets\Font\arial.ttf" "$(OutDir)bin" /i /s /y
+xcopy "$(ProjectDir)Assets\Font\georgiai.ttf" "$(OutDir)bin" /i /s /y
 call squishy-x64 -i "$(OutDir)Haru86_GraphicsEngine.exe" -o "$(OutDir)Haru86_GraphicsEngine.exe"
 del /Q $(OutDir)Haru86_GraphicsEngine.pdb
 </Command>
@@ -474,6 +474,7 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\App\GradDemo\0_MoonSea\Shader\RaySpaceShip.frag" />
+    <None Include="Assets\App\GradDemo\0_MoonSea\Shader\ShipParticle.frag" />
     <None Include="Assets\App\GradDemo\2_EarthAndMoon\Shader\EarthAndMoon.frag" />
     <None Include="Assets\App\GradDemo\1_LeaveEarth\Shader\LeaveEarth.frag" />
     <None Include="Assets\App\GradDemo\0_MoonSea\Shader\MoonSea.frag" />
@@ -492,6 +493,7 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <None Include="bin\SDL2_ttf.dll" />
     <None Include="bin\zlib1.dll" />
     <None Include="GraphicsEngine\Graphics\Shader\Line2Cylinder.geom" />
+    <None Include="GraphicsEngine\Graphics\Shader\Text.vert" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
