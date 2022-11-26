@@ -246,7 +246,7 @@ vec3 gn(vec3 p)
 
 vec2 CloudMap(vec3 p,int num,inout vec3 denGra)
 {
-    float f = fbm2(p*0.5+vec3(0.0,0.0,-_time*0.5),num).x;
+    float f = fbm2(p*0.5+vec3(-_time*0.25,0.0,0.0),num).x;
     f=smoothstep(-0.2,0.6,f);
     
     float d = p.y - f*0.1;
@@ -335,7 +335,7 @@ else
     vec3 ro=vec3(0.0,0.0,1.5),ta=vec3(0.0,0.0,0.0);
     
     //
-    //ro=vec3(25.5*cos(_time*0.1),5.5,25.5*sin(_time*0.1));
+    //ro=vec3(27.5*cos(_time*0.1),3.5,27.5*sin(_time*0.1));
     float tStep = 45.5;
     ro=vec3(27.5*cos(tStep*0.1),3.5,27.5*sin(tStep*0.1));
     

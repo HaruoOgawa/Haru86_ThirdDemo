@@ -2,10 +2,13 @@
 #include "GraphicsEngine/Component/MeshRendererComponent.h"
 #include "GraphicsEngine/Component/TransformComponent.h"
 #include "GraphicsEngine/Graphics/ShaderLib.h"
+#include "GraphicsEngine/Text/TextObject.h"
 
 namespace app {
 	MountFuji::MountFuji() :
-		m_MeshRenderer(nullptr)
+		m_MeshRenderer(nullptr),
+		m_UseTextIndex(-1),
+		m_Alpha(0.0f)
 	{
 		m_MeshRenderer = std::make_shared<MeshRendererComponent>(
 			std::make_shared<TransformComponent>(),
@@ -32,10 +35,22 @@ namespace app {
 		{
 			m_MeshRenderer->Draw();
 		}
+		else
+		{
+			if (m_UseTextIndex == 0) text::TextObject::Draw("DemoScene 64k Intro", 0.05f, 1.35f, 3.0f, glm::vec3(0.0f), glm::vec4(0.0f, 0.0f, 0.0f, m_Alpha));
+			else if (m_UseTextIndex == 1) text::TextObject::Draw("The Tale of\nthe Bamboo-Cutter", 0.05f, 1.35f, 3.0f, glm::vec3(0.0f), glm::vec4(0.0f, 0.0f, 0.0f, m_Alpha));
+			else if (m_UseTextIndex == 2) text::TextObject::Draw("CG Engineering\nHaru86_", 0.05f, 1.35f, 3.0f, glm::vec3(0.0f), glm::vec4(0.0f, 0.0f, 0.0f, m_Alpha));
+			else if (m_UseTextIndex == 3) text::TextObject::Draw("Music\nmelcom", 0.05f, 1.35f, 3.0f, glm::vec3(0.0f), glm::vec4(0.0f, 0.0f, 0.0f, m_Alpha));
+		}
 	}
 
 	void MountFuji::UpdateTimeLine(float time)
 	{
+		float pi = 3.1415f;
+		if (time >= 210.0f && time < 214.0f) { m_UseTextIndex = 0; m_Alpha = sin(glm::clamp((time >= 213.0f) ? 214.0f - time : time - 210.0f, 0.0f, 1.0f) * pi * 0.5f); }
+		else if (time >= 214.0f && time < 218.0f) { m_UseTextIndex = 1; m_Alpha = sin(glm::clamp((time >= 217.0f) ? 218.0f - time : time - 214.0f, 0.0f, 1.0f) * pi * 0.5f); }
+		else if (time >= 218.0f && time < 222.0f) { m_UseTextIndex = 2; m_Alpha = sin(glm::clamp((time >= 221.0f) ? 222.0f - time : time - 218.0f, 0.0f, 1.0f) * pi * 0.5f); }
+		else if (time >= 222.0f && time < 226.0f) { m_UseTextIndex = 3; m_Alpha = sin(glm::clamp((time >= 225.0f) ? 226.0f - time : time - 222.0f, 0.0f, 1.0f) * pi * 0.5f); }
 
 	}
 }

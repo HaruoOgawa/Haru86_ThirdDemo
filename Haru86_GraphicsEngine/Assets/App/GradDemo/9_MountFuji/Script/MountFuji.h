@@ -7,6 +7,8 @@ namespace app {
 	class MountFuji
 	{
 		std::shared_ptr<MeshRendererComponent> m_MeshRenderer;
+		int									   m_UseTextIndex;
+		float								   m_Alpha;
 	public:
 		MountFuji();
 		virtual ~MountFuji() = default;
