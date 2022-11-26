@@ -332,12 +332,13 @@ else
     st.x*=(_resolution.x/_resolution.y);
 #endif
    vec4 col = vec4(vec3(0.0),1.0);
-    vec3 ro=vec3(0.0,0.0,1.5),ta=vec3(0.0,0.0,0.0);
+    //vec3 ro=vec3(0.0,0.0,1.5),ta=vec3(0.0,0.0,0.0);
+    vec3 ro=_WorldCameraPos,ta=_WorldCameraCenter;
     
     //
     //ro=vec3(27.5*cos(_time*0.1),3.5,27.5*sin(_time*0.1));
-    float tStep = 45.5;
-    ro=vec3(27.5*cos(tStep*0.1),3.5,27.5*sin(tStep*0.1));
+    //float tStep = 45.5;
+    //ro=vec3(27.5*cos(tStep*0.1),3.5,27.5*sin(tStep*0.1));
     
     //
     vec3 cdir=normalize(ta-ro),cside=normalize(cross(vec3(0.0,1.0,0.0),cdir)),
