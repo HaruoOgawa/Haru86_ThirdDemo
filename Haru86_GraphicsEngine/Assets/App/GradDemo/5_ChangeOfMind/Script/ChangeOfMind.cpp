@@ -4,6 +4,7 @@
 #include "GraphicsEngine/Graphics/ShaderLib.h"
 #include "GraphicsEngine/GraphicsMain/GraphicsMain.h"
 #include "GraphicsEngine/Graphics/Primitive.h"
+#include "GraphicsEngine/Graphics/PostProcess.h"
 
 namespace app
 {
@@ -133,7 +134,11 @@ namespace app
 
 	void ChangeOfMind::UpdateTimeLine(float time)
 	{
-
+		PostProcess::GetInstance()->m_LatePostProcesCallBack = [=]() {
+			PostProcess::GetInstance()->m_LateMeshRenderer->m_material->SetIntUniform("_UseGridWave", 1);
+			PostProcess::GetInstance()->m_LateMeshRenderer->m_material->SetIntUniform("_UseWhiteNoise", 1);
+			PostProcess::GetInstance()->m_LateMeshRenderer->m_material->SetFloatUniform("_WhiteNoisePower", 1.0f);
+		};
 	}
 
 }
