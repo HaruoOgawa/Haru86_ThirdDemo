@@ -138,11 +138,11 @@ namespace app
         {
             m_SceneIndex = 6;
         }
-        else if (m_LocalTime >= 164.0f && m_LocalTime < 179.0f) //164 - 179
+        else if (m_LocalTime >= 164.0f && m_LocalTime < 180.0f) //164 - 179
         {
             m_SceneIndex = 7;
         }
-        else if (m_LocalTime >= 179.0f && m_LocalTime < 210.0f)// 179 - 194   => 194 + (286-271) = 179 => 3m
+        else if (m_LocalTime >= 180.0f && m_LocalTime < 210.0f)// 179 - 194   => 194 + (286-271) = 179 => 3m
         {
             m_SceneIndex = 8;
         }

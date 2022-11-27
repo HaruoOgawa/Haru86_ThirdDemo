@@ -134,11 +134,11 @@ namespace app
 
 	void ChangeOfMind::UpdateTimeLine(float time)
 	{
-		PostProcess::GetInstance()->m_LatePostProcesCallBack = [=]() {
+		/*PostProcess::GetInstance()->m_LatePostProcesCallBack = [=]() {
 			PostProcess::GetInstance()->m_LateMeshRenderer->m_material->SetIntUniform("_UseGridWave", 1);
 			PostProcess::GetInstance()->m_LateMeshRenderer->m_material->SetIntUniform("_UseWhiteNoise", 1);
 			PostProcess::GetInstance()->m_LateMeshRenderer->m_material->SetFloatUniform("_WhiteNoisePower", 1.0f);
-		};
+		};*/
 	}
 
 }

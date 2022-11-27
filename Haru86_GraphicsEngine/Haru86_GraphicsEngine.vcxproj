@@ -487,6 +487,7 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <None Include="Assets\App\GradDemo\6_RoughMikado\Shader\EnergyField.frag" />
     <None Include="Assets\App\GradDemo\6_RoughMikado\Shader\EnergyTrail.frag" />
     <None Include="Assets\App\GradDemo\7_FeatherRobe\Shader\FeatherRobe.frag" />
+    <None Include="Assets\App\GradDemo\7_FeatherRobe\Shader\FeatherRobeTrail.frag" />
     <None Include="Assets\App\GradDemo\9_MountFuji\Shader\MountFuji.frag" />
     <None Include="Assets\App\GradDemo\8_FindKaguya\Shader\Voxel.frag" />
     <None Include="bin\libfreetype-6.dll" />
