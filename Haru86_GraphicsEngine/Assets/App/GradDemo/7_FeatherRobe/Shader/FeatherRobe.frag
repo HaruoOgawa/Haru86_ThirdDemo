@@ -9,6 +9,7 @@ R"(
 #define gl_FragCoord fragCoord
 #define gl_FragColor fragColor
 #define _time iTime
+#define _BufferA iChannel0
 #define main() mainImage( out vec4 fragColor, in vec2 fragCoord )
 const int _RenderingTarget = 1;
 const float _LeaveStartTime = 1.0;
@@ -18,6 +19,9 @@ uniform vec2 _resolution;
 uniform float _RenderingTarget;
 uniform vec3 _WorldCameraPos;
 uniform vec3 _WorldCameraCenter;
+
+uniform vec3 _AuraPos;
+uniform sampler2D _BufferA;
 
 in vec2 uv;
 #endif
@@ -311,7 +315,16 @@ mapr rayaura(vec3 ro, vec3 rd)
     mapr mr;
     mr.neard=1000.0;
     
-    vec3 ap = vec3(0.0, 2.0, 0.0) /*+ path(vec3(-1.0),vec3(0.0,0.0,0.5))*/;
+    float r = 0.25 + rand(vec2(99.99,4545.21) * 5.0) *1.25, sp=1.0;
+    float offsetA = rand(vec2(6.621,1.11148) * 5.0) * 2.0 * 3.1415;
+    float offsetB = rand(vec2(1.9987,0.2259) * 5.0) * 2.0 * 3.1415;
+    vec3 dir = vec3(
+        4.0*r*cos(_time*sp+offsetA)*cos(_time*sp+offsetB),
+        4.0*r*cos(_time*sp+offsetA)*sin(_time*sp+offsetB),
+        4.0*r*sin(_time*sp+offsetA)
+    );
+    
+    vec3 ap = vec3(0.0, 2.0, 0.0) + dir;
     float i=0.0,t=0.0,acc=0.0;
     for(;++i<64.0;)
     {
@@ -416,7 +429,7 @@ vec3 dColor(mapr mr, vec3 ro,vec3 rd, vec2 st)
             border = max( 0.0, min( 1.0, border * 1.0 ) );
         
             vec3 color2 = shadeGround( ro, p, n, n2, ldir, -1.0, 1.0 ) 
-                * diffuseColor + vec3(1.0)* (  border*4.0 ) ;
+                * diffuseColor + vec3(0.917, 0.569, 0.596)* (  border*4.0 ) ;
             
             col = vec3(exp(-0.25*mr.t));
             
@@ -448,11 +461,14 @@ if(_RenderingTarget==2) // ZTest
 else
 {
 #ifdef DRAW_ON_SHADERTOY
+    vec2 uv = gl_FragCoord.xy/_resolution.xy;
     vec2 st=(gl_FragCoord.xy*2.-_resolution.xy)/min(_resolution.x,_resolution.y);
+    //vec3 ro= vec3(3.0*cos(_time),-2.,3.0*sin(_time)),ta=vec3(0.0,-3.0,0.0);
+    vec3 ro= vec3(0.0,-1.,5.0),ta=vec3(0.0,-3.0,0.0);
 #else
     vec2 st=uv*2.0-1.0;st.x*=(_resolution.x/_resolution.y);
+    vec3 ro= _WorldCameraPos,ta=_WorldCameraCenter;
 #endif
-    vec3 ro= vec3(3.0*cos(_time),-2.,3.0*sin(_time)) /*+ path(vec3(1.0),vec3(0.0))*/,ta=vec3(0.0,-3.0,0.0);
     vec3 cdir=normalize(ta-ro),cside=normalize(cross(vec3(0.0,1.0,0.0),cdir)),cup=normalize(cross(cdir,cside)),
     rd=normalize(st.x*cside+st.y*cup+1.0*cdir),col = DrawBG(ro,rd,st);
     ln = 128.0;mapr mr;
@@ -467,12 +483,15 @@ else
     col = mix(col, fog * sqrt(fog) * 1.2, smoothstep(0.0, 0.95, mr.t/15.0));
     
     mapr mra = rayaura(ro,rd);
-    vec3 acol =  vec3(0.26, 0.2569,0.917) * mra.acc ;
+    vec3 acol =  vec3(0.917, 0.569, 0.596) * mra.acc ;
     col += acol;
+    
+    col += texture(_BufferA,uv).rgb;
     
     gl_FragColor = vec4(col,1.0);
 }
 
 }
+
 
 )"

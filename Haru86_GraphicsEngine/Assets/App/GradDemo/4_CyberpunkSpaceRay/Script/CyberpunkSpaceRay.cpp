@@ -2,6 +2,7 @@
 #include "GraphicsEngine/Component/MeshRendererComponent.h"
 #include "GraphicsEngine/Component/TransformComponent.h"
 #include "GraphicsEngine/Graphics/ShaderLib.h"
+#include "GraphicsEngine/Graphics/PostProcess.h"
 
 namespace app {
 	CyberpunkSpaceRay::CyberpunkSpaceRay() :
@@ -36,6 +37,22 @@ namespace app {
 
 	void CyberpunkSpaceRay::UpdateTimeLine(float time)
 	{
+		if (GraphicsMain::GetInstance()->GetAppSceneIndex() == 4)
+		{
+			if (time >= 133.5f)
+			{
+				PostProcess::GetInstance()->m_LatePostProcesCallBack = [=]() {
+					float Rate = glm::clamp((time - 133.5f) * 2.0f, 0.0f, 1.0f);
 
+					PostProcess::GetInstance()->m_LateMeshRenderer->m_material->SetIntUniform("_UseGridWave", 1);
+					PostProcess::GetInstance()->m_LateMeshRenderer->m_material->SetIntUniform("_UseWaveCustom", 1);
+					PostProcess::GetInstance()->m_LateMeshRenderer->m_material->SetFloatUniform("_WavePower", Rate);
+					
+					PostProcess::GetInstance()->m_LateMeshRenderer->m_material->SetIntUniform("_UseWhiteNoise", 1);
+					PostProcess::GetInstance()->m_LateMeshRenderer->m_material->SetFloatUniform("_WhiteNoisePower", Rate * 2.0f);
+				};
+			}
+			
+		}
 	}
 }

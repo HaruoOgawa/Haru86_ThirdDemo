@@ -2,10 +2,12 @@
 #include "GraphicsEngine/Component/MeshRendererComponent.h"
 #include "GraphicsEngine/Component/TransformComponent.h"
 #include "GraphicsEngine/Graphics/ShaderLib.h"
+#include "GraphicsEngine/Graphics/RenderBuffer.h"
 
 namespace app {
 	FeatherRobe::FeatherRobe() :
-		m_MeshRenderer(nullptr)
+		m_MeshRenderer(nullptr),
+		m_AuraPos(glm::vec3(0.0f))
 	{
 		m_MeshRenderer = std::make_shared<MeshRendererComponent>(
 			std::make_shared<TransformComponent>(),
@@ -19,6 +21,30 @@ namespace app {
 
 		m_MeshRenderer->useZTest = false;
 		m_MeshRenderer->useAlphaTest = false;
+
+		//
+		m_AuraTrailRenderer = std::make_shared<MeshRendererComponent>(
+			std::make_shared<TransformComponent>(),
+			PrimitiveType::BOARD,
+			RenderingSurfaceType::RAYMARCHING,
+			shaderlib::StandardRenderBoard_vert,
+			std::string(
+				#include "../Shader/FeatherRobeTrail.frag"
+			)
+		);
+
+		m_RenderBufferList.push_back(std::make_shared<graphic::RenderBuffer>(
+			static_cast<int>(GraphicsRenderer::GetInstance()->GetScreenSize().x * GraphicsRenderer::GetInstance()->frameResolusion),
+			static_cast<int>(GraphicsRenderer::GetInstance()->GetScreenSize().y * GraphicsRenderer::GetInstance()->frameResolusion),
+			GL_RGBA16F, GL_RGBA, GL_FLOAT
+			));
+
+		m_RenderBufferList.push_back(std::make_shared<graphic::RenderBuffer>(
+			static_cast<int>(GraphicsRenderer::GetInstance()->GetScreenSize().x * GraphicsRenderer::GetInstance()->frameResolusion),
+			static_cast<int>(GraphicsRenderer::GetInstance()->GetScreenSize().y * GraphicsRenderer::GetInstance()->frameResolusion),
+			GL_RGBA16F, GL_RGBA, GL_FLOAT
+			));
+
 	}
 
 	void FeatherRobe::Update(float time)
@@ -29,11 +55,44 @@ namespace app {
 	{
 		if (IsRaymarching)
 		{
-			m_MeshRenderer->Draw();
+			if (GraphicsMain::GetInstance()->renderingTarget == ERerderingTarget::COLOR)
+			{
+				m_RenderBufferList[0]->Draw(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f), [&]() {
+					m_AuraTrailRenderer->Draw([&]() {
+						m_RenderBufferList[1]->GetFrameTexture()->SetActive(GL_TEXTURE0);
+						m_AuraTrailRenderer->m_material->SetTexUniform("_BufferA", 0);
+						});
+					m_RenderBufferList[1]->GetFrameTexture()->SetEnactive(GL_TEXTURE0);
+					}, true);
+
+				m_RenderBufferList[1]->Draw(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f), [&]() {
+					m_AuraTrailRenderer->Draw([&]() {
+						m_RenderBufferList[0]->GetFrameTexture()->SetActive(GL_TEXTURE0);
+						m_AuraTrailRenderer->m_material->SetTexUniform("_BufferA", 0);
+						});
+					m_RenderBufferList[0]->GetFrameTexture()->SetEnactive(GL_TEXTURE0);
+					}, true);
+			}
+
+			m_MeshRenderer->Draw([&]() {
+				m_MeshRenderer->m_material->SetVec3Uniform("_AuraPos", m_AuraPos);
+				m_RenderBufferList[0]->GetFrameTexture()->SetActive(GL_TEXTURE0);
+				m_MeshRenderer->m_material->SetTexUniform("_BufferA", 0);
+			});
+			m_RenderBufferList[0]->GetFrameTexture()->SetEnactive(GL_TEXTURE0);
 		}
 	}
 
 	void FeatherRobe::UpdateTimeLine(float time)
 	{
+		if (GraphicsMain::GetInstance()->GetAppSceneIndex() == 7)
+		{
+			m_AuraPos = glm::vec3(0.0f, 2.0f, time - 164.0f);
+			glm::vec3 CameraPos = glm::vec3(0.0f), CameraCenter = glm::vec3(0.0f, -3.0f, 0.0f) + m_AuraPos;
+			//if (time >= 164.0f && time < 172.0f) { CameraCenter.y -= 2.0f; CameraPos = glm::vec3(3.0f * cos(time), -4.0f, 3.0f * sin(time)) + m_AuraPos; }
+			/*else */if (time >= 164 && time < 180.0f) { CameraPos = glm::vec3(0.0f, -3.0f, 0.1f) + m_AuraPos; }
+			GraphicsMain::GetInstance()->m_MainCamera->m_position = CameraPos;
+			GraphicsMain::GetInstance()->m_MainCamera->m_center = CameraCenter;
+		}
 	}
 }

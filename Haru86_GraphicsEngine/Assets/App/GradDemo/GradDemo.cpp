@@ -40,7 +40,7 @@ namespace app
     {
 #ifdef _DEBUG
         // 時間のオフセット
-        //GraphicsMain::GetInstance()->m_SecondsTimeOffset = 10.0f;// シーンを飛ばすためのオフセット
+        GraphicsMain::GetInstance()->m_SecondsTimeOffset = 130.0f;// シーンを飛ばすためのオフセット
 
         // 音楽のミュート
         //GraphicsMain::GetInstance()->m_SoundPlayer->Mute(true);
@@ -138,17 +138,21 @@ namespace app
         {
             m_SceneIndex = 6;
         }
-        else if (m_LocalTime >= 164.0f && m_LocalTime < 179.0f) //164 - 179
+        else if (m_LocalTime >= 164.0f && m_LocalTime < 180.0f) //164 - 179
         {
             m_SceneIndex = 7;
         }
-        else if (m_LocalTime >= 179.0f && m_LocalTime < 194.0f)// 179 - 194   => 194 + (286-271) = 179 => 3m
+        else if (m_LocalTime >= 180.0f && m_LocalTime < 210.0f)// 179 - 194   => 194 + (286-271) = 179 => 3m
         {
             m_SceneIndex = 8;
         }
-        else if (m_LocalTime >= 194.0f && m_LocalTime < 228.0f) // 3:48 = 3*60+48 = 180+48 = 228
+        else if (m_LocalTime >= 210.0f && m_LocalTime < 228.0f) // 3:48 = 3*60+48 = 180+48 = 228
         {
             m_SceneIndex = 9;
+        }
+        else if (m_LocalTime >= 228.0f)
+        {
+            GraphicsMain::GetInstance()->isRunning = false;
         }
 
         //m_SceneIndex = 6; // Debug

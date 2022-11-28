@@ -252,8 +252,8 @@ namespace app
 			if (time >= 60.0f)
 			{
 				PostProcess::GetInstance()->m_LatePostProcesCallBack = [=]() {
-					PostProcess::GetInstance()->m_LateMeshRenderer->m_material->SetIntUniform("_UseWhite", 1);
-					PostProcess::GetInstance()->m_LateMeshRenderer->m_material->SetFloatUniform("_WhiteVal", time - 60.0f);
+					PostProcess::GetInstance()->m_LateMeshRenderer->m_material->SetIntUniform("_UseWhiteFade", 1);
+					PostProcess::GetInstance()->m_LateMeshRenderer->m_material->SetFloatUniform("_WhiteFadeVal", time - 60.0f);
 				};
 			}
 		}
