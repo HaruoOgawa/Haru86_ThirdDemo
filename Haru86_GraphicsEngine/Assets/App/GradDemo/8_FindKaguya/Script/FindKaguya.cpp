@@ -1,6 +1,7 @@
 #include "FindKaguya.h"
 #include "GraphicsEngine/Component/MeshRendererComponent.h"
 #include "GraphicsEngine/GraphicsMain/GraphicsMain.h"
+#include "GraphicsEngine/Graphics/PostProcess.h"
 
 namespace app
 {
@@ -35,5 +36,20 @@ namespace app
 
 	void FindKaguya::UpdateTimeLine(float time)
 	{
+		if (GraphicsMain::GetInstance()->GetAppSceneIndex() == 8)
+		{
+			if (time > 195.0f)
+			{
+				PostProcess::GetInstance()->m_LatePostProcesCallBack = [=]() {
+					float VignetteBrightness = (time > 207.0f) ? 0.25f + 0.75 * (time - 207.0f) / 2.0f : 0.25f * glm::clamp((time - 195.0f) / 5.0f, 0.0f, 1.0f);
+
+					PostProcess::GetInstance()->m_LateMeshRenderer->m_material->SetIntUniform("_UseVignette", 1);
+					PostProcess::GetInstance()->m_LateMeshRenderer->m_material->SetFloatUniform("_VignetteRadius", 0.9f);
+					PostProcess::GetInstance()->m_LateMeshRenderer->m_material->SetFloatUniform("_VignetteLateRadius", 0.0f);
+					PostProcess::GetInstance()->m_LateMeshRenderer->m_material->SetFloatUniform("_VignetteBrightness", VignetteBrightness);
+					PostProcess::GetInstance()->m_LateMeshRenderer->m_material->SetFloatUniform("_VignetteBlendRate", glm::clamp((time - 195.0f) / 2.0f, 0.0f, 1.0f));
+				};
+			}
+		}
 	}
 }

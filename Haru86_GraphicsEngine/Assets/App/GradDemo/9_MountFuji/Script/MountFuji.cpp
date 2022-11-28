@@ -3,6 +3,7 @@
 #include "GraphicsEngine/Component/TransformComponent.h"
 #include "GraphicsEngine/Graphics/ShaderLib.h"
 #include "GraphicsEngine/Text/TextObject.h"
+#include "GraphicsEngine/Graphics/PostProcess.h"
 
 namespace app {
 	MountFuji::MountFuji() :
@@ -57,6 +58,22 @@ namespace app {
 			else { CameraPos.z -= (time - 218.0f); }
 			GraphicsMain::GetInstance()->m_MainCamera->m_center = CameraCen;
 			GraphicsMain::GetInstance()->m_MainCamera->m_position = CameraPos;
+
+			if (time < 211.0f)
+			{
+				PostProcess::GetInstance()->m_LatePostProcesCallBack = [=]() {
+					PostProcess::GetInstance()->m_LateMeshRenderer->m_material->SetIntUniform("_UseVignette", 0);
+					PostProcess::GetInstance()->m_LateMeshRenderer->m_material->SetIntUniform("_UseWhiteFade", 1);
+					PostProcess::GetInstance()->m_LateMeshRenderer->m_material->SetFloatUniform("_WhiteFadeVal", 1.0f - (time - 210.0f));
+				};
+			}
+			else
+			{
+				PostProcess::GetInstance()->m_LatePostProcesCallBack = [=]() {
+					PostProcess::GetInstance()->m_LateMeshRenderer->m_material->SetIntUniform("_UseVignette", 0);
+					PostProcess::GetInstance()->m_LateMeshRenderer->m_material->SetIntUniform("_UseWhiteFade", 0);
+				};
+			}
 		}
 	}
 }

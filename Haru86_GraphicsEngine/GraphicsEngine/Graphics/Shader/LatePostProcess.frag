@@ -21,6 +21,7 @@ uniform int _UseVignette;
 uniform float _VignetteRadius;
 uniform float _VignetteLateRadius;
 uniform float _VignetteBrightness;
+uniform float _VignetteBlendRate;
 uniform int _UseWhiteNoise;
 uniform float _WhiteNoisePower;
 uniform int _UseFilmFilter;
@@ -39,9 +40,9 @@ float rand(vec2 st)
     return fract(sin(dot(st, vec2(12.9898, 78.233))) * 43758.5453);
 }
 
-vec3 Vignette(in vec3 col, vec2 st)
+vec3 Vignette(in vec3 col)
 {
-	st=st*2.0-1.0;
+	vec2 st = uv*2.0-1.0;
 	
 	float w = 1.1+(1.0-_VignetteRadius)*4.0 - _VignetteLateRadius*0.5;
 	
@@ -49,8 +50,8 @@ vec3 Vignette(in vec3 col, vec2 st)
 	col = mix(col,vec3(0.0),d);
 	//col*=d*0.5*(1.0+_VignetteBrightness);
 	col*=d*0.5*(1.0+9.0*_VignetteBrightness);
-
-	col.rgb+=(_VignetteBrightness);
+	col = mix(col, max(vec3(0.0), col), min(1.0, (_VignetteBrightness - 0.25) * 2.0));
+	col.rgb+=vec3(_VignetteBrightness);
 
 	return col;
 }
@@ -107,7 +108,7 @@ void main(){
 	if(_UseWhiteFade == 1) col = DrawWhite(col);
 	if(_UseWhiteNoise == 1) col = WhiteNoise(col, st);
 
-	if(_UseVignette == 1) col = Vignette(col, st);
+	if(_UseVignette == 1) col = mix(col, Vignette(col), _VignetteBlendRate);
 	if(_UseFilmFilter == 1) col = DrawFilmFilter(col, st);
 	
 	
