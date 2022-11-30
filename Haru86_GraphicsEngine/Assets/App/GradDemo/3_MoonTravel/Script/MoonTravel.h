@@ -7,6 +7,7 @@ namespace app {
 	class MoonTravel
 	{
 		std::shared_ptr<MeshRendererComponent> m_MeshRenderer;
+		std::shared_ptr<MeshRendererComponent> m_RaySpaceShip;
 	public:
 		MoonTravel();
 		virtual ~MoonTravel() = default;
