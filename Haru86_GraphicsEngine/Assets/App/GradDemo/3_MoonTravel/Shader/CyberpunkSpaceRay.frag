@@ -16,6 +16,7 @@ R"(
 #define main() mainImage( out vec4 fragColor, in vec2 fragCoord )
 const int _RenderingTarget = 1;
 const float _LeaveStartTime = 1.0;
+const float _Alpha = 1.0;
 #else
 uniform float _time;
 uniform vec2 _resolution;
@@ -24,6 +25,7 @@ uniform vec3 _WorldCameraPos;
 uniform vec3 _WorldCameraCenter;
 
 uniform float _LeaveStartTime;
+uniform float _Alpha;
 
 in vec2 uv;
 #endif
@@ -233,8 +235,9 @@ else
     st.x*=(_resolution.x/_resolution.y);
 #endif
     float zfactor=1.0-0.45*length(st);
-    CameraIndex = (fract(_time*0.1)<0.5)? 0 : 1;
-  
+    //CameraIndex = (fract(_time*0.1)<0.5)? 0 : 1;
+    CameraIndex=0;
+
     vec3 col = vec3(0.0),ro=vec3(0.0,0.0,1.5),ta=vec3(0.0,0.0,0.0);
     if(CameraIndex == 0)
     {
@@ -319,7 +322,7 @@ else
         
     }
     
-    gl_FragColor = vec4(col,1.0);
+    gl_FragColor = vec4(col,_Alpha);
 }
 
 }

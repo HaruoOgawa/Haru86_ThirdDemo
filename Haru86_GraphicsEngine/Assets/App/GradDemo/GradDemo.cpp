@@ -7,7 +7,6 @@
 #include "0_MoonSea/Script/MoonSea.h"
 #include "2_EarthAndMoon/Script/EarthAndMoon.h"
 #include "3_MoonTravel/Script/MoonTravel.h"
-#include "4_CyberpunkSpaceRay/Script/CyberpunkSpaceRay.h"
 #include "5_ChangeOfMind/Script/ChangeOfMind.h"
 #include "6_RoughMikado/Script/RoughMikado.h"
 #include "7_FeatherRobe/Script/FeatherRobe.h"
@@ -27,7 +26,6 @@ namespace app
         m_MoonSea(nullptr),
         m_EarthAndMoon(nullptr),
         m_MoonTravel(nullptr),
-        m_CyberpunkSpaceRay(nullptr),
         m_ChangeOfMind(nullptr),
         m_RoughMikado(nullptr),
         m_FeatherRobe(nullptr),
@@ -40,7 +38,7 @@ namespace app
     {
 #ifdef _DEBUG
         // 時間のオフセット
-        GraphicsMain::GetInstance()->m_SecondsTimeOffset = 130.0f;// シーンを飛ばすためのオフセット
+        GraphicsMain::GetInstance()->m_SecondsTimeOffset = 115.0f;// シーンを飛ばすためのオフセット
 
         // 音楽のミュート
         //GraphicsMain::GetInstance()->m_SoundPlayer->Mute(true);
@@ -54,7 +52,6 @@ namespace app
         m_MoonSea = std::make_shared<MoonSea>();
         m_EarthAndMoon = std::make_shared<EarthAndMoon>();
         m_MoonTravel = std::make_shared<MoonTravel>();
-        m_CyberpunkSpaceRay = std::make_shared<CyberpunkSpaceRay>();
         m_ChangeOfMind = std::make_shared<ChangeOfMind>();
         m_RoughMikado = std::make_shared<RoughMikado>();
         m_FeatherRobe = std::make_shared<FeatherRobe>();
@@ -78,8 +75,7 @@ namespace app
 
         if (m_SceneIndex == 0 || m_SceneIndex == 1) m_MoonSea->Update(m_LocalTime);
         if (m_SceneIndex == 2) m_EarthAndMoon->Update(m_LocalTime);
-        if (m_SceneIndex == 3) m_MoonTravel->Update(m_LocalTime);
-        if (m_SceneIndex == 4) m_CyberpunkSpaceRay->Update(m_LocalTime);
+        if (m_SceneIndex == 3 || m_SceneIndex == 4) m_MoonTravel->Update(m_LocalTime);
         if (m_SceneIndex == 5)  m_ChangeOfMind->Update(m_LocalTime);
         if (m_SceneIndex == 6) m_RoughMikado->Update(m_LocalTime);
         if (m_SceneIndex == 7) m_FeatherRobe->Update(m_LocalTime);
@@ -91,8 +87,7 @@ namespace app
     {
         if (m_SceneIndex == 0 || m_SceneIndex == 1) m_MoonSea->Draw(IsRaymarching);
         if (m_SceneIndex == 2) m_EarthAndMoon->Draw(IsRaymarching);
-        if (m_SceneIndex == 3) m_MoonTravel->Draw(IsRaymarching);
-        if (m_SceneIndex == 4) m_CyberpunkSpaceRay->Draw(IsRaymarching);
+        if (m_SceneIndex == 3 || m_SceneIndex == 4) m_MoonTravel->Draw(IsRaymarching);
         if (m_SceneIndex == 5) m_ChangeOfMind->Draw(IsRaymarching);
         if (m_SceneIndex == 6) m_RoughMikado->Draw(IsRaymarching);
         if (m_SceneIndex == 7) m_FeatherRobe->Draw(IsRaymarching);
@@ -124,7 +119,7 @@ namespace app
         }
         else if (m_LocalTime >= 103.0f && m_LocalTime < 118.0f)
         {
-            m_SceneIndex = 4;
+            m_SceneIndex = 3;
         }
         else if (m_LocalTime >= 118.0f && m_LocalTime < 134.0f)
         {
@@ -165,7 +160,6 @@ namespace app
         m_MoonSea->UpdateTimeLine(m_LocalTime);
         m_EarthAndMoon->UpdateTimeLine(m_LocalTime);
         m_MoonTravel->UpdateTimeLine(m_LocalTime);
-        m_CyberpunkSpaceRay->UpdateTimeLine(m_LocalTime);
         m_ChangeOfMind->UpdateTimeLine(m_LocalTime);
         m_RoughMikado->UpdateTimeLine(m_LocalTime);
         m_FeatherRobe->UpdateTimeLine(m_LocalTime);
