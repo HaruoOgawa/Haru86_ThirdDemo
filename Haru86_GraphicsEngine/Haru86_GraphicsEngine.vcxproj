@@ -407,7 +407,6 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
   <ItemGroup>
     <ClInclude Include="Assets\App\GradDemo\GradDemo.h" />
     <ClInclude Include="Assets\App\GradDemo\2_EarthAndMoon\Script\EarthAndMoon.h" />
-    <ClInclude Include="Assets\App\GradDemo\4_CyberpunkSpaceRay\Script\CyberpunkSpaceRay.h" />
     <ClInclude Include="Assets\App\GradDemo\5_ChangeOfMind\Script\ChangeOfMind.h" />
     <ClInclude Include="Assets\App\GradDemo\8_FindKaguya\Script\FindKaguya.h" />
     <ClInclude Include="Assets\App\GradDemo\7_FeatherRobe\Script\FeatherRobe.h" />
@@ -444,7 +443,6 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
   <ItemGroup>
     <ClCompile Include="Assets\App\GradDemo\GradDemo.cpp" />
     <ClCompile Include="Assets\App\GradDemo\2_EarthAndMoon\Script\EarthAndMoon.cpp" />
-    <ClCompile Include="Assets\App\GradDemo\4_CyberpunkSpaceRay\Script\CyberpunkSpaceRay.cpp" />
     <ClCompile Include="Assets\App\GradDemo\5_ChangeOfMind\Script\ChangeOfMind.cpp" />
     <ClCompile Include="Assets\App\GradDemo\8_FindKaguya\Script\FindKaguya.cpp" />
     <ClCompile Include="Assets\App\GradDemo\7_FeatherRobe\Script\FeatherRobe.cpp" />
@@ -479,7 +477,7 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <None Include="Assets\App\GradDemo\1_LeaveEarth\Shader\LeaveEarth.frag" />
     <None Include="Assets\App\GradDemo\0_MoonSea\Shader\MoonSea.frag" />
     <None Include="Assets\App\GradDemo\3_MoonTravel\Shader\MoonTravel.frag" />
-    <None Include="Assets\App\GradDemo\4_CyberpunkSpaceRay\Shader\CyberpunkSpaceRay.frag" />
+    <None Include="Assets\App\GradDemo\3_MoonTravel\Shader\CyberpunkSpaceRay.frag" />
     <None Include="Assets\App\GradDemo\5_ChangeOfMind\Shader\NegativeSphere.frag" />
     <None Include="Assets\App\GradDemo\5_ChangeOfMind\Shader\NegativeSphere.geom" />
     <None Include="Assets\App\GradDemo\5_ChangeOfMind\Shader\NegativeSphereCore.vert" />
