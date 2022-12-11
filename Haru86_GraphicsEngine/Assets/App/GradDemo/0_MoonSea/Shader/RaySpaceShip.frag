@@ -23,6 +23,9 @@ const int _TRSIndex = -1;
 const float _GoMoonTime = 3.0;
 int _RefMapIndex = 1;
 float _CorrectionValue = 0.1;
+int _UseCustomPos = 0;
+vec3 _CustomRo = vec3(0.0);
+vec3 _CustomTa = vec3(0.0);
 #else
 uniform float _time;
 uniform vec2 _resolution;
@@ -43,6 +46,9 @@ uniform float _GoMoonTime;
 uniform int _RefMapIndex ; // 0 ~ -1
 uniform sampler2D _BufferA;
 uniform float _CorrectionValue;
+uniform int _UseCustomPos;
+uniform vec3 _CustomRo;
+uniform vec3 _CustomTa;
 
 in vec2 uv;
 #endif
@@ -321,6 +327,12 @@ void main()
     vec3 ro= _WorldCameraPos,ta=_WorldCameraCenter;
     if(_MoveH > 0.0) { ro.y -= _MoveH; ta.y -= _MoveH; }
    ro *= _CorrectionValue;
+
+   if(_UseCustomPos == 1)
+   {
+        ro = _CustomRo;
+        ta = _CustomTa; 
+   }
 #endif
     vec3 cdir=normalize(ta-ro),cside=normalize(cross(vec3(0.0,1.0,0.0),cdir)),cup=normalize(cross(cdir,cside)),
     rd=normalize(st.x*cside+st.y*cup+1.0*cdir),col = vec3(0.0);

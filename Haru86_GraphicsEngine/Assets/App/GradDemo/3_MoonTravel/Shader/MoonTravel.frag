@@ -15,6 +15,8 @@ const int _RenderingTarget = 1;
 const float _ShowStartTime = 5.0;
 const float _ShowTimeDuration = 10.0;
 const float _Alpha = 1.0;
+const float _MoveSpeed = 1.0;
+
 #else
 uniform float _time;
 uniform vec2 _resolution;
@@ -25,6 +27,7 @@ uniform vec3 _WorldCameraCenter;
 uniform float _ShowStartTime;
 uniform float _ShowTimeDuration;
 uniform float _Alpha;
+uniform float _MoveSpeed;
 
 in vec2 uv;
 #endif
@@ -200,6 +203,8 @@ mapr Moonmap_detailed(vec3 p)
 
 mapr CreateMoonHightMap(vec3 ro,vec3 rd)
 {
+    ro.z += _time * _MoveSpeed; 
+
     float tm=0.0;
     float tx=1000.0;
     float hx=Moonmap(ro+rd*tx).d;
@@ -474,6 +479,8 @@ vec3 dColor(mapr mr, mapr moonr, vec3 ro,vec3 rd, vec2 st)
     }
     else if(moonr.hit)
     {
+        ro.z += _time * _MoveSpeed;
+
         vec3 p = ro + rd * moonr.t;
         vec3 d = p - ro;
         vec3 n = gn_Moon(p,dot(d, d) * EPSILON_NRM);
@@ -501,21 +508,16 @@ else
 #ifdef DRAW_ON_SHADERTOY
     vec2 uv = gl_FragCoord.xy/_resolution.xy;
     vec2 st=(gl_FragCoord.xy*2.-_resolution.xy)/min(_resolution.x,_resolution.y);
-    /*vec3 ro= vec3(1.,.5,-1. + _time*0.1),ta=ro+vec3(0.,0.,1.0);
-    if(_time < _ShowStartTime)
-    {
-        ro=vec3(0.0,vec2(2.0)),ta=vec3(0.0,1.0+(1.0),0.0);
-    }*/
-#else
-    vec2 st=uv*2.0-1.0;st.x*=(_resolution.x/_resolution.y);
-    //vec3 ro= _WorldCameraPos,ta=_WorldCameraCenter;
-#endif
     vec3 ro= vec3(1.,.5,-1. + _time*0.1),ta=ro+vec3(0.,0.,1.0);
     if(_time < _ShowStartTime)
     {
         ro=vec3(0.0,vec2(2.0)),ta=vec3(0.0,1.0+(1.0),0.0);
     }
-
+#else
+    vec2 st=uv*2.0-1.0;st.x*=(_resolution.x/_resolution.y);
+    vec3 ro= _WorldCameraPos,ta=_WorldCameraCenter;
+#endif
+    
     vec3 cdir=normalize(ta-ro),cside=normalize(cross(vec3(0.0,1.0,0.0),cdir)),cup=normalize(cross(cdir,cside)),
     rd=normalize(st.x*cside+st.y*cup+1.0*cdir),col=vec3(0.0);
     ln = 100.0;
