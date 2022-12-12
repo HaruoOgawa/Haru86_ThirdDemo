@@ -306,7 +306,7 @@ attrib +s +h $(OutDir)bin
 xcopy "$(ProjectDir)GraphicsEngine\Library\GLEW\x64\bin\glew32d.dll" "$(OutDir)bin" /i /s /y
 xcopy "$(ProjectDir)GraphicsEngine\Library\GLFW\x64\lib\glfw3.dll" "$(OutDir)bin" /i /s /y
 xcopy "$(ProjectDir)GraphicsEngine\Library\FreeType\lib\freetype.dll" "$(OutDir)bin" /i /s /y 
-xcopy "$(ProjectDir)Assets\Sound\melcom-cyberpunk.mp3" "$(OutDir)bin" /i /s /y
+xcopy "$(ProjectDir)Assets\Sound\edm_electronic_electronica_.mp3" "$(OutDir)bin" /i /s /y
 xcopy "$(ProjectDir)Assets\Font\georgiai.ttf" "$(OutDir)bin" /i /s /y
 del /Q $(OutDir)Haru86_GraphicsEngine.pdb</Command>
     </PostBuildEvent>
@@ -336,7 +336,7 @@ attrib +s +h $(OutDir)bin
 xcopy "$(ProjectDir)GraphicsEngine\Library\GLEW\x64\bin\glew32d.dll" "$(OutDir)bin" /i /s /y
 xcopy "$(ProjectDir)GraphicsEngine\Library\GLFW\x64\lib\glfw3.dll" "$(OutDir)bin" /i /s /y
 xcopy "$(ProjectDir)GraphicsEngine\Library\FreeType\lib\freetype.dll" "$(OutDir)bin" /i /s /y 
-xcopy "$(ProjectDir)Assets\Sound\melcom-cyberpunk.mp3" "$(OutDir)bin" /i /s /y
+xcopy "$(ProjectDir)Assets\Sound\edm_electronic_electronica_.mp3" "$(OutDir)bin" /i /s /y
 xcopy "$(ProjectDir)Assets\Font\georgiai.ttf" "$(OutDir)bin" /i /s /y
 del /Q $(OutDir)Haru86_GraphicsEngine.pdb
 </Command>
@@ -368,7 +368,7 @@ attrib +s +h $(OutDir)bin
 xcopy "$(ProjectDir)GraphicsEngine\Library\GLEW\x64\bin\glew32d.dll" "$(OutDir)bin" /i /s /y
 xcopy "$(ProjectDir)GraphicsEngine\Library\GLFW\x64\lib\glfw3.dll" "$(OutDir)bin" /i /s /y
 xcopy "$(ProjectDir)GraphicsEngine\Library\FreeType\lib\freetype.dll" "$(OutDir)bin" /i /s /y 
-xcopy "$(ProjectDir)Assets\Sound\melcom-cyberpunk.mp3" "$(OutDir)bin" /i /s /y
+xcopy "$(ProjectDir)Assets\Sound\edm_electronic_electronica_.mp3" "$(OutDir)bin" /i /s /y
 xcopy "$(ProjectDir)Assets\Font\georgiai.ttf" "$(OutDir)bin" /i /s /y
 call squishy-x64 -i "$(OutDir)Haru86_GraphicsEngine.exe" -o "$(OutDir)Haru86_GraphicsEngine.exe"
 del /Q $(OutDir)Haru86_GraphicsEngine.pdb

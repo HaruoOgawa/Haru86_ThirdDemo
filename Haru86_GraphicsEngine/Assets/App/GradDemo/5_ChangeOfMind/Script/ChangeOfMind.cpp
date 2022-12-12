@@ -136,6 +136,9 @@ namespace app
 	{
 		if (GraphicsMain::GetInstance()->GetAppSceneIndex() == 5)
 		{
+			GraphicsMain::GetInstance()->m_MainCamera->m_position = glm::vec3(0.0f, 0.0f, 3.0f);
+			GraphicsMain::GetInstance()->m_MainCamera->m_center = glm::vec3(0.0f, 0.0f, 0.0f);
+
 			if (time < 134.5f)
 			{
 				PostProcess::GetInstance()->m_LatePostProcesCallBack = [=]() {

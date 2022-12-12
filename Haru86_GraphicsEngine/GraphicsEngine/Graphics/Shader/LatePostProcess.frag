@@ -59,9 +59,9 @@ vec3 Vignette(in vec3 col)
 // ホワイトノイズ
 vec3 WhiteNoise(in vec3 col, vec2 st){ return col + vec3(1.0) * (rand(vec2(st.x,st.y)+_time) * _WhiteNoisePower  ); }
 
-vec3 DrawFilmFilter(in vec3 col, vec2 st)
+vec3 DrawFilmFilter(in vec3 col)
 {
-	st=st*2.0-1.0;
+	vec2 st = uv*2.0-1.0;
 
 	float w = 0.2 - _FilmWidthReduction;
 	if(abs(st.y) > (1.0-w)) col = vec3(0.0);
@@ -109,7 +109,7 @@ void main(){
 	if(_UseWhiteNoise == 1) col = WhiteNoise(col, st);
 
 	if(_UseVignette == 1) col = mix(col, Vignette(col), _VignetteBlendRate);
-	if(_UseFilmFilter == 1) col = DrawFilmFilter(col, st);
+	if(_UseFilmFilter == 1) col = DrawFilmFilter(col);
 	
 	
 	gl_FragColor=vec4(col,1.0);

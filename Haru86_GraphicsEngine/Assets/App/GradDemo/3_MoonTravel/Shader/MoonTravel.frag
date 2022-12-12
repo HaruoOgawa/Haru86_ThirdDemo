@@ -1,5 +1,6 @@
 R"(
 
+
 #version 330
 // ShaderToy --> OpenGL/GLSL Convert Preprocessor /////////////////////////////
 //#define DRAW_ON_SHADERTOY
@@ -15,6 +16,9 @@ const int _RenderingTarget = 1;
 const float _ShowStartTime = 5.0;
 const float _ShowTimeDuration = 10.0;
 const float _Alpha = 1.0;
+const float _MoveSpeed = 1.0;
+const int _DrawEarth = 1; 
+
 #else
 uniform float _time;
 uniform vec2 _resolution;
@@ -25,6 +29,8 @@ uniform vec3 _WorldCameraCenter;
 uniform float _ShowStartTime;
 uniform float _ShowTimeDuration;
 uniform float _Alpha;
+uniform float _MoveSpeed;
+uniform int _DrawEarth;
 
 in vec2 uv;
 #endif
@@ -200,6 +206,8 @@ mapr Moonmap_detailed(vec3 p)
 
 mapr CreateMoonHightMap(vec3 ro,vec3 rd)
 {
+    ro.z += _time * _MoveSpeed; 
+
     float tm=0.0;
     float tx=1000.0;
     float hx=Moonmap(ro+rd*tx).d;
@@ -285,14 +293,19 @@ mapr map(vec3 p)
     }
     else
     {
+        p.z += _time * _MoveSpeed; 
         vec4 lp = vec4(p,1.5);
+        lp.x = -abs(lp.x);
+        lp.x = mod(lp.x, 2.0) -1.0;
+        lp.x += 1.0;
         
         if(_time >= _ShowStartTime && _time < _ShowStartTime + _ShowTimeDuration)
         {
-            float h = 2.0;
+            float h = 8.0;
             lp.y += (h - h * (_time-_ShowStartTime)/_ShowTimeDuration);
         }
         
+        lp.y += -1.5;
         lp.z=abs(2.0-mod(lp.z,4.0));
         for(int i=0;i<8;i++){lp = fbm(lp);}
         
@@ -388,6 +401,9 @@ float calcAo(in vec3 p,in vec3 n)
 #define tile   0.850
 vec3 StarSpace(vec3 ro,vec3 rd)
 {
+    if(_time >= _ShowStartTime){ ro.z += _time * _MoveSpeed * 0.05; } 
+    else{ ro.z += _time * _MoveSpeed * 0.001; } 
+
     vec3 col=vec3(0.);
     float t=0.1,fade=1.;
     ro.x+=1.0;
@@ -418,7 +434,7 @@ vec3 dColor(mapr mr, mapr moonr, vec3 ro,vec3 rd, vec2 st)
 {
     vec3 col = vec3(0.0);
     
-    if((mr.t < moonr.t || !moonr.hit) && mr.hit && mr.m == 0)
+    if(mr.t < 10.0 /*(mr.t < moonr.t || !moonr.hit) && mr.hit*/ && mr.m == 0)
     {
         vec3 p = ro + rd*mr.t;
         vec3 n = gn(p);
@@ -436,7 +452,7 @@ vec3 dColor(mapr mr, mapr moonr, vec3 ro,vec3 rd, vec2 st)
             col=mix(col, refCol, 0.2);
         }
     }
-    else if(!moonr.hit && mr.hit && mr.m == 1) // 地球のライティング
+    else if(!moonr.hit && mr.hit && mr.m == 1 && _DrawEarth == 1) // 地球のライティング
     {
             vec3 p = ro+rd*mr.t;
             //p.xz*=rot(_time*0.5);
@@ -474,6 +490,8 @@ vec3 dColor(mapr mr, mapr moonr, vec3 ro,vec3 rd, vec2 st)
     }
     else if(moonr.hit)
     {
+        ro.z += _time * _MoveSpeed;
+
         vec3 p = ro + rd * moonr.t;
         vec3 d = p - ro;
         vec3 n = gn_Moon(p,dot(d, d) * EPSILON_NRM);
@@ -501,21 +519,16 @@ else
 #ifdef DRAW_ON_SHADERTOY
     vec2 uv = gl_FragCoord.xy/_resolution.xy;
     vec2 st=(gl_FragCoord.xy*2.-_resolution.xy)/min(_resolution.x,_resolution.y);
-    /*vec3 ro= vec3(1.,.5,-1. + _time*0.1),ta=ro+vec3(0.,0.,1.0);
-    if(_time < _ShowStartTime)
-    {
-        ro=vec3(0.0,vec2(2.0)),ta=vec3(0.0,1.0+(1.0),0.0);
-    }*/
-#else
-    vec2 st=uv*2.0-1.0;st.x*=(_resolution.x/_resolution.y);
-    //vec3 ro= _WorldCameraPos,ta=_WorldCameraCenter;
-#endif
-    vec3 ro= vec3(1.,.5,-1. + _time*0.1),ta=ro+vec3(0.,0.,1.0);
+    vec3 ro= vec3(1.,2.0,-1. + _time*0.1),ta=ro+vec3(0.,0.,1.0);
     if(_time < _ShowStartTime)
     {
         ro=vec3(0.0,vec2(2.0)),ta=vec3(0.0,1.0+(1.0),0.0);
     }
-
+#else
+    vec2 st=uv*2.0-1.0;st.x*=(_resolution.x/_resolution.y);
+    vec3 ro= _WorldCameraPos,ta=_WorldCameraCenter;
+#endif
+    
     vec3 cdir=normalize(ta-ro),cside=normalize(cross(vec3(0.0,1.0,0.0),cdir)),cup=normalize(cross(cdir,cside)),
     rd=normalize(st.x*cside+st.y*cup+1.0*cdir),col=vec3(0.0);
     ln = 100.0;
@@ -526,5 +539,6 @@ else
 }
 
 }
+
 
 )"
