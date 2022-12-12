@@ -7,3 +7,5 @@
 * 圧縮ツールとして 『[squishy](https://www.pouet.net/prod.php?which=85098)』を使用
 * Escでウィンドウを閉じる
 ## クレジット
+* CG Engineer: [Haru86_](https://twitter.com/Haru86_HO)  
+* Music:       [Mubert](https://mubert.com/)
