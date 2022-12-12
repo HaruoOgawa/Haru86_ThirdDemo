@@ -38,7 +38,7 @@ namespace app
     {
 #ifdef _DEBUG
         // 時間のオフセット
-        GraphicsMain::GetInstance()->m_SecondsTimeOffset = 100.0f;// シーンを飛ばすためのオフセット
+        GraphicsMain::GetInstance()->m_SecondsTimeOffset = 175.0f;// シーンを飛ばすためのオフセット
 
         // 音楽のミュート
         //GraphicsMain::GetInstance()->m_SoundPlayer->Mute(true);
@@ -101,19 +101,19 @@ namespace app
     {
         m_LocalTime = GraphicsMain::GetInstance()->m_SecondsTime;
 
-        if (m_LocalTime >= 0.0f && m_LocalTime < 44.0f)
+        if (m_LocalTime >= 0.0f && m_LocalTime < 42.0f)
         {
             m_SceneIndex = 0;
         }
-        else if (m_LocalTime >= 44.0f && m_LocalTime < 61.0f)
+        else if (m_LocalTime >= 42.0f && m_LocalTime < 61.0f)
         {
             m_SceneIndex = 1;
         }
-        else if (m_LocalTime >= 61.0f && m_LocalTime < 74.0f) // 13s
+        else if (m_LocalTime >= 61.0f && m_LocalTime < 75.0f) // 13s
         {
             m_SceneIndex = 2;
         }
-        else if (m_LocalTime >= 74.0f && m_LocalTime < 103.0f)
+        else if (m_LocalTime >= 75.0f && m_LocalTime < 103.0f)
         {
             m_SceneIndex = 3;
         }
@@ -121,23 +121,23 @@ namespace app
         {
             m_SceneIndex = 3;
         }
-        else if (m_LocalTime >= 118.0f && m_LocalTime < 134.0f)
+        else if (m_LocalTime >= 118.0f && m_LocalTime < 138.0f)
         {
             m_SceneIndex = 4;
         }
-        else if (m_LocalTime >= 134.0f && m_LocalTime < 149.0f)
+        else if (m_LocalTime >= 138.0f && m_LocalTime < 151.5f)
         {
             m_SceneIndex = 5;
         }
-        else if (m_LocalTime >= 149.0f && m_LocalTime < 164.0f) //149 - 164
+        else if (m_LocalTime >= 151.5f && m_LocalTime < 166.0f) //149 - 164
         {
             m_SceneIndex = 6;
         }
-        else if (m_LocalTime >= 164.0f && m_LocalTime < 180.0f) //164 - 179
+        else if (m_LocalTime >= 166.0f && m_LocalTime < 182.0f) //164 - 179
         {
             m_SceneIndex = 7;
         }
-        else if (m_LocalTime >= 180.0f && m_LocalTime < 210.0f)// 179 - 194   => 194 + (286-271) = 179 => 3m
+        else if (m_LocalTime >= 182.0f && m_LocalTime < 210.0f)// 179 - 194   => 194 + (286-271) = 179 => 3m
         {
             m_SceneIndex = 8;
         }

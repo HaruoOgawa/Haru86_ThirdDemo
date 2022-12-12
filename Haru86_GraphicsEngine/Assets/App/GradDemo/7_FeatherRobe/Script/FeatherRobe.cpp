@@ -7,7 +7,8 @@
 namespace app {
 	FeatherRobe::FeatherRobe() :
 		m_MeshRenderer(nullptr),
-		m_AuraPos(glm::vec3(0.0f))
+		m_AuraPos(glm::vec3(0.0f)),
+		m_Voxel(nullptr)
 	{
 		m_MeshRenderer = std::make_shared<MeshRendererComponent>(
 			std::make_shared<TransformComponent>(),
@@ -45,6 +46,17 @@ namespace app {
 			GL_RGBA16F, GL_RGBA, GL_FLOAT
 			));
 
+		m_Voxel = std::make_shared<MeshRendererComponent>(
+			std::make_shared<TransformComponent>(),
+			PrimitiveType::BOARD,
+			RenderingSurfaceType::RAYMARCHING,
+			shaderlib::StandardRenderBoard_vert,
+			std::string(
+				#include "../../8_FindKaguya/Shader/Voxel.frag"
+			)
+		);
+		m_Voxel->useAlphaTest = true;
+		m_Voxel->useZTest = true;
 	}
 
 	void FeatherRobe::Update(float time)
@@ -74,12 +86,28 @@ namespace app {
 					}, true);
 			}
 
+			//
+			float time = GraphicsMain::GetInstance()->m_SecondsTime;
+			float Alpha = (time < 180.0f)? 0.0f : glm::clamp((time - 180.0f) / 2.0f, 0.0f, 1.0f);
+
+			//
 			m_MeshRenderer->Draw([&]() {
 				m_MeshRenderer->m_material->SetVec3Uniform("_AuraPos", m_AuraPos);
 				m_RenderBufferList[0]->GetFrameTexture()->SetActive(GL_TEXTURE0);
 				m_MeshRenderer->m_material->SetTexUniform("_BufferA", 0);
+
+				m_MeshRenderer->m_material->SetFloatUniform("_Alpha", 1.0f - Alpha);
 			});
 			m_RenderBufferList[0]->GetFrameTexture()->SetEnactive(GL_TEXTURE0);
+
+			if (time >= 180.0f)
+			{
+				m_Voxel->Draw([&]() {
+					m_Voxel->m_material->SetIntUniform("_MapIndex", 0);
+					m_Voxel->m_material->SetIntUniform("_UseTex", 1);
+					m_Voxel->m_material->SetFloatUniform("_Alpha", Alpha);
+					});
+			}
 		}
 	}
 
@@ -87,9 +115,9 @@ namespace app {
 	{
 		if (GraphicsMain::GetInstance()->GetAppSceneIndex() == 7)
 		{
-			m_AuraPos = glm::vec3(0.0f, 2.0f, time - 164.0f);
+			m_AuraPos = glm::vec3(0.0f, 2.0f, time - 166.0f);
 			glm::vec3 CameraPos = glm::vec3(0.0f), CameraCenter = glm::vec3(0.0f, -3.0f, 0.0f) + m_AuraPos;
-			//if (time >= 164.0f && time < 172.0f) { CameraCenter.y -= 2.0f; CameraPos = glm::vec3(3.0f * cos(time), -4.0f, 3.0f * sin(time)) + m_AuraPos; }
+			//if (time >= 166.0f && time < 172.0f) { CameraCenter.y -= 2.0f; CameraPos = glm::vec3(3.0f * cos(time), -4.0f, 3.0f * sin(time)) + m_AuraPos; }
 			/*else */if (time >= 164 && time < 180.0f) { CameraPos = glm::vec3(0.0f, -3.0f, 0.1f) + m_AuraPos; }
 			GraphicsMain::GetInstance()->m_MainCamera->m_position = CameraPos;
 			GraphicsMain::GetInstance()->m_MainCamera->m_center = CameraCenter;

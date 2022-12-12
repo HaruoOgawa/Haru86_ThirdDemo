@@ -41,7 +41,7 @@ namespace app {
 			if (m_UseTextIndex == 0) text::TextObject::Draw("DemoScene 64k Intro", 0.05f, 1.35f, 3.0f, glm::vec3(0.0f), glm::vec4(0.0f, 0.0f, 0.0f, m_Alpha));
 			else if (m_UseTextIndex == 1) text::TextObject::Draw("The Tale of\nthe Bamboo-Cutter", 0.05f, 1.35f, 3.0f, glm::vec3(0.0f), glm::vec4(0.0f, 0.0f, 0.0f, m_Alpha));
 			else if (m_UseTextIndex == 2) text::TextObject::Draw("CG Engineer\nHaru86_", 0.05f, 1.35f, 3.0f, glm::vec3(0.0f), glm::vec4(0.0f, 0.0f, 0.0f, m_Alpha));
-			else if (m_UseTextIndex == 3) text::TextObject::Draw("Text to Music AI\nMubert", 0.05f, 1.35f, 3.0f, glm::vec3(0.0f), glm::vec4(0.0f, 0.0f, 0.0f, m_Alpha));
+			else if (m_UseTextIndex == 3) text::TextObject::Draw("Music\nMubert", 0.05f, 1.35f, 3.0f, glm::vec3(0.0f), glm::vec4(0.0f, 0.0f, 0.0f, m_Alpha));
 		}
 	}
 

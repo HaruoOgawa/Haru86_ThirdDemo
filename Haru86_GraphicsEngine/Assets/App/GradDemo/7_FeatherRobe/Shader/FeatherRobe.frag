@@ -13,6 +13,7 @@ R"(
 #define main() mainImage( out vec4 fragColor, in vec2 fragCoord )
 const int _RenderingTarget = 1;
 const float _LeaveStartTime = 1.0;
+const float _Alpha = 1.0;
 #else
 uniform float _time;
 uniform vec2 _resolution;
@@ -22,6 +23,7 @@ uniform vec3 _WorldCameraCenter;
 
 uniform vec3 _AuraPos;
 uniform sampler2D _BufferA;
+uniform float _Alpha;
 
 in vec2 uv;
 #endif
@@ -488,7 +490,7 @@ else
     
     col += texture(_BufferA,uv).rgb;
     
-    gl_FragColor = vec4(col,1.0);
+    gl_FragColor = vec4(col,_Alpha);
 }
 
 }

@@ -434,7 +434,6 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <ClInclude Include="GraphicsEngine\Text\TextObject.h" />
     <ClInclude Include="GraphicsEngine\Text\TTFFactory.h" />
     <ClInclude Include="Assets\App\GradDemo\0_MoonSea\Script\MoonSea.h" />
-    <ClInclude Include="Assets\App\GradDemo\1_LeaveEarth\Script\LeaveEarth.h" />
     <ClInclude Include="Assets\App\GradDemo\3_MoonTravel\Script\MoonTravel.h" />
     <ClInclude Include="Assets\App\GradDemo\9_MountFuji\Script\MountFuji.h" />
     <ClInclude Include="Assets\App\GradDemo\6_RoughMikado\Script\RoughMikado.h" />
@@ -464,7 +463,6 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <ClCompile Include="GraphicsEngine\Text\TextObject.cpp" />
     <ClCompile Include="GraphicsEngine\Text\TTFFactory.cpp" />
     <ClCompile Include="Assets\App\GradDemo\0_MoonSea\Script\MoonSea.cpp" />
-    <ClCompile Include="Assets\App\GradDemo\1_LeaveEarth\Script\LeaveEarth.cpp" />
     <ClCompile Include="Assets\App\GradDemo\3_MoonTravel\Script\MoonTravel.cpp" />
     <ClCompile Include="Assets\App\GradDemo\9_MountFuji\Script\MountFuji.cpp" />
     <ClCompile Include="Assets\App\GradDemo\6_RoughMikado\Script\RoughMikado.cpp" />
@@ -474,7 +472,6 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <None Include="Assets\App\GradDemo\0_MoonSea\Shader\RaySpaceShip.frag" />
     <None Include="Assets\App\GradDemo\0_MoonSea\Shader\ShipParticle.frag" />
     <None Include="Assets\App\GradDemo\2_EarthAndMoon\Shader\EarthAndMoon.frag" />
-    <None Include="Assets\App\GradDemo\1_LeaveEarth\Shader\LeaveEarth.frag" />
     <None Include="Assets\App\GradDemo\0_MoonSea\Shader\MoonSea.frag" />
     <None Include="Assets\App\GradDemo\3_MoonTravel\Shader\MoonTravel.frag" />
     <None Include="Assets\App\GradDemo\3_MoonTravel\Shader\CyberpunkSpaceRay.frag" />

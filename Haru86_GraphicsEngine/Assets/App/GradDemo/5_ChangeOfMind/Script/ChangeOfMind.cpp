@@ -139,10 +139,10 @@ namespace app
 			GraphicsMain::GetInstance()->m_MainCamera->m_position = glm::vec3(0.0f, 0.0f, 3.0f);
 			GraphicsMain::GetInstance()->m_MainCamera->m_center = glm::vec3(0.0f, 0.0f, 0.0f);
 
-			if (time < 134.5f)
+			if (time < 138.5f)
 			{
 				PostProcess::GetInstance()->m_LatePostProcesCallBack = [=]() {
-					float Rate = 1.0f - glm::clamp((time - 134.0f) * 2.0f, 0.0f, 1.0f);
+					float Rate = 1.0f - glm::clamp((time - 138.0f) * 2.0f, 0.0f, 1.0f);
 
 					PostProcess::GetInstance()->m_LateMeshRenderer->m_material->SetIntUniform("_UseGridWave", 1);
 					PostProcess::GetInstance()->m_LateMeshRenderer->m_material->SetIntUniform("_UseWaveCustom", 1);
