@@ -95,7 +95,7 @@ namespace app
 		if (IsRaymarching)
 		{
 			m_MoonSeaMeshRenderer->Draw([this]() {
-				m_MoonSeaMeshRenderer->m_material->SetFloatUniform("_LeaveStartTime", 44.0f);
+				m_MoonSeaMeshRenderer->m_material->SetFloatUniform("_LeaveStartTime", 42.0f);
 			});
 
 			if (m_IsDrawShipTrail)
@@ -161,7 +161,7 @@ namespace app
 			if(m_UseTextIndex == 0) text::TextObject::Draw("DemoScene 64k Intro", 0.05f, 1.35f, 3.0f, glm::vec3(0.0f), glm::vec4(1.0f, 1.0f, 1.0f,m_Alpha));
 			else if (m_UseTextIndex == 1) text::TextObject::Draw("The Tale of\nthe Bamboo-Cutter", 0.05f, 1.35f, 3.0f, glm::vec3(0.0f), glm::vec4(1.0f, 1.0f, 1.0f, m_Alpha));
 			else if (m_UseTextIndex == 2) text::TextObject::Draw("CG Engineer\nHaru86_", 0.05f, 1.35f, 3.0f, glm::vec3(0.0f), glm::vec4(1.0f, 1.0f, 1.0f, m_Alpha));
-			else if (m_UseTextIndex == 3) text::TextObject::Draw("Text to Music AI\nMubert", 0.05f, 1.35f, 3.0f, glm::vec3(0.0f), glm::vec4(1.0f, 1.0f, 1.0f, m_Alpha));
+			else if (m_UseTextIndex == 3) text::TextObject::Draw("Music\nMubert", 0.05f, 1.35f, 3.0f, glm::vec3(0.0f), glm::vec4(1.0f, 1.0f, 1.0f, m_Alpha));
 		}
 	}
 
@@ -225,10 +225,10 @@ namespace app
 			m_IsLeaveEarth = true;
 
 			{
-				m_MoveH = time - 44.0f;
+				m_MoveH = time - 42.0f;
 				//float h = 0.0f;
 				glm::vec3 ro = glm::vec3(0.0f, m_MoveH, 1.5f), ta = glm::vec3(0.0f, m_MoveH, 0.0f);
-				int CameraID = int(glm::floor(glm::mod(time, 3.0f))); // 0,1,2
+				int CameraID = int(glm::floor(glm::mod(time + 2.0f, 3.0f))); // 0,1,2
 
 				if (CameraID == 0)
 				{

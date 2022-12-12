@@ -147,10 +147,10 @@ namespace app {
 			GraphicsMain::GetInstance()->m_MainCamera->m_center = pos + glm::vec3(0.0f, 0.0f, 1.0f);
 			m_CustomRo = glm::vec3(0.0f, 0.0f, -0.25f - 4.75f * glm::clamp(time - 117.5f, 0.0f, 1.0f)); m_CustomTa = glm::vec3(0.0f, 0.0f, 0.0f);
 
-			if (time >= 133.5f)
+			if (time >= 137.5f)
 			{
 				PostProcess::GetInstance()->m_LatePostProcesCallBack = [=]() {
-					float Rate = glm::clamp((time - 133.5f) * 2.0f, 0.0f, 1.0f);
+					float Rate = glm::clamp((time - 137.5f) * 2.0f, 0.0f, 1.0f);
 
 					PostProcess::GetInstance()->m_LateMeshRenderer->m_material->SetIntUniform("_UseGridWave", 1);
 					PostProcess::GetInstance()->m_LateMeshRenderer->m_material->SetIntUniform("_UseWaveCustom", 1);

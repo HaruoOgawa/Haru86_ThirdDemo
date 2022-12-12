@@ -87,9 +87,9 @@ namespace app {
 	{
 		if (GraphicsMain::GetInstance()->GetAppSceneIndex() == 7)
 		{
-			m_AuraPos = glm::vec3(0.0f, 2.0f, time - 164.0f);
+			m_AuraPos = glm::vec3(0.0f, 2.0f, time - 166.0f);
 			glm::vec3 CameraPos = glm::vec3(0.0f), CameraCenter = glm::vec3(0.0f, -3.0f, 0.0f) + m_AuraPos;
-			//if (time >= 164.0f && time < 172.0f) { CameraCenter.y -= 2.0f; CameraPos = glm::vec3(3.0f * cos(time), -4.0f, 3.0f * sin(time)) + m_AuraPos; }
+			//if (time >= 166.0f && time < 172.0f) { CameraCenter.y -= 2.0f; CameraPos = glm::vec3(3.0f * cos(time), -4.0f, 3.0f * sin(time)) + m_AuraPos; }
 			/*else */if (time >= 164 && time < 180.0f) { CameraPos = glm::vec3(0.0f, -3.0f, 0.1f) + m_AuraPos; }
 			GraphicsMain::GetInstance()->m_MainCamera->m_position = CameraPos;
 			GraphicsMain::GetInstance()->m_MainCamera->m_center = CameraCenter;
