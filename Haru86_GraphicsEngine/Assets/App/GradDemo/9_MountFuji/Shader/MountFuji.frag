@@ -269,9 +269,10 @@ vec3 sky_color(vec3 e) {
 // raytrace ///////////////////////////////////
 vec4 DrawCloud(vec3 ro,vec3 rd,in vec4 col)
 {
-    col.rgb*=0.1;
-    col.a=0.0;
+    //col.rgb*=0.1;
+    //col.a=0.0;
     float d=0.0,t=0.0,i=0.0,h=0.0;
+    vec4 CloudCol = vec4(0.0);
     
     for(;++i<ln;i++)
     {
@@ -298,7 +299,7 @@ vec4 DrawCloud(vec3 ro,vec3 rd,in vec4 col)
             float dif = clamp(dot(nor,ldir), 0.0, 1.0 )/**sha*/;
             lcol.rgb*=dif;
             // ‰_‚Ì‚‚³’²®
-            col+=lcol*(1.0-col.a) * clamp(1.3 - p.y * 0.2, 0.0, 1.0);
+            CloudCol+=lcol*(1.0-CloudCol.a) * clamp(1.3 - p.y * 0.2, 0.0, 1.0);
             
            
         }
@@ -307,9 +308,23 @@ vec4 DrawCloud(vec3 ro,vec3 rd,in vec4 col)
         t+=max(0.05,0.1*d);
     }
     
-    col.rgb = mix(sky_color(rd), col.rgb+vec3(0.5), col.a); 
-    col.rgb = smoothstep(0.0, 1.0, col.rgb);
+    /*float rate = 1.0 - clamp(t/100.0, 0.0, 1.0);
+    col.rgb = mix(sky_color(rd),
+        mix(col.rgb, CloudCol.rgb, CloudCol.a),
+    rate); 
+    col.rgb = smoothstep(0.0, 1.0, col.rgb);*/
     
+    //CloudCol.rgb = exp(CloudCol.rgb)*0.35;
+    
+    CloudCol = max(vec4(0.0), CloudCol);
+    //col.rgb *= 1.0 - CloudCol.a;
+    //col += CloudCol;
+    col.rgb = mix(col.rgb, CloudCol.rgb + vec3(0.5), CloudCol.a);
+    //col.rgb = smoothstep(0.0, 0.5, col.rgb);
+
+    float rate = 1.0 - clamp(t/30.0, 0.0, 1.0);
+    col.rgb = mix(sky_color(rd), col.rgb, rate);
+
     g_CloudT = t;
     g_CloudP = ro+rd*t;
     
@@ -327,20 +342,15 @@ else
 {
 #ifdef DRAW_ON_SHADERTOY
     vec2 st=(gl_FragCoord.xy*2.-_resolution.xy)/min(_resolution.x,_resolution.y);
+    vec3 ro=vec3(0.0,0.0,1.5),ta=vec3(0.0,0.0,0.0);
+    float tStep = 45.5;
+    ro=vec3(27.5*cos(tStep*0.1),3.5,27.5*sin(tStep*0.1));
 #else
     vec2 st=uv*2.0-1.0;
     st.x*=(_resolution.x/_resolution.y);
-#endif
-   vec4 col = vec4(vec3(0.0),1.0);
-    //vec3 ro=vec3(0.0,0.0,1.5),ta=vec3(0.0,0.0,0.0);
     vec3 ro=_WorldCameraPos,ta=_WorldCameraCenter;
-    
-    //
-    //ro=vec3(27.5*cos(_time*0.1),3.5,27.5*sin(_time*0.1));
-    //float tStep = 45.5;
-    //ro=vec3(27.5*cos(tStep*0.1),3.5,27.5*sin(tStep*0.1));
-    
-    //
+#endif
+    vec4 col = vec4(vec3(0.0),1.0);
     vec3 cdir=normalize(ta-ro),cside=normalize(cross(vec3(0.0,1.0,0.0),cdir)),
     cup=normalize(cross(cdir,cside)),rd=normalize(st.x*cside+st.y*cup+1.*cdir);
     float i=0.0,t=0.0; mapr mr;
