@@ -14,6 +14,8 @@ namespace app {
 
 		std::shared_ptr<MeshRendererComponent> m_AuraTrailRenderer;
 		std::vector<std::shared_ptr<graphic::RenderBuffer>> m_RenderBufferList;
+
+		std::shared_ptr<MeshRendererComponent> m_Voxel;
 	public:
 		FeatherRobe();
 		virtual ~FeatherRobe() = default;
