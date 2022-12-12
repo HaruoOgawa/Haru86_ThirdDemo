@@ -14,6 +14,7 @@ namespace app {
 		glm::vec3 m_CustomRo;
 		glm::vec3 m_CustomTa;
 		float m_MoveSpeed;
+		bool m_DrawEarth;
 	public:
 		MoonTravel();
 		virtual ~MoonTravel() = default;
