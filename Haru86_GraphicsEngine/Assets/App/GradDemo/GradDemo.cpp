@@ -38,7 +38,7 @@ namespace app
     {
 #ifdef _DEBUG
         // 時間のオフセット
-        //GraphicsMain::GetInstance()->m_SecondsTimeOffset = 30.0f;// シーンを飛ばすためのオフセット
+        GraphicsMain::GetInstance()->m_SecondsTimeOffset = 130.0f;// シーンを飛ばすためのオフセット
 
         // 音楽のミュート
         //GraphicsMain::GetInstance()->m_SoundPlayer->Mute(true);
@@ -59,20 +59,8 @@ namespace app
         m_MountFuji = std::make_shared<MountFuji>();
     }
 
-    void GradDemo::Load()
-    {
-
-    }
-
     void GradDemo::Update()
     {
-        //GraphicsMain::GetInstance()->m_MainCamera->m_position = glm::vec3(glm::cos(m_LocalTime * 0.25f) * 3.0f, 0.0f, glm::sin(m_LocalTime * 0.25f) * 3.0f);
-        //GraphicsMain::GetInstance()->m_MainCamera->m_center = glm::vec3(glm::cos(m_LocalTime*0.1f) * 3.0f, 0.0f, glm::sin(m_LocalTime * 0.1f) * 3.0f);
-
-        //GraphicsRenderer::GetInstance()->SetBackgroudColor(glm::vec4(1.0f));
-
-        if(m_LocalTime)
-
         if (m_SceneIndex == 0 || m_SceneIndex == 1) m_MoonSea->Update(m_LocalTime);
         if (m_SceneIndex == 2) m_EarthAndMoon->Update(m_LocalTime);
         if (m_SceneIndex == 3 || m_SceneIndex == 4) m_MoonTravel->Update(m_LocalTime);
@@ -93,8 +81,6 @@ namespace app
         if (m_SceneIndex == 7) m_FeatherRobe->Draw(IsRaymarching);
         if (m_SceneIndex == 8) m_FindKaguya->Draw(IsRaymarching);
         if (m_SceneIndex == 9) m_MountFuji->Draw(IsRaymarching);
-
-        //text::TextObject::Draw("Haru86_");
     }
 
     void GradDemo::UpdateTimeline()
@@ -150,10 +136,7 @@ namespace app
             GraphicsMain::GetInstance()->isRunning = false;
         }
 
-        //m_SceneIndex = 6; // Debug
-
 #ifdef _DEBUG
-
         Console::Log("m_LocalTime: %f\n", m_LocalTime);
 #endif // _DEBUG
 

@@ -14,16 +14,6 @@ namespace shaderlib { // プリプロセッサでどれをリンクするか選ぶのもありかも？？ 
 		#include "GraphicsEngine/Graphics/Shader/DepthColor.frag"
 	};
 
-	const std::string Line2Cylinder_geom = {
-		#include "GraphicsEngine/Graphics/Shader/Line2Cylinder.geom"
-	};
-
-#ifdef _DEBUG
-	const std::string GridPlane_frag = {
-		#include "GraphicsEngine/Graphics/Shader/GridPlane.frag"
-	};
-#endif // _DEBUG
-
 	const std::string StandardRenderBoard_vert = {
 		#include "GraphicsEngine/Graphics/Shader/StandardRenderBoard.vert"
 	};
@@ -34,14 +24,6 @@ namespace shaderlib { // プリプロセッサでどれをリンクするか選ぶのもありかも？？ 
 
 	const std::string LatePostProcess_frag = {
 		#include "GraphicsEngine/Graphics/Shader/LatePostProcess.frag"
-	};
-
-	const std::string PolygonPostProcess_frag = {
-		#include "GraphicsEngine/Graphics/Shader/PolygonPostProcess.frag"
-	};
-
-	const std::string PolygonRaymarchingMixer_vert = {
-		#include "GraphicsEngine/Graphics/Shader/PolygonRaymarchingMixer.vert"
 	};
 
 	const std::string PolygonRaymarchingMixer_frag = {

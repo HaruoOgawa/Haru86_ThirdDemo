@@ -1,5 +1,4 @@
 #include "Material.h"
-#include "GraphicsEngine/Graphics/ComputeBuffer.h"
 #include "GraphicsEngine/Graphics/Texture.h"
 #include "GraphicsEngine/GraphicsMain/GraphicsMain.h"
 #include "GraphicsEngine/Graphics/ShaderLib.h"
@@ -186,50 +185,13 @@ void Material::SetVec4ArrayUniform(std::string uniformName, std::vector<float> v
 void Material::SetTexUniform(std::string uniformName, unsigned int val) {
 	auto prg = GetCurrentShaderPrg();
 	GLuint location = glGetUniformLocation(prg, uniformName.c_str());
-	//glUniform1i(location, static_cast<GLuint>(val-1));
 	glUniform1i(location, static_cast<GLuint>(val));
 }
 
 void Material::SetFloatVectorUniform(std::string uniformName, std::vector<float> val) {
 	auto prg = GetCurrentShaderPrg();
 	GLuint location = glGetUniformLocation(prg, uniformName.c_str());
-	//glUniform1fv(location, val.size(), reinterpret_cast<GLfloat*>(&val));
 	glUniform1fv(location, val.size(), reinterpret_cast<GLfloat*>(&val[0]));
-}
-
-// 普通のShaderにバッファーをアタッチ
-void Material::SetBufferToMat(std::shared_ptr<ComputeBuffer> buffer,int bufferIndex) {
-	SetActive();
-	buffer->SetActive();
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, bufferIndex, buffer->ssbo);
-	buffer->SetEactive();
-}
-
-void Material::LoadTextureList(std::vector<std::string> texPathList, std::vector<std::string> texUniformNameList) {
-	/*for (int i = 0; i < texPathList.size(); i++) {
-		
-		std::unique_ptr<Texture> tex = std::make_unique<Texture>();
-		tex->texUniformName = texUniformNameList[i];
-		if (!tex->Load(texPathList[i])) {
-			printf("Cannot Load This Texture\n");
-		}
-		else {
-
-			m_texture_list.push_back(std::move(tex));
-		}
-	}*/
-}
-void Material::SetActiveTextureList() {
-	/*for (int i = 0; i < m_texture_list.size(); i++) {
-		m_texture_list[i]->SetActive();
-		SetTexUniform(m_texture_list[i]->texUniformName, m_texture_list[i]->GetTextureID());
-	}*/
-}
-
-void Material::SetEactiveTextureList() {
-	/*for (int i = 0; i < m_texture_list.size(); i++) {
-		m_texture_list[i]->SetEactive();
-	}*/
 }
 
 GLuint Material::GetCurrentShaderPrg() {
@@ -276,44 +238,4 @@ void Material::UnLoadData() {
 		glDeleteShader(depthGeometryShaderData);
 	}
 	glDeleteShader(depthFragShaderData);
-}
-
-// Compute Shader Func
-void Material::Dispatch(int xGroupNum, int yGroupNum, int zGroupNum) {
-	glDispatchCompute(xGroupNum, yGroupNum, zGroupNum);
-}
-
-void Material::BindComputeBuffer(CorrectionType correctionType) {
-	if (correctionType == CorrectionType::COMPUTEBUFFER) {
-		for (int i = 0; i < m_buffers.size(); i++) {
-			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, i, m_buffers[i]->ssbo);
-		}
-	}
-	else if (correctionType == CorrectionType::ARRAY) {
-		for (int i = 0; i < m_buffers.size(); i++) {
-			glBindBuffer(GL_ARRAY_BUFFER, m_buffers[i]->ssbo);
-		}
-	}
-}
-
-void Material::DisBindComputeBuffer(CorrectionType correctionType) {
-	if (correctionType == CorrectionType::COMPUTEBUFFER) {
-		for (int i = 0; i < m_buffers.size(); i++) {
-			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, i, 0);
-		}
-	}
-	else if (correctionType == CorrectionType::ARRAY) {
-		for (int i = 0; i < m_buffers.size(); i++) {
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-		}
-	}
-}
-
-// ComputeShaderにバッファをアタッチ
-void Material::SetBufferToCS(std::shared_ptr<ComputeBuffer> buffer, int bufferindex) {
-	m_buffers.push_back(buffer);
-	SetActive();
-	buffer->SetActive();
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, bufferindex, buffer->ssbo);
-	buffer->SetEactive();
 }

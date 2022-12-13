@@ -358,7 +358,6 @@ void main()
              vec3 refcol = dRefColor(ro, rd, n);
              col = mix(col, refcol, mr.metallic);
          }
-         //col += mr.jetCol*0.05;
          Alpha = 1.0;
     }
     

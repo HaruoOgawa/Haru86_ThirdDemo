@@ -17,8 +17,6 @@ namespace app
 		std::shared_ptr<MeshRendererComponent> m_ShipTrailResultRenderer;
 
 		bool								   m_IsLeaveEarth;
-
-		//
 		int									   m_UseTextIndex;
 		float								   m_Alpha;
 		bool								   m_DrawRaySpaceShip;
