@@ -49,8 +49,8 @@ vec3 Vignette(in vec3 col)
 	float d = (length(st))*w;
 	col = mix(col,vec3(0.0),d);
 	//col*=d*0.5*(1.0+_VignetteBrightness);
-	col*=d*0.5*(1.0+9.0*_VignetteBrightness);
-	col = mix(col, max(vec3(0.0), col), min(1.0, (_VignetteBrightness - 0.25) * 2.0));
+	//col*=d*0.5*(1.0+9.0*_VignetteBrightness);
+	//col = mix(col, max(vec3(0.0), col), min(1.0, (_VignetteBrightness - 0.25) * 2.0));
 	col.rgb+=vec3(_VignetteBrightness);
 
 	return col;

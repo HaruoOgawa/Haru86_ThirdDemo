@@ -349,7 +349,7 @@ void main()
          float diff = max(0.0, dot(nabs, ldir));
          float spec = pow(max(0.0, dot(reflect(-ldir, nabs), -rd)), 16.0);
          float ambient = 0.25;
-         col = BaseCol * (diff + ambient) + vec3(1.0) * spec;
+         col = mr.jetCol*0.05 * (diff + ambient) + vec3(1.0) * spec;
          
          {
              ro = p;
@@ -358,7 +358,7 @@ void main()
              vec3 refcol = dRefColor(ro, rd, n);
              col = mix(col, refcol, mr.metallic);
          }
-         col += mr.jetCol*0.05;
+         //col += mr.jetCol*0.05;
          Alpha = 1.0;
     }
     
