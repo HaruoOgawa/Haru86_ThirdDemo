@@ -60,9 +60,7 @@ namespace app
 				PrimitiveType::BOARD,
 				RenderingSurfaceType::RAYMARCHING,
 				shaderlib::StandardRenderBoard_vert,
-				std::string(
-					#include "../../8_FindKaguya/Shader/Voxel.frag"
-				)
+				shaderlib::Voxel_frag
 			);
 
 			m_Voxel->useAlphaTest = true;

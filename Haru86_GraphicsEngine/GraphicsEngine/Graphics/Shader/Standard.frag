@@ -40,7 +40,8 @@ void main(){
 	}
 	else if(_UseMainTex == 1) // テクスチャサンプリング
 	{
-		col=texture(_MainTex,in_uv);
+		vec4 TexCol = texture(_MainTex,vec2(in_uv.x,1.0-in_uv.y));
+		col = _Color * TexCol.r;
 	}
 	else if(_UseMainCube == 1)
 	{
@@ -55,8 +56,6 @@ void main(){
 		col=vec4(1.0);
 		//col=vec4(in_uv.x,in_uv.y,0.0,1.0);
 	}
-
-	
 
 	// 環境光
 	vec4 envColor = vec4(0.0,0.0,0.0,1.0);

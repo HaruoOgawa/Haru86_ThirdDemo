@@ -54,7 +54,6 @@ public:
 	unsigned int m_TargetFrameIndex;
 	bool isRunning;
 	float previousTime;
-	std::shared_ptr<MeshRendererComponent> m_MainBoardRenderer;
 
 	bool mouseStateBool;
 

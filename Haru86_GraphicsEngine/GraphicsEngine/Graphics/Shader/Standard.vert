@@ -11,6 +11,7 @@ uniform float _time;
 uniform float _deltaTime;
 uniform vec3 _CameraPos;
 uniform int _IsMulMatOnVert;
+uniform int _IsMOnly;
 
 layout(location=0)in vec3 vertex;
 layout(location=1)in vec3 normal;
@@ -33,6 +34,14 @@ void main(){
 		out_uv=texcoord;
 		out_WorldVertexPos=MMatrix * pos;
 		out_WorldNormal=MMatrix * vec4(normalize(normal), 0.0);
+		out_gl_InstanceID = id;
+	}
+	else if(_IsMOnly == 1)
+	{
+		gl_Position=MMatrix*pos;
+		out_uv=texcoord;
+		out_WorldVertexPos=MMatrix*pos;
+		out_WorldNormal=vec4(normalize(normal), 0.0);
 		out_gl_InstanceID = id;
 	}
 	else if(_IsMulMatOnVert == 0)

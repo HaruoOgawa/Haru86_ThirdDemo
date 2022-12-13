@@ -66,7 +66,7 @@ namespace app
 			PrimitiveType::BOARD,
 			RenderingSurfaceType::RAYMARCHING,
 			shaderlib::StandardRenderBoard_vert,
-			shaderlib::StandardRenderBoard_frag
+			shaderlib::LatePostProcess_frag
 		);
 
 		m_ShipTrailResultRenderer->useZTest = false;
@@ -124,7 +124,8 @@ namespace app
 			{
 				m_ShipTrailResultRenderer->Draw([&]() {
 					m_RenderBufferList[0]->GetFrameTexture()->SetActive(GL_TEXTURE0);
-					m_ShipTrailResultRenderer->m_material->SetTexUniform("frameTex", 0);
+					m_ShipTrailResultRenderer->m_material->SetIntUniform("_NotUseFraRes", 1);
+					m_ShipTrailResultRenderer->m_material->SetTexUniform("_SrcTexture", 0);
 				});
 				m_RenderBufferList[0]->GetFrameTexture()->SetEnactive(GL_TEXTURE0);
 			}
