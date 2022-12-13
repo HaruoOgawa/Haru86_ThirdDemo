@@ -12,7 +12,7 @@ R"(
 #define _time iTime
 #define main() mainImage( out vec4 fragColor, in vec2 fragCoord )
 const int _RenderingTarget = 1;
-const float _LeaveStartTime = 1.0;
+const float _LeaveStartTime = 1000.0;
 #else
 uniform float _time;
 uniform vec2 _resolution;
@@ -50,9 +50,10 @@ void compm(inout mapr mr,float d,int mt,bool IsMin) // CompareMap
 #define rot(a) mat2(cos(a),-sin(a),sin(a),cos(a))
 
 // Get random value
-float random(in vec2 st)
+float hash(vec2 p)
 {
-    return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
+	float h = dot(p, vec2(127.1, 311.7));	
+    return fract(sin(h) * 43758.5453123);
 }
 
 // Get noise
@@ -62,15 +63,19 @@ float noise(in vec2 st)
     vec2 i = floor(st);
     vec2 f = fract(st);
 
-    float a = random(i + vec2(0.0, 0.0));
-    float b = random(i + vec2(1.0, 0.0));
-    float c = random(i + vec2(0.0, 1.0));
-    float d = random(i + vec2(1.0, 1.0));
+    float a = hash(i + vec2(0.0, 0.0));
+    float b = hash(i + vec2(1.0, 0.0));
+    float c = hash(i + vec2(0.0, 1.0));
+    float d = hash(i + vec2(1.0, 1.0));
 
     // -2.0f^3 + 3.0f^2
     vec2 u = f * f * (3.0 - 2.0 * f);
 
-    return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+    float result = mix(mix(a, b, u.x),
+                        mix(c, d, u.x), u.y);
+    
+    // Normalized to '-1 - 1'.
+    return (2.0 * result) - 1.0;
 }
 
 float hash( float n ) { return fract(sin(n)*753.5453123); }
@@ -203,7 +208,7 @@ vec3 trs(vec3 p,vec3 s,vec3 r,vec3 t)
 
 #define SEA_FREQ 0.16
 #define SEA_HEIGHT 0.6
-#define SEA_CHOPPY 4.8
+#define SEA_CHOPPY 4.0
 #define ITER_GEOMETRY 3
 #define ITER_FRAGMENT 5
 #define SEA_SPEED 0.8
@@ -330,7 +335,7 @@ mapr map(vec3 p)
     
     {
         float h=clamp(_time-_LeaveStartTime,0.0,1.0);
-        compm(mr,length( trs(p,vec3(1.0),vec3(0.0),vec3(0.0,-0.35-h,0.0)) )-0.5,0,true);
+        compm(mr,length( trs(p,vec3(1.0),vec3(0.0),vec3(0.0,-0.35-h - 3.5,0.0)) )-0.5,0,true);
     }
     
     return mr;
@@ -414,11 +419,9 @@ vec3 getSeaColor(vec3 p,vec3 n,vec3 l,vec3 eye,vec3 dist)
 }
 
 vec4 DrawCloud(vec3 ro,vec3 rd,in vec4 col)
-{
-    col.rgb*=0.1;
-    col.a=0.0;
+{;
     float d=0.0,t=0.0,i=0.0,h=0.0;
-    vec3 skycol=mix(vec3(0.0,0.038,0.038),vec3(0.0,0.04,0.15),(mod(rd.y, 1.0)*0.5+0.5));
+    vec4 CloudCol = vec4(0.0);
     
     for(;++i<ln;i++)
     {
@@ -427,6 +430,7 @@ vec4 DrawCloud(vec3 ro,vec3 rd,in vec4 col)
         vec2 re=CloudMap(p, 5, denGra);
         d=re.x;
         h=re.y;
+        
         if(d>dmin)
         {
             // Local Color
@@ -439,16 +443,21 @@ vec4 DrawCloud(vec3 ro,vec3 rd,in vec4 col)
             float dif = clamp(dot(nor,ldir), 0.0, 1.0 )/**sha*/;
             lcol.rgb*=dif;
             // ‰_‚Ì‚‚³’²®
-            col+=lcol*(1.0-col.a) /** clamp(1.3 - p.y * 0.2, 0.0, 1.0)*/;
+            CloudCol+=lcol*(1.0-CloudCol.a) * clamp(1.3 - p.y * 0.2, 0.0, 1.0);
+            
+           
         }
         
-        //t+=d;
         t+=max(0.05,0.1*d);
     }
     
-    col.rgb = mix(skycol, col.rgb+vec3(0.5), col.a); 
-    col.rgb = smoothstep(0.0, 1.0, col.rgb);
-    
+    CloudCol = max(vec4(0.0), CloudCol);
+    col.rgb = mix(col.rgb, CloudCol.rgb + vec3(0.5), CloudCol.a);
+
+    float rate = 1.0 - clamp(t/30.0, 0.0, 1.0);
+    vec3 skycol=mix(vec3(0.0,0.038,0.038),vec3(0.0,0.04,0.15),(mod(rd.y, 1.0)*0.5+0.5));
+    col.rgb = mix(skycol, col.rgb, rate);
+
     return col;
 }
 
@@ -513,17 +522,19 @@ else
 {
 #ifdef DRAW_ON_SHADERTOY
     vec2 st = (gl_FragCoord.xy*2.0-_resolution.xy)/min(_resolution.x,_resolution.y);
+    float h=max(0.0,_time-_LeaveStartTime/*+0.25*/),
+    LeaveRate=clamp(_time-_LeaveStartTime,0.0,1.0);
+    vec3 ro=vec3(0.0,h,1.5),ta=vec3(0.0,h,0.0);
+    //ro = vec3(0.0, 3.5, 5.0); ta = vec3(0.0, 3.5, 0.0);
 #else
     vec2 st=uv*2.0-1.0;
     st.x*=(_resolution.x/_resolution.y);
-#endif
-    //
     float h=max(0.0,_time-_LeaveStartTime/*+0.25*/),
     LeaveRate=clamp(_time-_LeaveStartTime,0.0,1.0);
-    
-    // 
     vec3 ro=_WorldCameraPos,ta=_WorldCameraCenter;
-    
+#endif
+    ro.y+=3.5; ta.y+=3.5; 
+
     // ƒJƒƒ‰ƒ[ƒN
     if(LeaveRate>=1.0)
     {
@@ -617,5 +628,6 @@ else
 }
 
 }
+
 
 )"
