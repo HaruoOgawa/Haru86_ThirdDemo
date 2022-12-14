@@ -36,7 +36,7 @@ struct mapr // MapResult
    vec3 vPos;
    vec3 mask;
    float i;
-   float t;
+   float tvalue;
    float acc;
    vec3 vCol;
    float flash;
@@ -57,9 +57,9 @@ void compm(inout mapr mr,float d,int mt,bool IsMin) // CompareMap
     }
 }
 
-vec3 trs(vec3 p,vec3 s,vec3 r,vec3 t)
+vec3 trs(vec3 p,vec3 s,vec3 r,vec3 tvalue)
 {
-    p+=t; 
+    p+=tvalue; 
     p.yz*=rot(s.x);p.xz*=rot(s.y);p.xy*=rot(s.z);
     p*=s;
     
@@ -216,13 +216,13 @@ vec3 gn(vec3 p)
 // RayCast
 mapr Raycast(vec3 ro, vec3 rd)
 {
-    mapr mr;float i=0.0,t=0.0,acc=0.0,flash=0.0;mr.vCol=vec3(0.0);mr.flash=0.0;
+    mapr mr;float i=0.0,tvalue=0.0,acc=0.0,flash=0.0;mr.vCol=vec3(0.0);mr.flash=0.0;
     for(;++i<64.0;){
-        mr=map(ro+rd*( t+=mr.d*0.75 ));if(mr.d<dmin||t>tmax)break;acc+=exp(-3.0*mr.d);
-        if(mod(distance(vec3(0.0),ro+rd*t)-_time*10.0,10.0)<1.0){flash+=exp(-3.0*mr.d);}
+        mr=map(ro+rd*( tvalue+=mr.d*0.75 ));if(mr.d<dmin||tvalue>tmax)break;acc+=exp(-3.0*mr.d);
+        if(mod(distance(vec3(0.0),ro+rd*tvalue)-_time*10.0,10.0)<1.0){flash+=exp(-3.0*mr.d);}
     }
     
-    mr.i=i; mr.t=t;mr.acc=acc;mr.flash=flash;
+    mr.i=i; mr.tvalue=tvalue;mr.acc=acc;mr.flash=flash;
  
     return mr;
 }
@@ -262,7 +262,7 @@ else
         {
             //col = vec3(1.0)*20.0/mr.i;
 
-            vec3 p = ro + rd * mr.t;
+            vec3 p = ro + rd * mr.tvalue;
             vec3 n = gn(p);
             float ao = calcAo(p, n);
             float diff = max(0.0, dot(ldir,n));
@@ -274,7 +274,7 @@ else
         {
             //col = vec3(0.615, 0.8, 0.88)*20.0/mr.i;
             
-            vec3 p = ro + rd * mr.t;
+            vec3 p = ro + rd * mr.tvalue;
             vec3 n = gn(p);
             float ao = calcAo(p, n);
             float diff = max(0.0, dot(ldir,n));
@@ -284,7 +284,7 @@ else
     }
     
      //vec3 fog = mix(vec3(0.96), vec3(0.24), -rd.y*0.5 + 0.5);
-     //col = mix(col, fog*sqrt(fog)*1.2, smoothstep(0.0, 0.95, mr.t/60.0));
+     //col = mix(col, fog*sqrt(fog)*1.2, smoothstep(0.0, 0.95, mr.tvalue/60.0));
     
     gl_FragColor = vec4(col,_Alpha);
 }

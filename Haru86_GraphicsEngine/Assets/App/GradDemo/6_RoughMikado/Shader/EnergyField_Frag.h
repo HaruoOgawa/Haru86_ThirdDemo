@@ -27,7 +27,7 @@ struct mapr // MapResult
    float d; // Distance
    bool  hit;
    int   m; // MaterialType
-   float t;     
+   float tvalue;     
    float i;
 };
 
@@ -45,9 +45,9 @@ void compm(inout mapr mr,float d,int mt,bool IsMin) // CompareMap
     }
 }
 
-vec3 trs(vec3 p,vec3 s,vec3 r,vec3 t)
+vec3 trs(vec3 p,vec3 s,vec3 r,vec3 tvalue)
 {
-    p+=t; 
+    p+=tvalue; 
     p.yz*=rot(s.x);p.xz*=rot(s.y);p.xy*=rot(s.z);
     p*=s;
     
@@ -191,17 +191,17 @@ mapr map(vec3 p)
 mapr ray(vec3 ro, vec3 rd)
 {
     mapr mr;
-    float i=0.0,t=0.0,acc=0.0;
+    float i=0.0,tvalue=0.0,acc=0.0;
     for(;++i<64.0;)
     {
-        mr=map(ro+rd*(t+=mr.d*0.75));
+        mr=map(ro+rd*(tvalue+=mr.d*0.75));
        
         if(mr.d<0.001){mr.hit=true; break;}
         if(mr.d>1000.0){break;}
         acc+=exp(-3.0*mr.d);
     }
     
-    mr.i=i;mr.t=t;
+    mr.i=i;mr.tvalue=tvalue;
     
     return mr;
 }
@@ -274,11 +274,11 @@ vec3 dColor(mapr mr, vec3 ro, vec3 rd)
     {
         if(mr.m == 0)
         {
-            col = vec3(1.0) * exp(-1.0*mr.t);
+            col = vec3(1.0) * exp(-1.0*mr.tvalue);
         }
         else if(mr.m == 1)
         {
-            vec3 p = ro + rd * mr.t;
+            vec3 p = ro + rd * mr.tvalue;
             vec3 n = gn(p);
             float diff = max(0.0, dot(n, ldir));
             float spec = pow(max(0.0, dot(reflect(-ldir, n), -rd)), 16.0);
@@ -303,7 +303,7 @@ void main()
     col = dColor(mr, ro, rd);
     
     vec3 fog = mix(vec3(0.1), vec3(0.85), -rd.y*0.5+0.5) *0.25;
-    col = mix(col, fog * sqrt(fog) * 1.2, smoothstep(0.0, 0.95, mr.t/10.0));
+    col = mix(col, fog * sqrt(fog) * 1.2, smoothstep(0.0, 0.95, mr.tvalue/10.0));
     
     col += DrawAura(uv).rgb;
       

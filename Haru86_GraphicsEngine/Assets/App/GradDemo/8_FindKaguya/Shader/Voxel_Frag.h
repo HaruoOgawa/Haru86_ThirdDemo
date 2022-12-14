@@ -50,13 +50,13 @@ void compm(inout mapr mr,float d,int mt,bool IsMin) // CompareMap
     }
 }
 
-vec3 trs(vec3 p,vec3 s,vec3 r,vec3 t)
+vec3 trs(vec3 pvalue,vec3 s,vec3 r,vec3 tvalue)
 {
-    p+=t; 
-    p.yz*=rot(s.x);p.xz*=rot(s.y);p.xy*=rot(s.z);
-    p*=s;
+    pvalue+=tvalue; 
+    pvalue.yz*=rot(s.x);pvalue.xz*=rot(s.y);pvalue.xy*=rot(s.z);
+    pvalue*=s;
     
-    return p;
+    return pvalue;
 }
 
 //
@@ -71,61 +71,61 @@ vec2 path(in float z){
 }
 
 //
-float rand(vec2 p)
+float rand(vec2 pvalue)
 {
-    return fract( sin(dot(p,vec2(12.9898,78.233)))*43758.5453123 );
+    return fract( sin(dot(pvalue,vec2(12.9898,78.233)))*43758.5453123 );
 }
 
 // Ray Function ///////////////////////////////////////////////////////////////
-float UpDirMap(vec3 p)
+float UpDirMap(vec3 pvalue)
 {
-    p.xy -= path(p.z); // Perturb an object around a path.
+    pvalue.xy -= path(pvalue.z); // Perturb an object around a path.
    
-	p = cos(p*.1575 + sin(p.zxy*.4375)); // 3D sinusoidal mutation.
+	pvalue = cos(pvalue*.1575 + sin(pvalue.zxy*.4375)); // 3D sinusoidal mutation.
     
     // Spherize. The result is some mutated, spherical blob-like shapes.
-    float n = dot(p, p); 
+    float n = dot(pvalue, pvalue); 
     
-    p = sin(p*3. + cos(p.yzx*3.)); // Finer bumps. Subtle, and almost not necessary with voxelization.
+    pvalue = sin(pvalue*3. + cos(pvalue.yzx*3.)); // Finer bumps. Subtle, and almost not necessary with voxelization.
     
-    return n - p.x*p.y*p.z*.35 - .9; // Combine, and we're done.
+    return n - pvalue.x*pvalue.y*pvalue.z*.35 - .9; // Combine, and we're done.
 }
 
-float AroundMap(vec3 p)
+float AroundMap(vec3 pvalue)
 {
-    //p.xy -= path(p.z); // Perturb an object around a path.
+    //pvalue.xy -= path(pvalue.z); // Perturb an object around a path.
    
-    p.xz=vec2(atan(p.x,p.z)/3.0*pi,length(p.xz)-1.); // rotate
-	p = cos(p*.1575 + sin(p.zxy*.4375)); // 3D sinusoidal mutation.
+    pvalue.xz=vec2(atan(pvalue.x,pvalue.z)/3.0*pi,length(pvalue.xz)-1.); // rotate
+	pvalue = cos(pvalue*.1575 + sin(pvalue.zxy*.4375)); // 3D sinusoidal mutation.
     
     // Spherize. The result is some mutated, spherical blob-like shapes.
-    float n = dot(p, p); 
+    float n = dot(pvalue, pvalue); 
     
-    //p = sin(p*3. + cos(p.yzx*3.)); // Finer bumps. Subtle, and almost not necessary with voxelization.
+    //pvalue = sin(pvalue*3. + cos(pvalue.yzx*3.)); // Finer bumps. Subtle, and almost not necessary with voxelization.
     
-    return n - p.x*p.y*p.z*.35 - .9; // Combine, and we're done.
+    return n - pvalue.x*pvalue.y*pvalue.z*.35 - .9; // Combine, and we're done.
 }
 
-mapr map(vec3 p)
+mapr map(vec3 pvalue)
 {
     mapr mr;
     mr.d=1000.0;
     mr.hit=false;
     mr.m=-1;
     
-    if(_MapIndex == 0){compm(mr, UpDirMap(p) ,0 , true);}
-    if(_MapIndex == 1){compm(mr, AroundMap(p) ,0 , true);}
+    if(_MapIndex == 0){compm(mr, UpDirMap(pvalue) ,0 , true);}
+    if(_MapIndex == 1){compm(mr, AroundMap(pvalue) ,0 , true);}
     
     return mr;
 }
 
-vec3 gn(vec3 p)
+vec3 gn(vec3 pvalue)
 {
     vec2 e=vec2(0.001,0.0);
     return normalize(vec3(
-        map(p+e.xyy).d-map(p-e.xyy).d,
-        map(p+e.yxy).d-map(p-e.yxy).d,
-        map(p+e.yyx).d-map(p-e.yyx).d
+        map(pvalue+e.xyy).d-map(pvalue-e.xyy).d,
+        map(pvalue+e.yxy).d-map(pvalue-e.yxy).d,
+        map(pvalue+e.yyx).d-map(pvalue-e.yyx).d
     ));
 }
 
@@ -133,27 +133,27 @@ vec3 gn(vec3 p)
 mapr VoxelRayCast(vec3 ro,vec3 rd,const bool IsRef)
 {
     //
-    vec3 p = floor(ro) + 0.5;
+    vec3 pvalue = floor(ro) + 0.5;
     mapr mr;
     vec3 dRd = 1.0/abs(rd); // ray step ???
     rd = sign(rd);
-    vec3 side = dRd*(rd * (p - ro) + 0.5);
+    vec3 side = dRd*(rd * (pvalue - ro) + 0.5);
     vec3 mask = vec3(0.0);
     
     //
     int num = (IsRef)? 40 : 80;
     for(int i = 0; i< num; i++)
     {
-        if( (mr=map(p)).d < 0.0) break;
+        if( (mr=map(pvalue)).d < 0.0) break;
         
         // maskが重要(?) これがボクセライズを担当？
         mask = step(side, side.yzx) * (1.0 - step(side.zxy, side));
         side += mask*dRd;
-        p += mask *rd;
+        pvalue += mask *rd;
     }
     
     //
-    mr.vPos = p;
+    mr.vPos = pvalue;
     mr.mask = mask;
     
     return mr;
@@ -163,11 +163,11 @@ mapr VoxelRayCast(vec3 ro,vec3 rd,const bool IsRef)
 float voxShadow(vec3 ro, vec3 rd, float end){
 
     float shade = 1.0;
-    vec3 p = floor(ro) + .5;
+    vec3 pvalue = floor(ro) + .5;
 
 	vec3 dRd = 1./abs(rd);//1./max(abs(rd), vec3(.0001));
 	rd = sign(rd);
-    vec3 side = dRd*(rd * (p - ro) + 0.5);
+    vec3 side = dRd*(rd * (pvalue - ro) + 0.5);
     
     vec3 mask = vec3(0);
     
@@ -175,13 +175,13 @@ float voxShadow(vec3 ro, vec3 rd, float end){
 	
 	for (int i = 0; i < 16; i++) {
 		
-        d = map(p).d;
+        d = map(pvalue).d;
         
-        if (d<0. || length(p-ro)>end) break;
+        if (d<0. || length(pvalue-ro)>end) break;
         
         mask = step(side, side.yzx)*(1.-step(side.zxy, side));
 		side += mask*dRd;
-		p += mask * rd;                
+		pvalue += mask * rd;                
 	}
 
     // Shadow value. If in shadow, return a dark value.
@@ -189,12 +189,12 @@ float voxShadow(vec3 ro, vec3 rd, float end){
     
 }
 
-vec4 voxelAO(vec3 p, vec3 d1, vec3 d2) {
+vec4 voxelAO(vec3 pvalue, vec3 d1, vec3 d2) {
    
     // Take the four side and corner readings... at the correct positions...
     // That's the annoying bit that I'm glad others have worked out. :)
-	vec4 side = vec4(map(p + d1).d, map(p + d2).d, map(p - d1).d, map(p - d2).d);
-	vec4 corner = vec4(map(p + d1 + d2).d, map(p - d1 + d2).d, map(p - d1 - d2).d, map(p + d1 - d2).d);
+	vec4 side = vec4(map(pvalue + d1).d, map(pvalue + d2).d, map(pvalue - d1).d, map(pvalue - d2).d);
+	vec4 corner = vec4(map(pvalue + d1 + d2).d, map(pvalue - d1 + d2).d, map(pvalue - d1 - d2).d, map(pvalue + d1 - d2).d);
 	
     // Quantize them. It's either occluded, or it's not, so to speak.
     side = step(side, vec4(0));
@@ -223,12 +223,7 @@ float calcVoxAO(vec3 vp, vec3 sp, vec3 rd, vec3 mask) {
 
 #define MM 0
 
-#define VARIANT 1              // 1: amplifies Voronoi cell jittering
-#if VARIANT
-      float ofs = .5;          // jitter Voronoi centers in -ofs ... 1.+ofs
-#else
-      float ofs = 0.;
-#endif
+float ofs = .5;
     
 //int FAULT = 1;                 // 0: crest 1: fault
 
@@ -256,33 +251,29 @@ vec3 hash3( uvec3 x )
 // === Voronoi =====================================================
 // --- Base Voronoi. inspired by https://www.shadertoy.com/view/MslGD8
 
-#define hash22(p)  fract( 18.5453 * sin( p * mat2(127.1,311.7,269.5,183.3)) )
-#define disp(p) ( -ofs + (1.+2.*ofs) * hash22(p) )
+#define hash22(pvalue)  fract( 18.5453 * sin( pvalue * mat2(127.1,311.7,269.5,183.3)) )
+#define disp(pvalue) ( -ofs + (1.+2.*ofs) * hash22(pvalue) )
 
 // --- Voronoi distance to borders. inspired by https://www.shadertoy.com/view/ldl3W8
 vec3 voronoiB( vec2 u )  // returns len + id
 {
     vec2 iu = floor(u), C, P;
 	float m = 1e9,d;
-#if VARIANT
+
     for( int k=0; k < 25; k++ ) {
-        vec2  p = iu + vec2(k%5-2,k/5-2),
-#else
-    for( int k=0; k < 9; k++ ) {
-        vec2  p = iu + vec2(k%3-1,k/3-1),
-#endif
-              o = disp(p),
-      	      r = p - u + o;
+        vec2 pvalue = iu + vec2(k%5-2,k/5-2),
+              o = disp(pvalue),
+      	      r = pvalue - u + o;
 		d = dot(r,r);
-        if( d < m ) m = d, C = p-iu, P = r;
+        if( d < m ) m = d, C = pvalue-iu, P = r;
     }
 
     m = 1e9;
     
     for( int k=0; k < 25; k++ ) {
-        vec2 p = iu+C + vec2(k%5-2,k/5-2),
-		     o = disp(p),
-             r = p-u + o;
+        vec2 pvalue = iu+C + vec2(k%5-2,k/5-2),
+		     o = disp(pvalue),
+             r = pvalue-u + o;
 
         if( dot(P-r,P-r)>1e-5 )
         m = min( m, .5*dot( (P+r), normalize(r-P) ) );
@@ -296,10 +287,10 @@ vec3 voronoiB( vec2 u )  // returns len + id
 int MOD = 1;  // type of Perlin noise
     
 // --- 2D
-#define hash21(p) fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453123)
-float noise2(vec2 p) {
-    vec2 i = floor(p);
-    vec2 f = fract(p); f = f*f*(3.-2.*f); // smoothstep
+#define hash21(pvalue) fract(sin(dot(pvalue,vec2(127.1,311.7)))*43758.5453123)
+float noise2(vec2 pvalue) {
+    vec2 i = floor(pvalue);
+    vec2 f = fract(pvalue); f = f*f*(3.-2.*f); // smoothstep
 
     float v= mix( mix(hash21(i+vec2(0,0)),hash21(i+vec2(1,0)),f.x),
                   mix(hash21(i+vec2(0,1)),hash21(i+vec2(1,1)),f.x), f.y);
@@ -309,15 +300,15 @@ float noise2(vec2 p) {
                     : 1.-abs(2.*v-1.);
 }
 
-#define noise22(p) vec2(noise2(p),noise2(p+17.7))
-vec2 fbm22(vec2 p) {
+#define noise22(pvalue) vec2(noise2(pvalue),noise2(pvalue+17.7))
+vec2 fbm22(vec2 pvalue) {
     vec2 v = vec2(0);
     float a = .5;
     mat2 R = rot(.37);
 
-    for (int i = 0; i < 6; i++, p*=2.,a/=2.) 
-        p *= R,
-        v += a * noise22(p);
+    for (int i = 0; i < 6; i++, pvalue*=2.,a/=2.) 
+        pvalue *= R,
+        v += a * noise22(pvalue);
 
     return v;
 }
@@ -345,7 +336,7 @@ vec3 DrawMarble(vec2 st)
 ////////////////////////////////////////////
 
 //
-float thickness( in vec3 p, in vec3 n, float maxDist, float falloff )
+float thickness( in vec3 pvalue, in vec3 n, float maxDist, float falloff )
 {
 	const float nbIte = 6.0;
 	float ao = 0.0;
@@ -354,35 +345,35 @@ float thickness( in vec3 p, in vec3 n, float maxDist, float falloff )
         
         float l = (i*.75 + fract(cos(i)*45758.5453)*.25)/nbIte*maxDist;
         
-        ao += (l + map( p -n*l ).d) / pow(1. + l, falloff);
+        ao += (l + map( pvalue -n*l ).d) / pow(1. + l, falloff);
     }
 	
     return clamp( 1.-ao/nbIte, 0., 1.);
 }
 
-vec3 dColor(vec3 ro, vec3 rd, float t, mapr mr, vec3 lightPos,const bool IsRef)
+vec3 dColor(vec3 ro, vec3 rd, float tvalue, mapr mr, vec3 lightPos,const bool IsRef)
 {
     vec3 col = vec3(0.0);
     
     // Lighting
     if(mr.hit)
     {
-        vec3 p = ro + rd*t;
+        vec3 pvalue = ro + rd*tvalue;
         vec3 n = -(mr.mask * sign(rd));
     
         if(mr.m == 0) // Debug
         {
             // param
-            vec3 p2l = lightPos-p; // pos to ldir
+            vec3 p2l = lightPos-pvalue; // pos to ldir
             float lDist = max(length(p2l),0.001);
             p2l /= lDist;
             float atten = 1.0/(1.0 + lDist*0.2 + lDist*0.1);
             
             // shadowing
-            float shade = voxShadow(p +n*0.01,p2l,lDist);
+            float shade = voxShadow(pvalue +n*0.01,p2l,lDist);
             
             // Ambient Occulusion
-            float ao = calcVoxAO(mr.vPos, p, rd, mr.mask);
+            float ao = calcVoxAO(mr.vPos, pvalue, rd, mr.mask);
             
             // Diffuse
             float diff = max(0.0, dot(n, p2l));
@@ -393,7 +384,7 @@ vec3 dColor(vec3 ro, vec3 rd, float t, mapr mr, vec3 lightPos,const bool IsRef)
             
             // Translucency, courtesy of XT95. See the "thickness" function.
             vec3 hf =  normalize(p2l + n);
-            float th = thickness( p, n, 1., 1. );
+            float th = thickness( pvalue, n, 1., 1. );
             float tdiff =  pow( clamp( dot(rd, -hf), 0., 1.), 1.);
             float trans = (tdiff + .0)*th;
             
@@ -402,15 +393,15 @@ vec3 dColor(vec3 ro, vec3 rd, float t, mapr mr, vec3 lightPos,const bool IsRef)
             vec3 n_abs = abs(n);
             if(n_abs.x > n_abs.y && n_abs.x > n_abs.z)
             {
-                st_m = p.yz;
+                st_m = pvalue.yz;
             }
             else if(n_abs.y > n_abs.x && n_abs.y > n_abs.z)
             {
-                st_m = p.xz;
+                st_m = pvalue.xz;
             }
             else if(n_abs.z > n_abs.y && n_abs.z > n_abs.x)
             {
-                st_m = p.xy;
+                st_m = pvalue.xy;
             }
             
             
@@ -464,7 +455,7 @@ else
     vec3 lightPos = ro + vec3(0.0,1.0,5.0);
     if(_MapIndex == 0) lightPos.xy += path(lightPos.z);
     
-    float zfactor=1.0-0.45*length(st), t=0.0;
+    float zfactor=1.0-0.45*length(st), tvalue=0.0;
     //zfactor=1.0;
     
     //
@@ -472,18 +463,18 @@ else
     cup=normalize(cross(cdir,cside)),rd=normalize(st.x*cside+st.y*cup+zfactor*cdir);
     
     //
-    vec3 n;vec3 p;bool IsHit;
+    vec3 n;vec3 pvalue;bool IsHit;
     {
         // RayTrace
         mapr mr = VoxelRayCast(ro, rd, false);
         vec3 tCube = (mr.vPos - ro - 0.5*sign(rd))/rd;
-        t = max(max(tCube.x, tCube.y), tCube.z);
+        tvalue = max(max(tCube.x, tCube.y), tCube.z);
         
         // Lighting
-        col = dColor(ro, rd, t, mr, lightPos, false);
+        col = dColor(ro, rd, tvalue, mr, lightPos, false);
         
         //
-        p = ro + rd*t;
+        pvalue = ro + rd*tvalue;
         n = -(mr.mask * sign(rd));
         IsHit = mr.hit;
     }
@@ -492,7 +483,7 @@ else
     if(IsHit)
     {
         //
-        ro = p;
+        ro = pvalue;
         rd = clamp(reflect(rd,n), vec3(-0.5), vec3(0.5));
     
         // RayTrace
@@ -510,11 +501,11 @@ else
     //vec3 fog = vec3(1.0);
     if(_MapIndex == 0)
     {
-        col = mix(col, fog*sqrt(fog)*1.2, smoothstep(0.0, 0.95, t/60.0));
+        col = mix(col, fog*sqrt(fog)*1.2, smoothstep(0.0, 0.95, tvalue/60.0));
     }
     else if(_MapIndex == 1)
     {
-        col = mix(col, fog*sqrt(fog)*1.2, smoothstep(0.0, 0.95, t/120.0));
+        col = mix(col, fog*sqrt(fog)*1.2, smoothstep(0.0, 0.95, tvalue/120.0));
     }
     
     //

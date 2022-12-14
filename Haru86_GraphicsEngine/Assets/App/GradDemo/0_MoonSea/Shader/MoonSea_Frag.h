@@ -180,9 +180,9 @@ vec4 fbm2(in vec3 x,int octaves)
     return vec4(a,d);
 }
 
-vec3 trs(vec3 p,vec3 s,vec3 r,vec3 t)
+vec3 trs(vec3 p,vec3 s,vec3 r,vec3 tvalue)
 {
-    p+=t; 
+    p+=tvalue; 
     p.yz*=rot(s.x);p.xz*=rot(s.y);p.xy*=rot(s.z);
     p*=s;
     
@@ -407,12 +407,12 @@ vec3 getSeaColor(vec3 p,vec3 n,vec3 l,vec3 eye,vec3 dist)
 
 vec4 DrawCloud(vec3 ro,vec3 rd,in vec4 col)
 {;
-    float d=0.0,t=0.0,i=0.0,h=0.0;
+    float d=0.0,tvalue=0.0,i=0.0,h=0.0;
     vec4 CloudCol = vec4(0.0);
     
     for(;++i<ln;i++)
     {
-        vec3 p = ro+rd*t;
+        vec3 p = ro+rd*tvalue;
         vec3 denGra;
         vec2 re=CloudMap(p, 5, denGra);
         d=re.x;
@@ -435,13 +435,13 @@ vec4 DrawCloud(vec3 ro,vec3 rd,in vec4 col)
            
         }
         
-        t+=max(0.05,0.1*d);
+        tvalue+=max(0.05,0.1*d);
     }
     
     CloudCol = max(vec4(0.0), CloudCol);
     col.rgb = mix(col.rgb, CloudCol.rgb + vec3(0.5), CloudCol.a);
 
-    float rate = 1.0 - clamp(t/30.0, 0.0, 1.0);
+    float rate = 1.0 - clamp(tvalue/30.0, 0.0, 1.0);
     vec3 skycol=mix(vec3(0.0,0.038,0.038),vec3(0.0,0.04,0.15),(mod(rd.y, 1.0)*0.5+0.5));
     col.rgb = mix(skycol, col.rgb, rate);
 
@@ -453,13 +453,13 @@ vec4 DrawCloud(vec3 ro,vec3 rd,in vec4 col)
 vec3 StarSpace(vec3 ro,vec3 rd)
 {
     vec3 col=vec3(0.);
-    float t=0.1,fade=1.;
+    float tvalue=0.1,fade=1.;
     ro.x+=1.0;
     //ro.z=mod(ro.z+_time*0.1,6.0)-3.0;
     
     for(int m=0;m<20;m++)
     {
-        vec3 p = ro+rd*t; float r=0.,SumD=0.;
+        vec3 p = ro+rd*tvalue; float r=0.,SumD=0.;
         p = abs(vec3(tile)-mod(p,vec3(tile*2.))); // tiling fold
         // IFS
         for(int n=0;n<17;n++)
@@ -470,9 +470,9 @@ vec3 StarSpace(vec3 ro,vec3 rd)
             r=length(p);
         }
         SumD*=SumD*SumD;
-        col+=vec3(t,t*t,t*t*t*t)*SumD*0.0015*fade;
+        col+=vec3(tvalue,tvalue*tvalue,tvalue*tvalue*tvalue*tvalue)*SumD*0.0015*fade;
         fade*=0.730;
-        t+=0.1;
+        tvalue+=0.1;
     }
     
     return col*0.01;
@@ -541,11 +541,11 @@ else
     vec4 col = vec4(vec3(0.0), 1.0);
     vec3 cdir=normalize(ta-ro),cside=normalize(cross(vec3(0.0,1.0,0.0),cdir)),cup=normalize(cross(cdir,cside)),
     rd=normalize(st.x*cside+st.y*cup+1.0*cdir);
-    float i=0.0,t=0.0,acc=0.0; mapr mr;
+    float i=0.0,tvalue=0.0,acc=0.0; mapr mr;
     
     if(LeaveRate<1.0)
     {
-        for(;++i<ln;){mr=map(ro+rd*(t+=mr.d));if(mr.d<dmin)break;acc+=exp(-3.0*mr.d);}
+        for(;++i<ln;){mr=map(ro+rd*(tvalue+=mr.d));if(mr.d<dmin)break;acc+=exp(-3.0*mr.d);}
 
         // ”wŒi‚Ì–é‹ó
         col.rgb = sky(rd,false);
@@ -559,7 +559,7 @@ else
 
         if(mr.m==0)
         {
-            vec3 p = ro+rd*t;
+            vec3 p = ro+rd*tvalue;
             p.y-=h;
             //vec3 n = gn(p);
             //vec3 pn = n*0.5+0.5;

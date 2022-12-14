@@ -55,9 +55,9 @@ void compm(inout mapr mr,float d,int mt,bool IsMin) // CompareMap
     }
 }
 
-vec3 trs(vec3 p,vec3 s,vec3 r,vec3 t)
+vec3 trs(vec3 p,vec3 s,vec3 r,vec3 tvalue)
 {
-    p+=t; 
+    p+=tvalue; 
     p.yz*=rot(s.x);p.xz*=rot(s.y);p.xy*=rot(s.z);
     p*=s;
     
@@ -142,7 +142,7 @@ vec3 hsv2rgb2(vec3 c, float k) {
 }
 
 // https://www.shadertoy.com/view/MsGGDK
-vec3 DrawCyberpunk(vec3 n,float t)
+vec3 DrawCyberpunk(vec3 n,float tvalue)
 {
     vec3 h = vec3(1.0);
     
@@ -157,7 +157,7 @@ vec3 DrawCyberpunk(vec3 n,float t)
         e = max(min(max(d.x, d.z), min(max(d.x, d.y), max(d.y, d.z))) / b, e);
     }
     
-    b=smoothstep(-(t*0.001+0.05), t*0.001+0.05, abs(0.5-fract(e*900.0))-0.4);
+    b=smoothstep(-(tvalue*0.001+0.05), tvalue*0.001+0.05, abs(0.5-fract(e*900.0))-0.4);
     h=(b+0.01)*0.002*vec3(5.0,1.0,5.0);
     
     vec3 col = pow(h/(abs(h)+1.0), vec3(0.45));
@@ -244,23 +244,23 @@ else
     //
     g_ro = ro;
     
-    float i=0.0,t=0.0,som=0.0,acc=0.0;mapr mr; // SumOfStep
-    for(;++i<ln;){mr=map(ro+rd*(t+=mr.d));if(mr.d<dmin||t>tmax)break;acc+=exp(-3.0*mr.d);}
+    float i=0.0,tvalue=0.0,som=0.0,acc=0.0;mapr mr; // SumOfStep
+    for(;++i<ln;){mr=map(ro+rd*(tvalue+=mr.d));if(mr.d<dmin||tvalue>tmax)break;acc+=exp(-3.0*mr.d);}
     som=i/float(ln);
     
     if(mr.hit)
     {
         if(mr.m == 0) // Debug
         {
-            col = vec3(exp(-0.25*t));
+            col = vec3(exp(-0.25*tvalue));
         }
         else if(mr.m == 1) // Common
         {
-            col = vec3(exp(-1.0*t));
+            col = vec3(exp(-1.0*tvalue));
         }
         else if(mr.m == 2) // Cyberpunk
         {
-            vec3 p=ro+rd*t;
+            vec3 p=ro+rd*tvalue;
             vec3 n = gn(p);
             if(CameraIndex == 0)
             {
@@ -287,12 +287,12 @@ else
             {
                 ro=p;
                 rd=reflect(rd,n);
-                t=0.1;
+                tvalue=0.1;
                 i=0.0;
                 mr=mapr(0.0,false,-1);
-                for(;++i<ln*0.5;){mr=map(ro+rd*(t+=mr.d));if(mr.d<dmin||t>tmax)break;}
+                for(;++i<ln*0.5;){mr=map(ro+rd*(tvalue+=mr.d));if(mr.d<dmin||tvalue>tmax)break;}
                 som=i/float(ln*0.5);
-                //col+=vec3(0.0,0.0,1.0)*exp(-1.0*t)*0.1;
+                //col+=vec3(0.0,0.0,1.0)*exp(-1.0*tvalue)*0.1;
                 col+=vec3(1.0)*som*0.5;
             }
             

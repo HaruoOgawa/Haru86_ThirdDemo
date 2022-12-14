@@ -29,7 +29,7 @@ struct mapr // MapResult
    bool  hit;
    int   m; // MaterialType
    float i;
-   float t;
+   float tvalue;
    float acc;
 };
 
@@ -47,7 +47,7 @@ void compm(inout mapr mr,float d,int mt,bool IsMin) // CompareMap
     }
 }
 
-vec3 trs(vec3 p,vec3 s,vec3 r,vec3 t){p+=t;p.yz*=rot(s.x);p.xz*=rot(s.y);p.xy*=rot(s.z);p*=s;return p;}
+vec3 trs(vec3 p,vec3 s,vec3 r,vec3 tvalue){p+=tvalue;p.yz*=rot(s.x);p.xz*=rot(s.y);p.xy*=rot(s.z);p*=s;return p;}
 
 vec2 path(in float z){    
     float a = sin(z * 0.11), b = cos(z * 0.14);
@@ -98,15 +98,15 @@ vec3 gn(vec3 p)
 // Ray Func
 mapr ray(vec3 ro,vec3 rd, float ln)
 {
-    mapr mr; float i=0.0,t=0.0,acc=0.0;
-    for(;++i<ln;){mr=map(ro+rd*(t+=mr.d));if(mr.d<dmin||mr.t>tmax)break;acc+=exp(-15.0*mr.d);}
-    mr.i=i;mr.t=t;mr.acc=acc;
+    mapr mr; float i=0.0,tvalue=0.0,acc=0.0;
+    for(;++i<ln;){mr=map(ro+rd*(tvalue+=mr.d));if(mr.d<dmin||mr.tvalue>tmax)break;acc+=exp(-15.0*mr.d);}
+    mr.i=i;mr.tvalue=tvalue;mr.acc=acc;
     return mr;
 }
 
 vec4 dColor(mapr mr, vec3 ro, vec3 rd, vec2 st)
 {
-    vec3 p = ro + rd * mr.t; 
+    vec3 p = ro + rd * mr.tvalue; 
     vec4 col = vec4(vec3(0.125, 0.291, 0.723)*mr.acc * 8.0, 1.0);
     return col;
 }

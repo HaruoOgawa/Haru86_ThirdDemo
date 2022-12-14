@@ -15,9 +15,9 @@ namespace app {
 			PrimitiveType::BOARD,
 			RenderingSurfaceType::RAYMARCHING,
 			shaderlib::StandardRenderBoard_vert,
-			std::string(
-				#include "../Shader/FeatherRobe.frag"
-			)
+			std::string({
+				#include "../Shader/FeatherRobe_FragComp.h"
+			})
 		);
 
 		m_MeshRenderer->useZTest = false;
@@ -29,9 +29,9 @@ namespace app {
 			PrimitiveType::BOARD,
 			RenderingSurfaceType::RAYMARCHING,
 			shaderlib::StandardRenderBoard_vert,
-			std::string(
-				#include "../Shader/FeatherRobeTrail.frag"
-			)
+			std::string({
+				#include "../Shader/FeatherRobeTrail_FragComp.h"
+			})
 		);
 
 		m_RenderBufferList.push_back(std::make_shared<graphic::RenderBuffer>(
@@ -51,9 +51,7 @@ namespace app {
 			PrimitiveType::BOARD,
 			RenderingSurfaceType::RAYMARCHING,
 			shaderlib::StandardRenderBoard_vert,
-			std::string(
-				#include "../../8_FindKaguya/Shader/Voxel.frag"
-			)
+			shaderlib::Voxel_frag
 		);
 		m_Voxel->useAlphaTest = true;
 		m_Voxel->useZTest = true;

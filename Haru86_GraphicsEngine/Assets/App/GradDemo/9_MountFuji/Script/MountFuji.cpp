@@ -16,9 +16,9 @@ namespace app {
 			PrimitiveType::BOARD,
 			RenderingSurfaceType::RAYMARCHING,
 			shaderlib::StandardRenderBoard_vert,
-			std::string(
-				#include "../Shader/MountFuji.frag"
-			)
+			std::string({
+				#include "../Shader/MountFuji_FragComp.h"
+			})
 		);
 
 		m_MeshRenderer->useZTest = false;

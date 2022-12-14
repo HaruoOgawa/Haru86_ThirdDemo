@@ -53,7 +53,7 @@ struct mapr // MapResult
    float d; // Distance
    bool  hit;
    int   m; // MaterialType
-   float t;     
+   float tvalue;     
    float i;
    float acc;
    vec3 jetCol;
@@ -82,9 +82,9 @@ void compm(inout mapr mr,float d,int mt,bool IsMin, bool IsSMin) // CompareMap
     }
 }
 
-vec3 trs(vec3 p,vec3 s,vec3 r,vec3 t)
+vec3 trs(vec3 p,vec3 s,vec3 r,vec3 tvalue)
 {
-    p+=t;
+    p+=tvalue;
     p.yz*=rot(r.x);p.xz*=rot(r.y);p.xy*=rot(r.z);
     p*=s;
     return p;
@@ -169,12 +169,12 @@ vec4 fbm2(in vec3 x,int octaves)
 vec3 StarSpace(vec3 ro,vec3 rd)
 {
     vec3 col=vec3(0.);
-    float t=0.1,fade=1.;
+    float tvalue=0.1,fade=1.;
     ro.x+=1.0;
     
     for(int m=0;m<20;m++)
     {
-        vec3 p = ro+rd*t; float r=0.,SumD=0.;
+        vec3 p = ro+rd*tvalue; float r=0.,SumD=0.;
         p = abs(vec3(tile)-mod(p,vec3(tile*2.))); // tiling fold
         // IFS
         for(int n=0;n<17;n++)
@@ -185,9 +185,9 @@ vec3 StarSpace(vec3 ro,vec3 rd)
             r=length(p);
         }
         SumD*=SumD*SumD;
-        col+=vec3(t,t*t,t*t*t*t)*SumD*0.0015*fade;
+        col+=vec3(tvalue,tvalue*tvalue,tvalue*tvalue*tvalue*tvalue)*SumD*0.0015*fade;
         fade*=0.730;
-        t+=0.1;
+        tvalue+=0.1;
     }
     
     return col*0.01;
@@ -264,19 +264,19 @@ mapr map(vec3 p)
 
 mapr ray(vec3 ro, vec3 rd, bool IsRef)
 {
-    float t=0.0,i=0.0,acc=0.0;mapr mr;vec3 jetCol=vec3(0.0);
+    float tvalue=0.0,i=0.0,acc=0.0;mapr mr;vec3 jetCol=vec3(0.0);
     for(i=0.0; i<80.0; ++i) {
-        vec3 p = ro+rd*t;
+        vec3 p = ro+rd*tvalue;
         mr = map(p);
         
-        if(abs(mr.d)<(t*5.0 + 1.0)*.0001 || t>=3000.0) break;
+        if(abs(mr.d)<(tvalue*5.0 + 1.0)*.0001 || tvalue>=3000.0) break;
         acc += exp(-3.0 * mr.d);
-        t = min(t+mr.d, 3000.0);
+        tvalue = min(tvalue+mr.d, 3000.0);
         
         vec3 jDir = g_ShipPos - p;
         jetCol += exp(-1.0*length(jDir)) * vec3(0.33,0.33,0.88);
     }
-    mr.i=i;mr.t=t;mr.acc=acc;mr.jetCol=jetCol;
+    mr.i=i;mr.tvalue=tvalue;mr.acc=acc;mr.jetCol=jetCol;
     return mr;
 }
 
@@ -306,7 +306,7 @@ void main()
     rd=normalize(st.x*cside+st.y*cup+1.0*cdir),col = vec3(0.0);
     g_ShipPos = vec3(0.0);
     mapr mr= ray(ro, rd, false);
-    vec3 p = ro + rd * mr.t;
+    vec3 p = ro + rd * mr.tvalue;
     float Alpha = 0.0;
 
     if(mr.hit && mr.m == 0)

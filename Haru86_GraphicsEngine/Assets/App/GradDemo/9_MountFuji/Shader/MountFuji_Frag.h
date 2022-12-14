@@ -52,9 +52,9 @@ void compm(inout mapr mr,float d,int mt,bool IsMin) // CompareMap
     }
 }
 
-vec3 trs(vec3 p,vec3 s,vec3 r,vec3 t)
+vec3 trs(vec3 p,vec3 s,vec3 r,vec3 tvalue)
 {
-    p+=t; 
+    p+=tvalue; 
     p.yz*=rot(s.x);p.xz*=rot(s.y);p.xy*=rot(s.z);
     p*=s;
     
@@ -259,20 +259,20 @@ vec4 DrawCloud(vec3 ro,vec3 rd,in vec4 col)
 {
     //col.rgb*=0.1;
     //col.a=0.0;
-    float d=0.0,t=0.0,i=0.0,h=0.0;
+    float d=0.0,tvalue=0.0,i=0.0,h=0.0;
     vec4 CloudCol = vec4(0.0);
     
     for(;++i<ln;i++)
     {
-        vec3 p = ro+rd*t;
+        vec3 p = ro+rd*tvalue;
         vec3 denGra;
         vec2 re=CloudMap(p, 5, denGra);
         d=re.x;
         h=re.y;
         
         //if(d<dmin)break;
-        //if(t>50.0)break;
-        //if(t>5000.0)break;
+        //if(tvalue>50.0)break;
+        //if(tvalue>5000.0)break;
         
         //if(d<dmin)
         if(d>dmin)
@@ -292,11 +292,11 @@ vec4 DrawCloud(vec3 ro,vec3 rd,in vec4 col)
            
         }
         
-        //t+=d;
-        t+=max(0.05,0.1*d);
+        //tvalue+=d;
+        tvalue+=max(0.05,0.1*d);
     }
     
-    /*float rate = 1.0 - clamp(t/100.0, 0.0, 1.0);
+    /*float rate = 1.0 - clamp(tvalue/100.0, 0.0, 1.0);
     col.rgb = mix(sky_color(rd),
         mix(col.rgb, CloudCol.rgb, CloudCol.a),
     rate); 
@@ -310,11 +310,11 @@ vec4 DrawCloud(vec3 ro,vec3 rd,in vec4 col)
     col.rgb = mix(col.rgb, CloudCol.rgb + vec3(0.5), CloudCol.a);
     //col.rgb = smoothstep(0.0, 0.5, col.rgb);
 
-    float rate = 1.0 - clamp(t/30.0, 0.0, 1.0);
+    float rate = 1.0 - clamp(tvalue/30.0, 0.0, 1.0);
     col.rgb = mix(sky_color(rd), col.rgb, rate);
 
-    g_CloudT = t;
-    g_CloudP = ro+rd*t;
+    g_CloudT = tvalue;
+    g_CloudP = ro+rd*tvalue;
     
     return col;
 }
@@ -334,20 +334,20 @@ else
     vec4 col = vec4(vec3(0.0),1.0);
     vec3 cdir=normalize(ta-ro),cside=normalize(cross(vec3(0.0,1.0,0.0),cdir)),
     cup=normalize(cross(cdir,cside)),rd=normalize(st.x*cside+st.y*cup+1.*cdir);
-    float i=0.0,t=0.0; mapr mr;
+    float i=0.0,tvalue=0.0; mapr mr;
     
-    for(;++i<ln;){mr=map(ro+rd*(t+=mr.d));if(mr.d<dmin)break;}
+    for(;++i<ln;){mr=map(ro+rd*(tvalue+=mr.d));if(mr.d<dmin)break;}
 
     if(mr.hit)
     {
         if(mr.m == 0)
         {
             //col.rgb = vec3(1.0)*10.0/i;
-            col = vec4(vec3(exp(-0.1*t)), 1.0);
+            col = vec4(vec3(exp(-0.1*tvalue)), 1.0);
         }
         else if(mr.m == 1)
         {
-            vec3 p = ro+rd*t;
+            vec3 p = ro+rd*tvalue;
             vec3 n = gn(p);
             
             float slope = 1.0-dot(n,vec3(0.0,1.0,0.0));
@@ -365,7 +365,7 @@ else
             col.rgb+=vec3(1.0,1.0,0.98)*diff * min(1.0, 0.111*exp2(p.y) );
            
             // fog
-            vec3 ramda=exp2(-0.0025*t*vec3(1.0,2.0,4.0));
+            vec3 ramda=exp2(-0.0025*tvalue*vec3(1.0,2.0,4.0));
             col.rgb=mix(vec3(0.5),col.rgb,ramda);
         }
     }
@@ -380,7 +380,7 @@ else
     //col = CloudCol;
     //col = mix(col,CloudCol,clamp(CloudCol.a, 0.0, 1.0));
     
-    float DepthM = t;
+    float DepthM = tvalue;
     float DepthC = g_CloudT*0.55;
     //col = (DepthM < DepthC || CloudCol.r<0.1)? col : CloudCol;
     float rate = clamp((DepthM-DepthC) , 0.0 , 1.0);

@@ -32,7 +32,7 @@ struct mapr // MapResult
    float d; // Distance
    bool  hit;
    int   m; // MaterialType
-   float t;     
+   float tvalue;     
    float i;
    float acc;
 };
@@ -51,9 +51,9 @@ void compm(inout mapr mr,float d,int mt,bool IsMin) // CompareMap
     }
 }
 
-vec3 trs(vec3 p,vec3 s,vec3 r,vec3 t)
+vec3 trs(vec3 p,vec3 s,vec3 r,vec3 tvalue)
 {
-    p+=t; 
+    p+=tvalue; 
     p.yz*=rot(s.x);p.xz*=rot(s.y);p.xy*=rot(s.z);
     p*=s;
     
@@ -223,7 +223,7 @@ mapr CreateMoonHightMap(vec3 ro,vec3 rd)
         }
     }
     
-    mr.i=i;mr.t=tmid;mr.acc=acc;mr.hit = true;
+    mr.i=i;mr.tvalue=tmid;mr.acc=acc;mr.hit = true;
     return mr;
 }
 float hash( float n ) { return fract(sin(n)*753.5453123); }
@@ -321,10 +321,10 @@ mapr ray(vec3 ro,vec3 rd,const bool IsRef)
     
     //if(_time < _ShowStartTime) {return mapr(1000.0,false,-1,0.0,0.0,0.0);}
     
-    float i=0.0,t=0.0,acc=0.0;
-    for(;++i<150.0;){mr=map(ro+rd*(t+=mr.d*0.5));if(mr.d<dmin||mr.t>tmax)break;acc+=exp(-3.0*mr.d);}
+    float i=0.0,tvalue=0.0,acc=0.0;
+    for(;++i<150.0;){mr=map(ro+rd*(tvalue+=mr.d*0.5));if(mr.d<dmin||mr.tvalue>tmax)break;acc+=exp(-3.0*mr.d);}
     
-    mr.i=i;mr.t=t;mr.acc=acc;
+    mr.i=i;mr.tvalue=tvalue;mr.acc=acc;
     
     return mr;
 }
@@ -332,14 +332,14 @@ mapr ray(vec3 ro,vec3 rd,const bool IsRef)
 float shadow(vec3 ro, vec3 rd)
 {
     float sh=1.0;
-    float t=dmin;
+    float tvalue=dmin;
     
     for(int i=0; i<32; i++)
     {
-        float d=map(ro+rd*t).d;
-        if(sh<0.0001 || t>tmax) break;
-        sh=min(sh, max(0.0, 10.0*d/t));
-        t+=d;
+        float d=map(ro+rd*tvalue).d;
+        if(sh<0.0001 || tvalue>tmax) break;
+        sh=min(sh, max(0.0, 10.0*d/tvalue));
+        tvalue+=d;
     }
     
     sh=clamp(sh, 0.0, 1.0);
@@ -383,13 +383,13 @@ vec3 StarSpace(vec3 ro,vec3 rd)
     else{ ro.z += _time * _MoveSpeed * 0.001; } 
 
     vec3 col=vec3(0.);
-    float t=0.1,fade=1.;
+    float tvalue=0.1,fade=1.;
     ro.x+=1.0;
     //ro.z=mod(ro.z+_time*0.1,6.0)-3.0;
     
     for(int m=0;m<20;m++)
     {
-        vec3 p = ro+rd*t; float r=0.,SumD=0.;
+        vec3 p = ro+rd*tvalue; float r=0.,SumD=0.;
         p = abs(vec3(tile)-mod(p,vec3(tile*2.))); // tiling fold
         // IFS
         for(int n=0;n<17;n++)
@@ -400,9 +400,9 @@ vec3 StarSpace(vec3 ro,vec3 rd)
             r=length(p);
         }
         SumD*=SumD*SumD;
-        col+=vec3(t,t*t,t*t*t*t)*SumD*0.0015*fade;
+        col+=vec3(tvalue,tvalue*tvalue,tvalue*tvalue*tvalue*tvalue)*SumD*0.0015*fade;
         fade*=0.730;
-        t+=0.1;
+        tvalue+=0.1;
     }
     
     return col*0.01;
@@ -412,9 +412,9 @@ vec3 dColor(mapr mr, mapr moonr, vec3 ro,vec3 rd, vec2 st)
 {
     vec3 col = vec3(0.0);
     
-    if(mr.t < 10.0 /*(mr.t < moonr.t || !moonr.hit) && mr.hit*/ && mr.m == 0)
+    if(mr.tvalue < 10.0 /*(mr.tvalue < moonr.tvalue || !moonr.hit) && mr.hit*/ && mr.m == 0)
     {
-        vec3 p = ro + rd*mr.t;
+        vec3 p = ro + rd*mr.tvalue;
         vec3 n = gn(p);
         
         {
@@ -432,7 +432,7 @@ vec3 dColor(mapr mr, mapr moonr, vec3 ro,vec3 rd, vec2 st)
     }
     else if(!moonr.hit && mr.hit && mr.m == 1 && _DrawEarth == 1) // 地球のライティング
     {
-            vec3 p = ro+rd*mr.t;
+            vec3 p = ro+rd*mr.tvalue;
             //p.xz*=rot(_time*0.5);
             vec3 n = gn(p);
             vec3 pn = n*0.5+0.5;
@@ -470,7 +470,7 @@ vec3 dColor(mapr mr, mapr moonr, vec3 ro,vec3 rd, vec2 st)
     {
         ro.z += _time * _MoveSpeed;
 
-        vec3 p = ro + rd * moonr.t;
+        vec3 p = ro + rd * moonr.tvalue;
         vec3 d = p - ro;
         vec3 n = gn_Moon(p,dot(d, d) * EPSILON_NRM);
         col = vec3(1.0)*max(0.0,dot(n,ldir));

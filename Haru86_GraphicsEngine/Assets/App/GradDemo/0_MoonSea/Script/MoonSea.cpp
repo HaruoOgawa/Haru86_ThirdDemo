@@ -23,14 +23,15 @@ namespace app
 		m_RefMapIndex(0),
 		m_CorrectionValue(0.1f)
 	{
+		
 		m_MoonSeaMeshRenderer = std::make_shared<MeshRendererComponent>(
 			std::make_shared<TransformComponent>(),
 			PrimitiveType::BOARD,
 			RenderingSurfaceType::RAYMARCHING,
 			shaderlib::StandardRenderBoard_vert,
-			std::string(
-				#include "../Shader/MoonSea.frag"
-			)
+			std::string({
+					#include "../Shader/MoonSea_FragComp.h"
+			})
 		);
 		m_MoonSeaMeshRenderer->useZTest = false;
 		m_MoonSeaMeshRenderer->useAlphaTest = false;
@@ -40,9 +41,9 @@ namespace app
 			PrimitiveType::BOARD,
 			RenderingSurfaceType::RAYMARCHING,
 			shaderlib::StandardRenderBoard_vert,
-			std::string(
-				#include "../Shader/RaySpaceShip.frag"
-			)
+			std::string({
+				#include "../Shader/RaySpaceShip_FragComp.h"
+			})
 		);
 		m_RaySpaceShip->useZTest = false;
 		m_RaySpaceShip->useAlphaTest = true;
@@ -53,9 +54,9 @@ namespace app
 			PrimitiveType::BOARD,
 			RenderingSurfaceType::RAYMARCHING,
 			shaderlib::StandardRenderBoard_vert,
-			std::string(
-				#include "../Shader/ShipParticle.frag"
-			)
+			std::string({
+				#include "../Shader/ShipParticle_FragComp.h"
+			})
 		);
 
 		m_ShipTrailRenderer->useZTest = false;

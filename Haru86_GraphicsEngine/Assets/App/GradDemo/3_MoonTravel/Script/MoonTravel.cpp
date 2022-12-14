@@ -19,9 +19,9 @@ namespace app {
 			PrimitiveType::BOARD,
 			RenderingSurfaceType::RAYMARCHING,
 			shaderlib::StandardRenderBoard_vert,
-			std::string(
-				#include "../Shader/MoonTravel.frag"
-			)
+			std::string({
+				#include "../Shader/MoonTravel_FragComp.h"
+			})
 		);
 
 		m_MeshRenderer->useZTest = false;
@@ -32,9 +32,9 @@ namespace app {
 			PrimitiveType::BOARD,
 			RenderingSurfaceType::RAYMARCHING,
 			shaderlib::StandardRenderBoard_vert,
-			std::string(
-				#include "../../0_MoonSea/Shader/RaySpaceShip.frag"
-			)
+			std::string({
+				#include "../../0_MoonSea/Shader/RaySpaceShip_FragComp.h"
+			})
 		);
 		m_RaySpaceShip->useZTest = false;
 		m_RaySpaceShip->useAlphaTest = true;
@@ -44,9 +44,9 @@ namespace app {
 			PrimitiveType::BOARD,
 			RenderingSurfaceType::RAYMARCHING,
 			shaderlib::StandardRenderBoard_vert,
-			std::string(
-				#include "../Shader/CyberpunkSpaceRay.frag"
-			)
+			std::string({
+				#include "../Shader/CyberpunkSpaceRay_FragComp.h"
+			})
 		);
 
 		m_CyberMeshRenderer->useZTest = false;

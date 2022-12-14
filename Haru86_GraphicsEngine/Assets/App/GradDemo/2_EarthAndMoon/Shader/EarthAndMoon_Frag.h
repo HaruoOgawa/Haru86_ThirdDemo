@@ -99,9 +99,9 @@ float fbm3(vec3 p,float num,float A)
     return w/asum;
 }
 
-vec3 trs(vec3 p,vec3 s,vec3 r,vec3 t)
+vec3 trs(vec3 p,vec3 s,vec3 r,vec3 tvalue)
 {
-    p+=t; 
+    p+=tvalue; 
     p.yz*=rot(s.x);p.xz*=rot(s.y);p.xy*=rot(s.z);
     p*=s;
     
@@ -145,13 +145,13 @@ mapr map(vec3 p)
 vec3 StarSpace(vec3 ro,vec3 rd)
 {
     vec3 col=vec3(0.);
-    float t=0.1,fade=1.;
+    float tvalue=0.1,fade=1.;
     ro.x+=1.0;
     //ro.z=mod(ro.z+_time*0.1,6.0)-3.0;
     
     for(int m=0;m<20;m++)
     {
-        vec3 p = ro+rd*t; float r=0.,SumD=0.;
+        vec3 p = ro+rd*tvalue; float r=0.,SumD=0.;
         p = abs(vec3(tile)-mod(p,vec3(tile*2.))); // tiling fold
         // IFS
         for(int n=0;n<17;n++)
@@ -162,9 +162,9 @@ vec3 StarSpace(vec3 ro,vec3 rd)
             r=length(p);
         }
         SumD*=SumD*SumD;
-        col+=vec3(t,t*t,t*t*t*t)*SumD*0.0015*fade;
+        col+=vec3(tvalue,tvalue*tvalue,tvalue*tvalue*tvalue*tvalue)*SumD*0.0015*fade;
         fade*=0.730;
-        t+=0.1;
+        tvalue+=0.1;
     }
     
     return col*0.01;
@@ -201,9 +201,9 @@ else
         ta=vec3(r*cos(1.71+offset+tof),0.85*h,r*sin(1.71+offset+tof)), 
     cdir=normalize(ta-ro),cside=normalize(cross(vec3(0.0,1.0,0.0),cdir)),cup=normalize(cross(cdir,cside)),
     rd=normalize(st.x*cside+st.y*cup+1.0*cdir);
-    float i=0.0,t=0.0,acc=0.0; mapr mr;
+    float i=0.0,tvalue=0.0,acc=0.0; mapr mr;
     
-    for(;++i<ln;){mr=map(ro+rd*(t+=mr.d));if(mr.d<dmin)break;acc+=exp(-3.0*mr.d);}
+    for(;++i<ln;){mr=map(ro+rd*(tvalue+=mr.d));if(mr.d<dmin)break;acc+=exp(-3.0*mr.d);}
 
     // ”wŒi‚Ì‰F’ˆ
     col = StarSpace(ro,rd);
@@ -216,7 +216,7 @@ else
     // ’n‹…‚Ì•`‰æ
     if(mr.m==0)
     {
-        vec3 p = ro+rd*t;
+        vec3 p = ro+rd*tvalue;
         //p.xz*=rot(_time*0.5);
         vec3 n = gn(p);
         vec3 pn = n*0.5+0.5;
@@ -256,7 +256,7 @@ else
     }
     else if(mr.m==1)
     {
-        vec3 p = ro+rd*t;
+        vec3 p = ro+rd*tvalue;
         vec3 n = gn(p);
         vec3 pn = n*0.5+0.5;
         col = vec3(1.0-fbm3(5.0*pn,5.0,1.0) )+vec3(0.5,0.4,0.15);
