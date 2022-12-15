@@ -1,5 +1,3 @@
-
-
 #version 330
 
 uniform float _time;
@@ -14,11 +12,11 @@ uniform float _Alpha;
 in vec2 uv;
 
 // Shared Preprocessor ////////////////////////////////////////////////////////
-#define pi 3.14159265
+const float pi = 3.14159265;
 #define rot(a) mat2(cos(a),-sin(a),sin(a),cos(a))
-#define dmin 0.0003
-#define tmax 30.0
-#define ldir normalize(vec3(1.0,1.0,-1.0))
+const float dmin = 0.0003;
+const float tmax = 30.0;
+const vec3 ldir = normalize(vec3(1.0, 1.0, -1.0));
 
 // Gloabal Valiable
 vec3 g_ro;
@@ -162,7 +160,6 @@ mapr VoxelRayCast(vec3 ro,vec3 rd,const bool IsRef)
 // Lighting
 float voxShadow(vec3 ro, vec3 rd, float end){
 
-    float shade = 1.0;
     vec3 pvalue = floor(ro) + .5;
 
 	vec3 dRd = 1./abs(rd);//1./max(abs(rd), vec3(.0001));
@@ -185,7 +182,7 @@ float voxShadow(vec3 ro, vec3 rd, float end){
 	}
 
     // Shadow value. If in shadow, return a dark value.
-    return shade = step(0., d)*.7 + .3;
+    return step(0., d)*.7 + .3;
     
 }
 
@@ -222,8 +219,6 @@ float calcVoxAO(vec3 vp, vec3 sp, vec3 rd, vec3 mask) {
 // integrated with cracks here: https://www.shadertoy.com/view/Xd3fRN
 
 #define MM 0
-
-float ofs = .5;
     
 //int FAULT = 1;                 // 0: crest 1: fault
 
@@ -238,21 +233,12 @@ float RATIO = 1.,              // stone length/width ratio
       CRACK_profile = 1.,      // fault vertical shape  1.  .2 
       CRACK_slope = 50.,       //                      10.  1.4
       CRACK_width = .0;
-    
-
-// std int hash, inspired from https://www.shadertoy.com/view/XlXcW4
-vec3 hash3( uvec3 x ) 
-{
-#   define scramble  x = ( (x>>8U) ^ x.yzx ) * 1103515245U // GLIB-C const
-    scramble; scramble; scramble; 
-    return vec3(x) / float(0xffffffffU) + 1e-30; // <- eps to fix a windows/angle bug
-}
 
 // === Voronoi =====================================================
 // --- Base Voronoi. inspired by https://www.shadertoy.com/view/MslGD8
 
-#define hash22(pvalue)  fract( 18.5453 * sin( pvalue * mat2(127.1,311.7,269.5,183.3)) )
-#define disp(pvalue) ( -ofs + (1.+2.*ofs) * hash22(pvalue) )
+vec2 hash22(vec2 pvalue) { return fract(18.5453 * sin(pvalue * mat2(127.1, 311.7, 269.5, 183.3))); }
+vec2 disp(vec2 pvalue) { return (-0.5 + (1. + 2. * 0.5) * hash22(pvalue)); }
 
 // --- Voronoi distance to borders. inspired by https://www.shadertoy.com/view/ldl3W8
 vec3 voronoiB( vec2 u )  // returns len + id
@@ -283,11 +269,10 @@ vec3 voronoiB( vec2 u )  // returns len + id
 }
 
 // === pseudo Perlin noise =============================================
-#define rot(a) mat2(cos(a),-sin(a),sin(a),cos(a))
 int MOD = 1;  // type of Perlin noise
     
 // --- 2D
-#define hash21(pvalue) fract(sin(dot(pvalue,vec2(127.1,311.7)))*43758.5453123)
+float hash21(vec2 pvalue) { return fract(sin(dot(pvalue, vec2(127.1, 311.7))) * 43758.5453123); }
 float noise2(vec2 pvalue) {
     vec2 i = floor(pvalue);
     vec2 f = fract(pvalue); f = f*f*(3.-2.*f); // smoothstep
@@ -300,7 +285,6 @@ float noise2(vec2 pvalue) {
                     : 1.-abs(2.*v-1.);
 }
 
-#define noise22(pvalue) vec2(noise2(pvalue),noise2(pvalue+17.7))
 vec2 fbm22(vec2 pvalue) {
     vec2 v = vec2(0);
     float a = .5;
@@ -308,7 +292,7 @@ vec2 fbm22(vec2 pvalue) {
 
     for (int i = 0; i < 6; i++, pvalue*=2.,a/=2.) 
         pvalue *= R,
-        v += a * noise22(pvalue);
+        v += a * vec2(noise2(pvalue), noise2(pvalue + 17.7));
 
     return v;
 }
@@ -513,4 +497,3 @@ else
 }
 
 }
-

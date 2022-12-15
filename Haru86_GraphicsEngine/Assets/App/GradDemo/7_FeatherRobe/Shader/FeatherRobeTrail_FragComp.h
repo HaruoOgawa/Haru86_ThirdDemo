@@ -10,7 +10,6 @@
  "uniform vec3 _WorldCameraPos,_WorldCameraCenter;"
  "uniform sampler2D _BufferA;"
  "in vec2 uv;\n"
- "#endif\n"
  "#define pi 3.14159265\n"
  "#define rot(a)mat2(cos(a),-sin(a),sin(a),cos(a))\n"
  "#define dmin 0.001\n"

@@ -10,7 +10,6 @@ uniform vec3 _WorldCameraCenter;
 uniform sampler2D _BufferA;
 
 in vec2 uv;
-#endif
 
 // Shared Preprocessor ////////////////////////////////////////////////////////
 #define pi 3.14159265

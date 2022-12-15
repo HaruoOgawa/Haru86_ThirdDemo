@@ -15,11 +15,11 @@ uniform float _Alpha;
 in vec2 uv;
 
 // Shared Preprocessor ////////////////////////////////////////////////////////
-#define pi 3.14159265
+const float pi = 3.14159265;
 #define rot(a) mat2(cos(a),-sin(a),sin(a),cos(a))
-#define dmin 0.001
-#define tmax 30.0
-#define ldir normalize(vec3(1.0,1.0,-1.0))
+const float dmin = 0.0003;
+const float tmax = 30.0;
+const vec3 ldir = normalize(vec3(1.0, 1.0, -1.0));
 
 // Gloabal Valiable
 vec3 g_ro;
@@ -77,13 +77,9 @@ float rand(in vec2 st)
 }
 
 // Distance Function
-#define STEPS 50
-#define EPSILON 0.001
-//#define FLAT_SHADING
-#define BORDER_LINES
-#define BORDER_THICKNESS 1.0
-//#define FLAT_GROUND
-#define TRIANGLE_BG
+const int STEPS = 50;
+const float EPSILON = 0.001;
+const float BORDER_THICKNESS = 1.0;
 
 // iq's sSqdSegment and sdTriangle functions from: https://www.shadertoy.com/view/XsXSz4
 // squared distance to a segment (and orientation)
@@ -109,33 +105,21 @@ float sdTriangle( in vec2 v1, in vec2 v2, in vec2 v3, in vec2 p )
 vec3 shadeBG( vec2 uv, float sp )
 {
 	float sp2 = 0.0;
-	// TRIANGLE BG
-#ifdef TRIANGLE_BG
-	vec2 v2 = vec2( -0.12, 0.1 );
-	vec2 v1 = vec2( 0.12, 0.1 );
-	vec2 v3 = vec2( 0.0,  0.4 );
-	float vadd1 = sp * 0.1;
-	float vadd2 = sp2;
-	float triDist1 = min( 1.0, ( 300.0 * 
-						sdTriangle( v1 + vec2( vadd1, -vadd1 ), v2 + vec2( -vadd1, -vadd1 ), v3 + vec2( 0.0, vadd1 ), uv ) ) );
-	if ( triDist1 < 0.0 ) // todo: optimize branch
-	{
-		triDist1 = pow( smoothstep( 0.0, 1.0, abs( triDist1 * 0.05 ) ), 0.1 );
-	}
-	triDist1 = max( 0.6, triDist1 );
-	return vec3( triDist1 ) * 
-		vec3( 1.0, 0.95, 0.975 );
-#else
-	// SPHERE BG
-	uv.x *= iResolution.x / iResolution.y;
-	uv.y -= 0.25;
-	
-	vec3 color = vec3( 1.0, 1.0, 1.0 );
-	
-	float l1 = pow( max( 0.0, min( 1.0, length( uv ) * 4.0 * ( 1.0 + sp  ) ) ), 10.0 );
-	float l2 = pow( max( 0.0, min( 1.0, length( uv ) * 6.0 * ( 1.0 + sp2 ) ) ), 10.0 );
-	return color * ( max( 1.0 - l1, l2 ) );
-#endif
+
+    vec2 v2 = vec2(-0.12, 0.1);
+    vec2 v1 = vec2(0.12, 0.1);
+    vec2 v3 = vec2(0.0, 0.4);
+    float vadd1 = sp * 0.1;
+    float vadd2 = sp2;
+    float triDist1 = min(1.0, (300.0 *
+        sdTriangle(v1 + vec2(vadd1, -vadd1), v2 + vec2(-vadd1, -vadd1), v3 + vec2(0.0, vadd1), uv)));
+    if (triDist1 < 0.0) // todo: optimize branch
+    {
+        triDist1 = pow(smoothstep(0.0, 1.0, abs(triDist1 * 0.05)), 0.1);
+    }
+    triDist1 = max(0.6, triDist1);
+    return vec3(triDist1) *
+        vec3(1.0, 0.95, 0.975);
 }
 int triIsect( const vec3   V1,  // Triangle vertices
 			  const vec3   V2,
@@ -224,19 +208,12 @@ vec3 polygonalGround( vec3 pos, float zshift, float sp )
 	float tm = 20.0;
 	float gtm = 5.0;
 
-#ifdef FLAT_GROUND
-	float h1 = 0.0;
-	float h2 = 0.0;
-	float h3 = 0.0;
-	float h4 = 0.0;
-#else
     float tvalue = _time;
     tvalue = 1.0;
-	float h1 = sin( gtm * tvalue + tm * rand(  um * uv1 ) );
-	float h2 = sin( gtm * tvalue + tm * rand(  um * vec2( uv2.x, uv1.y ) ) );
-	float h3 = sin( gtm * tvalue + tm * rand(  um * uv2 ) );
-	float h4 = sin( gtm * tvalue + tm * rand(  um * vec2( uv1.x, uv2.y ) ) );
-#endif
+    float h1 = sin(gtm * tvalue + tm * rand(um * uv1));
+    float h2 = sin(gtm * tvalue + tm * rand(um * vec2(uv2.x, uv1.y)));
+    float h3 = sin(gtm * tvalue + tm * rand(um * uv2));
+    float h4 = sin(gtm * tvalue + tm * rand(um * vec2(uv1.x, uv2.y)));
 	
 	float hm = 0.7 * max( 0.3, min( 1.0, -( uv1.y - 26.0 ) * 0.05 ) );
 	vec3 v1 = vec3( uv1.x, h1 * hm, uv1.y );
@@ -340,9 +317,6 @@ float intersectZPlane( vec3 ro, vec3 rd, float planeZ )
 // ground
 vec3 shadeGround( vec3 eye, vec3 pt, vec3 norm, vec3 normReflection, vec3 light, float mult, float sp )
 {
-#ifdef FLAT_SHADING
-	pt.xz = pt.xz - mod( pt.xz, 1.0 ); // flat shading
-#endif
 	vec3 r = normalize( reflect( light, norm ) );
 	vec3 eyeDir = normalize( pt - eye );
 	float dotR = dot( r, eyeDir );
