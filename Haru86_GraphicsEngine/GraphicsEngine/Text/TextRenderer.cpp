@@ -13,8 +13,8 @@ namespace text
 			std::make_shared<TransformComponent>(),
 			PrimitiveType::BOARD,
 			RenderingSurfaceType::RASTERIZER,
-			shaderlib::Text_vert,
-			shaderlib::Text_frag
+			shaderlib::Standard_vert,
+			shaderlib::Standard_frag
 		);
 
 		m_TextMeshRenderer->useAlphaTest = true;
@@ -77,6 +77,11 @@ namespace text
 				//
 				m_TextMeshRenderer->Draw([&]() {
 					m_TextMeshRenderer->m_material->SetVec4Uniform("_Color", Color);
+					m_TextMeshRenderer->m_material->SetIntUniform("_IsMOnly", 1);
+					m_TextMeshRenderer->m_material->SetIntUniform("_IsMulMatOnVert", 0);
+					m_TextMeshRenderer->m_material->SetIntUniform("_UseLighting", 0);
+					m_TextMeshRenderer->m_material->SetIntUniform("_UseMainTex", 1);
+
 					if (CharTex)
 					{
 						CharTex->SetActive(GL_TEXTURE0);

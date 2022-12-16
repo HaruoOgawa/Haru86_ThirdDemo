@@ -255,16 +255,7 @@ float RATIO = 1.,              // stone length/width ratio
       CRACK_zebra_amp = .67,
       CRACK_profile = 1.,      // fault vertical shape  1.  .2 
       CRACK_slope = 50.,       //                      10.  1.4
-      CRACK_width = .0;
-    
-
-// std int hash, inspired from https://www.shadertoy.com/view/XlXcW4
-vec3 hash3( uvec3 x ) 
-{
-#   define scramble  x = ( (x>>8U) ^ x.yzx ) * 1103515245U // GLIB-C const
-    scramble; scramble; scramble; 
-    return vec3(x) / float(0xffffffffU) + 1e-30; // <- eps to fix a windows/angle bug
-}
+      CRACK_width = .0;    
 
 // === Voronoi =====================================================
 // --- Base Voronoi. inspired by https://www.shadertoy.com/view/MslGD8

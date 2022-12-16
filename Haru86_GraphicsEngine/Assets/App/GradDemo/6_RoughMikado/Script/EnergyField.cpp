@@ -15,9 +15,9 @@ namespace app
 			PrimitiveType::BOARD,
 			RenderingSurfaceType::RAYMARCHING,
 			shaderlib::StandardRenderBoard_vert,
-			std::string(
-				#include "../Shader/EnergyField.frag"
-			)
+			std::string({
+				#include "../Shader/EnergyField_FragComp.h"
+			})
 		);
 		
 		m_RayTrailRenderer = std::make_shared<MeshRendererComponent>(
@@ -25,9 +25,9 @@ namespace app
 			PrimitiveType::BOARD,
 			RenderingSurfaceType::RAYMARCHING,
 			shaderlib::StandardRenderBoard_vert,
-			std::string(
-				#include "../Shader/EnergyTrail.frag"
-			)
+			std::string({
+				#include "../Shader/EnergyTrail_FragComp.h"
+			})
 		);
 
 		m_RenderBufferList.push_back(std::make_shared<graphic::RenderBuffer>(

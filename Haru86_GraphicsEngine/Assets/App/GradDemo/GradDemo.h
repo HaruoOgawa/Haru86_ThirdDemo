@@ -33,7 +33,6 @@ namespace app
         ~GradDemo() = default;
 
         void Start();
-        void Load();
         void Update();
         void Draw(bool IsRaymarching);
         void UpdateTimeline();

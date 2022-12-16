@@ -34,6 +34,12 @@ uniform float _WhiteFadeVal;
 uniform int _UseGridWave;
 uniform float _WavePower;
 uniform int _UseWaveCustom;
+uniform int _NotUseFraRes;
+uniform int _UseMixer;
+uniform sampler2D polygon_frameTexture;
+uniform sampler2D polygon_depthTexture;
+uniform sampler2D raymarching_frameTexture;
+uniform sampler2D raymarching_depthTexture;
 
 float rand(vec2 st)
 {
@@ -100,7 +106,7 @@ vec3 GridWave(in vec3 col, vec2 st)
 }
 
 void main(){
-	vec2 st=uv*_frameResolusion;
+	vec2 st=(_NotUseFraRes==1)? uv : uv*_frameResolusion;
 	vec3 col=texture(_SrcTexture,st).rgb;
 	
 	if(_UseGridWave == 1) col = GridWave(col, st);
@@ -110,7 +116,15 @@ void main(){
 
 	if(_UseVignette == 1) col = mix(col, Vignette(col), _VignetteBlendRate);
 	if(_UseFilmFilter == 1) col = DrawFilmFilter(col);
-	
+	if(_UseMixer == 1)
+	{
+		vec4 polygonCol=texture(polygon_frameTexture,st);
+		vec3 polygonDepth=texture(polygon_depthTexture,st).rgb;
+		vec3 raymarchingCol=texture(raymarching_frameTexture,st).rgb;
+		vec3 raymarchingDepth=texture(raymarching_depthTexture,st).rgb;
+		if(polygonDepth.r<=raymarchingDepth.r && polygonCol.a > 0.0){col = mix(raymarchingCol, polygonCol.rgb, polygonCol.a);}
+		else{col= raymarchingCol;}
+	}
 	
 	gl_FragColor=vec4(col,1.0);
 }

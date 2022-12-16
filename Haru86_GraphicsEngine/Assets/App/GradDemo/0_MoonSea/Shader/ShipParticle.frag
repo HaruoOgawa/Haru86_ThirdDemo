@@ -95,11 +95,7 @@ mapr map(vec3 p)
         );
         compm(mr, length(p+dir+_ShipPos)-0.001, 0, true);
     }
-    
-    // Debug
-    //_ShipPos = vec3(0.0, sin(_time)*0.5-0.5, 0.0); // 0 ~ -1
-    //{compm(mr, length(p + _ShipPos) - 0.001, 0, true);}
-    
+ 
     return mr;
 }
 

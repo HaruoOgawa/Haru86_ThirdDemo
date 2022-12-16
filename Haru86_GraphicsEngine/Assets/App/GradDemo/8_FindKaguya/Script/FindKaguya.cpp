@@ -13,9 +13,7 @@ namespace app
 			PrimitiveType::BOARD,
 			RenderingSurfaceType::RAYMARCHING,
 			shaderlib::StandardRenderBoard_vert,
-			std::string(
-				#include "../Shader/Voxel.frag"
-			)
+			shaderlib::Voxel_frag
 		);
 	}
 

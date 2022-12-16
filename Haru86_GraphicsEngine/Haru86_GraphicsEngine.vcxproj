@@ -414,7 +414,6 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <ClInclude Include="GraphicsEngine\Graphics\EGraphicsParam.h" />
     <ClInclude Include="GraphicsEngine\Graphics\ShaderLib.h" />
     <ClInclude Include="GraphicsEngine\Message\Console.h" />
-    <ClInclude Include="GraphicsEngine\Graphics\ComputeBuffer.h" />
     <ClInclude Include="GraphicsEngine\Library\tinygltf\json.hpp" />
     <ClInclude Include="GraphicsEngine\Library\tinygltf\stb_image.h" />
     <ClInclude Include="GraphicsEngine\Library\tinygltf\stb_image_write.h" />
@@ -446,7 +445,6 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <ClCompile Include="Assets\App\GradDemo\8_FindKaguya\Script\FindKaguya.cpp" />
     <ClCompile Include="Assets\App\GradDemo\7_FeatherRobe\Script\FeatherRobe.cpp" />
     <ClCompile Include="Assets\App\GradDemo\6_RoughMikado\Script\EnergyField.cpp" />
-    <ClCompile Include="GraphicsEngine\Graphics\ComputeBuffer.cpp" />
     <ClCompile Include="GraphicsEngine\GraphicsMain\GraphicsMain.cpp" />
     <ClCompile Include="GraphicsEngine\Graphics\GraphicsRenderer.cpp" />
     <ClCompile Include="GraphicsEngine\GraphicsMain\Main.cpp" />
@@ -488,8 +486,6 @@ xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y
     <None Include="bin\libfreetype-6.dll" />
     <None Include="bin\SDL2_ttf.dll" />
     <None Include="bin\zlib1.dll" />
-    <None Include="GraphicsEngine\Graphics\Shader\Line2Cylinder.geom" />
-    <None Include="GraphicsEngine\Graphics\Shader\Text.vert" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

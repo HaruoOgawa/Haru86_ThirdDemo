@@ -23,14 +23,15 @@ namespace app
 		m_RefMapIndex(0),
 		m_CorrectionValue(0.1f)
 	{
+		
 		m_MoonSeaMeshRenderer = std::make_shared<MeshRendererComponent>(
 			std::make_shared<TransformComponent>(),
 			PrimitiveType::BOARD,
 			RenderingSurfaceType::RAYMARCHING,
 			shaderlib::StandardRenderBoard_vert,
-			std::string(
-				#include "../Shader/MoonSea.frag"
-			)
+			std::string({
+					#include "../Shader/MoonSea_FragComp.h"
+			})
 		);
 		m_MoonSeaMeshRenderer->useZTest = false;
 		m_MoonSeaMeshRenderer->useAlphaTest = false;
@@ -40,9 +41,9 @@ namespace app
 			PrimitiveType::BOARD,
 			RenderingSurfaceType::RAYMARCHING,
 			shaderlib::StandardRenderBoard_vert,
-			std::string(
-				#include "../Shader/RaySpaceShip.frag"
-			)
+			std::string({
+				#include "../Shader/RaySpaceShip_FragComp.h"
+			})
 		);
 		m_RaySpaceShip->useZTest = false;
 		m_RaySpaceShip->useAlphaTest = true;
@@ -53,9 +54,9 @@ namespace app
 			PrimitiveType::BOARD,
 			RenderingSurfaceType::RAYMARCHING,
 			shaderlib::StandardRenderBoard_vert,
-			std::string(
-				#include "../Shader/ShipParticle.frag"
-			)
+			std::string({
+				#include "../Shader/ShipParticle_FragComp.h"
+			})
 		);
 
 		m_ShipTrailRenderer->useZTest = false;
@@ -66,7 +67,7 @@ namespace app
 			PrimitiveType::BOARD,
 			RenderingSurfaceType::RAYMARCHING,
 			shaderlib::StandardRenderBoard_vert,
-			shaderlib::StandardRenderBoard_frag
+			shaderlib::LatePostProcess_frag
 		);
 
 		m_ShipTrailResultRenderer->useZTest = false;
@@ -124,7 +125,8 @@ namespace app
 			{
 				m_ShipTrailResultRenderer->Draw([&]() {
 					m_RenderBufferList[0]->GetFrameTexture()->SetActive(GL_TEXTURE0);
-					m_ShipTrailResultRenderer->m_material->SetTexUniform("frameTex", 0);
+					m_ShipTrailResultRenderer->m_material->SetIntUniform("_NotUseFraRes", 1);
+					m_ShipTrailResultRenderer->m_material->SetTexUniform("_SrcTexture", 0);
 				});
 				m_RenderBufferList[0]->GetFrameTexture()->SetEnactive(GL_TEXTURE0);
 			}
@@ -239,8 +241,8 @@ namespace app
 				}
 				else if (CameraID == 1)
 				{
-					float r = 10.0f;
-					ro = glm::vec3(cos(time) * r, 0.0f, sin(time) * r);
+					float r = 25.0f;
+					ro = glm::vec3(cos(3.1415f/2.0f) * r, r * 2.0f, sin(3.1415f / 2.0f) * r);
 				}
 				else if (CameraID == 2)
 				{

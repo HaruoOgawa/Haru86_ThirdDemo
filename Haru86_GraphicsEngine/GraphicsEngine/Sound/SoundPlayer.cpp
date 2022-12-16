@@ -2,9 +2,10 @@
 #include <Windows.h>
 #include <mmsystem.h>
 #include <array>
-#include "GraphicsEngine/Message/Console.h"
-#include <sstream>
 #pragma comment(lib, "Winmm.lib")
+#ifdef _DEBUG
+#include <sstream>
+#endif // _DEBUG
 
 namespace sound 
 {
@@ -62,14 +63,14 @@ namespace sound
 
 	void SoundPlayer::Skip(float SkipOffset)
 	{
-		//
+#ifdef _DEBUG
 		float Offset = (SkipOffset * 1000.0f); // ミリ秒に直す
 
 		std::ostringstream ss;
-		ss << Offset; 
+		ss << Offset;
 		std::string SkipOffset_str(ss.str());
 		std::string cmd = "seek mp3 to " + SkipOffset_str;
-		
+
 		std::array<char, MAXERRORLENGTH> errorString;
 		mciGetErrorStringA(
 			mciSendStringA(cmd.c_str(), NULL, 0, NULL),
@@ -78,9 +79,8 @@ namespace sound
 
 		// スキップした後は、もう一度Playしないと音が鳴らない
 		Play();
+#endif // _DEBUG
 
-		//Console::Log("cmd: %s\n", cmd.c_str());
-		//std::printf("%s\n", errorString.data());
 	}
 
 	void SoundPlayer::Mute(bool IsMute)

@@ -24,9 +24,9 @@ namespace app
 				RenderingSurfaceType::RASTERIZER,
 				VertexData, Dimention, Indices,
 				shaderlib::Standard_vert,
-				std::string(
-					#include "../Shader/NegativeSphere.frag"
-				),
+				std::string({
+					#include "../Shader/NegativeSphere_FragComp.h"
+				}),
 				std::string(
 					#include "../Shader/NegativeSphere.geom"
 				)
@@ -43,9 +43,9 @@ namespace app
 				std::make_shared<TransformComponent>(),
 				PrimitiveType::SPHERE,
 				RenderingSurfaceType::RASTERIZER,
-				std::string(
-					#include "../Shader/NegativeSphereCore.vert"
-				),
+				std::string({
+					#include "../Shader/NegativeSphereCore_VertComp.h."
+				}),
 				shaderlib::Standard_frag
 			);
 
@@ -60,9 +60,7 @@ namespace app
 				PrimitiveType::BOARD,
 				RenderingSurfaceType::RAYMARCHING,
 				shaderlib::StandardRenderBoard_vert,
-				std::string(
-					#include "../../8_FindKaguya/Shader/Voxel.frag"
-				)
+				shaderlib::Voxel_frag
 			);
 
 			m_Voxel->useAlphaTest = true;
@@ -75,9 +73,9 @@ namespace app
 				PrimitiveType::BOARD,
 				RenderingSurfaceType::RAYMARCHING,
 				shaderlib::StandardRenderBoard_vert,
-				std::string(
-					#include "../Shader/Triangle.frag"
-				)
+				std::string({
+					#include "../Shader/Triangle_FragComp.h"
+				})
 			);
 
 			m_Triangle->useAlphaTest = true;

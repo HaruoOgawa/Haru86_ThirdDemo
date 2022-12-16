@@ -30,17 +30,8 @@ void PostProcess::DestroyInstance() {
 PostProcess::PostProcess():
 	m_UsePostProcess(false),
 	m_UseSSR(false),
-	m_LatePostProcesCallBack([]() {}),
-	m_PolygonePPRenderer(nullptr)
+	m_LatePostProcesCallBack([]() {})
 {
-	m_PolygonePPRenderer = std::make_shared<MeshRendererComponent>(
-		std::make_shared<TransformComponent>(),
-		PrimitiveType::BOARD,
-		RenderingSurfaceType::RASTERIZER,
-		shaderlib::StandardRenderBoard_vert, 
-		shaderlib::PolygonPostProcess_frag
-	);
-	
 	m_LateMeshRenderer = std::make_shared<MeshRendererComponent>(
 		std::make_shared<TransformComponent>(),
 		PrimitiveType::BOARD,
@@ -48,27 +39,6 @@ PostProcess::PostProcess():
 		shaderlib::StandardRenderBoard_vert,
 		shaderlib::LatePostProcess_frag
 	);
-}
-
-void PostProcess::DrawPolygonPostProcess(const std::shared_ptr<Texture>& SrcTexture, const unsigned int& DestBuffer)const {
-	// Draw PostProcess Result
-	GraphicsMain::GetInstance()->renderingTarget = ERerderingTarget::COLOR;
-	glBindFramebuffer(GL_FRAMEBUFFER, DestBuffer);
-	glViewport(0, 0, static_cast<int>(GraphicsRenderer::GetInstance()->GetScreenSize().x * GraphicsRenderer::GetInstance()->frameResolusion), static_cast<int>(GraphicsRenderer::GetInstance()->GetScreenSize().y * GraphicsRenderer::GetInstance()->frameResolusion));
-
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glEnable(GL_DEPTH_TEST);
-
-	// draw PostProcess Board
-	m_PolygonePPRenderer->Draw([&]() {
-		// Set SrcTexture
-		SrcTexture->SetActive(GL_TEXTURE1);
-		m_PolygonePPRenderer->m_material->SetTexUniform("_SrcTexture", 1);
-	}, GL_TRIANGLES, false, 0);
-
-	SrcTexture->SetEnactive(GL_TEXTURE1);
 }
 
 // SSR

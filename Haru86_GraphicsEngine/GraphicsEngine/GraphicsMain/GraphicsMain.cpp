@@ -76,16 +76,7 @@ void GraphicsMain::LoadData() {
 	//
 	m_SoundPlayer = std::make_shared<sound::SoundPlayer>();
 
-	//
 	m_App->Start();
-
-	m_MainBoardRenderer = std::make_shared<MeshRendererComponent>(
-		std::make_shared<TransformComponent>(),
-		PrimitiveType::BOARD,
-		RenderingSurfaceType::RASTERIZER,
-		shaderlib::StandardRenderBoard_vert,
-		shaderlib::StandardRenderBoard_frag
-	);
 
 	if (m_MainCamera == nullptr) m_MainCamera = std::make_shared<TransformComponent>(glm::vec3(0.0f, 0.0f, -3.0f), glm::vec3(0.0f), glm::vec3(1.0f));
 	if (!m_GroabalLightPosition) m_GroabalLightPosition = std::make_shared<TransformComponent>(glm::vec3(10.0f));
