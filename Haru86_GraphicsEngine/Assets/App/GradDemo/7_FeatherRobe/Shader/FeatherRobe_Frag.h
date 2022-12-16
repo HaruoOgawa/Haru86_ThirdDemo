@@ -33,7 +33,7 @@ struct mapr // MapResult
    float d; // Distance
    bool  hit;
    int   m; // MaterialType
-   float tvalue;     
+   float tv;     
    float i;
    float acc;
    float neard;
@@ -53,9 +53,9 @@ void compm(inout mapr mr,float d,int mt,bool IsMin) // CompareMap
     }
 }
 
-vec3 trs(vec3 p,vec3 s,vec3 r,vec3 tvalue)
+vec3 trs(vec3 p,vec3 s,vec3 r,vec3 tv)
 {
-    p+=tvalue; 
+    p+=tv; 
     p.yz*=rot(s.x);p.xz*=rot(s.y);p.xy*=rot(s.z);
     p*=s;
     
@@ -131,7 +131,7 @@ int triIsect( const vec3   V1,  // Triangle vertices
   vec3 e1, e2;  //Edge1, Edge2
   vec3 P, Q, T;
   float det, inv_det, u, v;
-  float tvalue;
+  float tv;
  
   e1 = V2 - V1;
   e2 = V3 - V1;
@@ -151,10 +151,10 @@ int triIsect( const vec3   V1,  // Triangle vertices
   v = dot(D, Q) * inv_det;
   if(v < 0. || u + v  > 1.) return 0;
  
-  tvalue = dot(e2, Q) * inv_det;
+  tv = dot(e2, Q) * inv_det;
  
-  if(tvalue > EPSILON) { //ray intersection
-    res = tvalue;
+  if(tv > EPSILON) { //ray intersection
+    res = tv;
     return 1;
   }
  
@@ -170,7 +170,7 @@ int triIsectNC( const vec3   V1,  // Triangle vertices
   vec3 e1, e2;  //Edge1, Edge2
   vec3 P, Q, T;
   float det, inv_det, u, v;
-  float tvalue;
+  float tv;
  
   e1 = V2 - V1;
   e2 = V3 - V1;
@@ -188,10 +188,10 @@ int triIsectNC( const vec3   V1,  // Triangle vertices
  
   v = dot(D, Q) * inv_det;
  
-  tvalue = dot(e2, Q) * inv_det;
+  tv = dot(e2, Q) * inv_det;
  
-  if(tvalue > EPSILON) { //ray intersection
-    res = tvalue;
+  if(tv > EPSILON) { //ray intersection
+    res = tv;
     return 1;
   }
  
@@ -208,12 +208,12 @@ vec3 polygonalGround( vec3 pos, float zshift, float sp )
 	float tm = 20.0;
 	float gtm = 5.0;
 
-    float tvalue = _time;
-    tvalue = 1.0;
-    float h1 = sin(gtm * tvalue + tm * rand(um * uv1));
-    float h2 = sin(gtm * tvalue + tm * rand(um * vec2(uv2.x, uv1.y)));
-    float h3 = sin(gtm * tvalue + tm * rand(um * uv2));
-    float h4 = sin(gtm * tvalue + tm * rand(um * vec2(uv1.x, uv2.y)));
+    float tv = _time;
+    tv = 1.0;
+    float h1 = sin(gtm * tv + tm * rand(um * uv1));
+    float h2 = sin(gtm * tv + tm * rand(um * vec2(uv2.x, uv1.y)));
+    float h3 = sin(gtm * tv + tm * rand(um * uv2));
+    float h4 = sin(gtm * tv + tm * rand(um * vec2(uv1.x, uv2.y)));
 	
 	float hm = 0.7 * max( 0.3, min( 1.0, -( uv1.y - 26.0 ) * 0.05 ) );
 	vec3 v1 = vec3( uv1.x, h1 * hm, uv1.y );
@@ -227,7 +227,7 @@ vec3 polygonalGround( vec3 pos, float zshift, float sp )
 	int tri2res = triIsectNC( v1, v3, v4, ro, rd, t2 );
 						 
 	float h = 0.0;
-	if ( tri1res == 1 )
+	if ( tri1res == 1 && tri2res > 0)
 	{
 		vec3 pt = ro + rd * t1;
 		return ( pt );
@@ -245,11 +245,7 @@ mapr map(vec3 p)
     mr.m=-1;
     
     {compm(mr, p.y - (polygonalGround(p,0.0,1.0).y * (0.75)  - 3.0), 1, true);}
-    {
-        vec3 lp = p + vec3(0.0,2.0,0.0);
-       // compm(mr, length(lp)-0.25, 2, true);
-    }
-    //{compm(mr,Triangle(trs(p,vec3(1.5),vec3(0.0),vec3(0.0)),vec3(1.24),1.8),0,true);}
+    
     return mr;
 }
 
@@ -267,10 +263,10 @@ mapr ray(vec3 ro,vec3 rd,const bool IsRef)
 {
     mapr mr;
     
-    float i=0.0,tvalue=0.0,acc=0.0;
-    for(;++i<ln;){mr=map(ro+rd*(tvalue+=mr.d*0.75));if(mr.d<dmin||mr.tvalue>tmax)break;acc+=exp(-3.0*mr.d);}
+    float i=0.0,tv=0.0,acc=0.0;
+    for(;++i<ln;){mr=map(ro+rd*(tv+=mr.d*0.75));if(mr.d<dmin||mr.tv>tmax)break;acc+=exp(-3.0*mr.d);}
     
-    mr.i=i;mr.tvalue=tvalue;mr.acc=acc;
+    mr.i=i;mr.tv=tv;mr.acc=acc;
     
     return mr;
 }
@@ -290,10 +286,10 @@ mapr rayaura(vec3 ro, vec3 rd)
     );
     
     vec3 ap = vec3(0.0, 2.0, 0.0) + dir;
-    float i=0.0,tvalue=0.0,acc=0.0;
+    float i=0.0,tv=0.0,acc=0.0;
     for(;++i<64.0;)
     {
-        mr=mapr(length( ro+rd*(tvalue+=mr.d*0.75) + ap)-0.25,false,2,0.0,0.0,0.0,0.0);
+        mr=mapr(length( ro+rd*(tv+=mr.d*0.75) + ap)-0.25,false,2,0.0,0.0,0.0,0.0);
         if((mr.d) < mr.neard)
         {
             mr.neard = mr.d;
@@ -303,7 +299,7 @@ mapr rayaura(vec3 ro, vec3 rd)
         acc+=exp(-3.0*mr.d);
     }
     
-    mr.i=i;mr.tvalue=tvalue;mr.acc=acc;
+    mr.i=i;mr.tv=tv;mr.acc=acc;
     
     return mr;
 }
@@ -325,8 +321,8 @@ vec3 shadeGround( vec3 eye, vec3 pt, vec3 norm, vec3 normReflection, vec3 light,
 	vec3 groundColor = vec3( diffuseColor + ambientColor );
 	
 	vec3 rd = normalize( reflect( -eyeDir, normReflection ) );
-	float tvalue = intersectZPlane( pt, rd, 10.0 );
-	vec3 bgPos = pt + rd * tvalue;
+	float tv = intersectZPlane( pt, rd, 10.0 );
+	vec3 bgPos = pt + rd * tv;
 	
 	float mixv = max( 0.0, dotR * 2.0 );
 	vec3 bgColor = shadeBG( abs( bgPos.xy ) * vec2( 0.1, -0.2 ) + vec2( 0.0,2.0 ), sp );
@@ -350,8 +346,6 @@ float calcAo(in vec3 p,in vec3 n)
 vec3 DrawBG(vec3 ro, vec3 rd, vec2 st)
 {
     vec3 col = vec3(0.2,0.2,0.5)*0.1;
-    //col += vec3(exp(-3.0*length(st)));
-    
     return col;
 }
 
@@ -361,22 +355,11 @@ vec3 dColor(mapr mr, vec3 ro,vec3 rd, vec2 st)
     
     if(mr.hit)
     {
-        vec3 p = ro + rd*mr.tvalue;
+        vec3 p = ro + rd*mr.tv;
         vec3 n = gn(p);
         vec3 n2 = normalize( n + vec3(0.0,8.0,0.0) );
     
-        if(mr.m == 0) // Debug
-        {
-            vec3 p = ro + rd * mr.tvalue;
-            vec3 n = gn(p);
-            float ao = calcAo(p, n);
-            float diff = max(0.0, dot(n,ldir)), ambient = 0.25;;
-            float spec = pow(max(0.0, dot(reflect(-ldir, n), -rd)), 16.0);
-           // col = vec3(0.2,0.2,0.5)*0.1*color2*(diff+ambient) + vec3(1.0)*spec;
-            col = vec3(0.2,0.2,0.5) *10.0/mr.i * ao * (diff+ambient);
-            
-        }
-        else if(mr.m == 1) 
+        if(mr.m == 1) 
         {
             vec3 color1 = shadeBG( st, 1.0 );
             vec3 diffuseColor = vec3( 1.0, 0.95, 0.90 );
@@ -393,7 +376,7 @@ vec3 dColor(mapr mr, vec3 ro,vec3 rd, vec2 st)
             vec3 color2 = shadeGround( ro, p, n, n2, ldir, -1.0, 1.0 ) 
                 * diffuseColor + vec3(0.917, 0.569, 0.596)* (  border*4.0 ) ;
             
-            col = vec3(exp(-0.25*mr.tvalue));
+            col = vec3(exp(-0.25*mr.tv));
             
             float dist = ( 1.0 - length( st - vec2( 0.0, 0.25 ) ) * .5) * 1.0;
             
@@ -404,10 +387,6 @@ vec3 dColor(mapr mr, vec3 ro,vec3 rd, vec2 st)
             col += vec3(1.0) * mr.acc * 0.01;
             
             col  *= dist;
-        }
-        else if(mr.m == 2)
-        {
-            //col = vec3(0.917, 0.569, 0.6) * pow(-2.0);
         }
     }
     return col;
@@ -435,7 +414,7 @@ else
     } 
     
     vec3 fog = mix(vec3(0.96), vec3(0.24), -rd.y*0.5+0.5);
-    col = mix(col, fog * sqrt(fog) * 1.2, smoothstep(0.0, 0.95, mr.tvalue/15.0));
+    col = mix(col, fog * sqrt(fog) * 1.2, smoothstep(0.0, 0.95, mr.tv/15.0));
     
     mapr mra = rayaura(ro,rd);
     vec3 acol =  vec3(0.917, 0.569, 0.596) * mra.acc ;
