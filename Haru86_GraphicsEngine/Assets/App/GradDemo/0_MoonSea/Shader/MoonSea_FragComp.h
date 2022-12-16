@@ -301,7 +301,7 @@
              "z+=2.,y.xz*=rot(_time);"
            "else"
              " if(S==1)"
-               ";"
+               "y=y+_WorldCameraPos,z=z+_WorldCameraCenter;"
              "else"
                " if(S==2)"
                  "y+=vec3(2.);"

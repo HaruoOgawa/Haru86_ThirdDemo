@@ -529,6 +529,7 @@ else
         else if(CameraID == 1)
         {
             // default Camera
+            ro = ro + _WorldCameraPos, ta = ta + _WorldCameraCenter;
         }
         else if(CameraID == 2)
         {

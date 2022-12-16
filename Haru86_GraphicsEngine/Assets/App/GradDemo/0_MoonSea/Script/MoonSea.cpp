@@ -241,8 +241,8 @@ namespace app
 				}
 				else if (CameraID == 1)
 				{
-					float r = 10.0f;
-					ro = glm::vec3(cos(time) * r, 0.0f, sin(time) * r);
+					float r = 25.0f;
+					ro = glm::vec3(cos(3.1415f/2.0f) * r, r * 2.0f, sin(3.1415f / 2.0f) * r);
 				}
 				else if (CameraID == 2)
 				{
