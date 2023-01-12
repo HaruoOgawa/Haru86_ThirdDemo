@@ -21,7 +21,8 @@ namespace app
 		m_ShipTrailResultRenderer(nullptr),
 		m_IsDrawShipTrail(false),
 		m_RefMapIndex(0),
-		m_CorrectionValue(0.1f)
+		m_CorrectionValue(0.1f),
+		m_CameraID(-1)
 	{
 		
 		m_MoonSeaMeshRenderer = std::make_shared<MeshRendererComponent>(
@@ -97,6 +98,7 @@ namespace app
 		{
 			m_MoonSeaMeshRenderer->Draw([this]() {
 				m_MoonSeaMeshRenderer->m_material->SetFloatUniform("_LeaveStartTime", 42.0f);
+				m_MoonSeaMeshRenderer->m_material->SetIntUniform("_CameraID", m_CameraID);
 			});
 
 			if (m_IsDrawShipTrail)
@@ -228,27 +230,27 @@ namespace app
 
 			{
 				m_MoveH = time - 42.0f;
-				//float h = 0.0f;
+				float pi = 3.1415f, sp = 0.5f;
 				glm::vec3 ro = glm::vec3(0.0f, m_MoveH, 1.5f), ta = glm::vec3(0.0f, m_MoveH, 0.0f);
-				int CameraID = int(glm::floor(glm::mod(time + 2.0f, 3.0f))); // 0,1,2
-
-				if (CameraID == 0)
+				m_CameraID = int(glm::floor(glm::mod(time * sp + 0.5f + 2.0f, 3.0f))); // 0,1,2
+				
+				if (m_CameraID == 0)
 				{
 					// down side camera
 					float r = 0.5f;
 					ta += 4.0f;
 					ro = glm::vec3(cos(time) * r, ro.y, sin(time) * r);
 				}
-				else if (CameraID == 1)
+				else if (m_CameraID == 1) // ‚±‚±‚ÌŽžA”wŒi‚É‰½‚à‰f‚ç‚È‚­‚Ä•Ï
 				{
 					float r = 25.0f;
-					ro = glm::vec3(cos(3.1415f/2.0f) * r, r * 2.0f, sin(3.1415f / 2.0f) * r);
+					ro = glm::vec3(cos(pi /2.0f + time * sp) * r, ro.y, sin(pi / 2.0f + time * sp) * r);
 				}
-				else if (CameraID == 2)
+				else if (m_CameraID == 2)
 				{
 					// upside camera
-					float r = 0.5f;
-					ro += glm::vec3(cos(time) * r, 2.0, sin(time) * r);
+					float r = 0.5f, a = abs(fmod(time, pi * 2.0f) - pi);
+					ro += glm::vec3(cos(a) * r, 2.0, sin(a) * r);
 				}
 
 				GraphicsMain::GetInstance()->m_MainCamera->m_position = ro;

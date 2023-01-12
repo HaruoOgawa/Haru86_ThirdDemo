@@ -9,6 +9,7 @@ uniform vec3 _WorldCameraPos;
 uniform vec3 _WorldCameraCenter;
 
 uniform float _LeaveStartTime;
+uniform int _CameraID;
 
 in vec2 uv;
 
@@ -518,20 +519,19 @@ else
     if(LeaveRate>=1.0)
     {
         ro=vec3(0.0,h,1.5),ta=vec3(0.0,h,0.0);
-        int CameraID = int(floor(mod(_time,3.0))); // 0,1,2
         
-        if(CameraID == 0)
+        if(_CameraID == 0)
         {
             // down side camera
             ta+=2.0;
             ro.xz*=rot(_time);
         }
-        else if(CameraID == 1)
+        else if(_CameraID == 1)
         {
             // default Camera
             ro = ro + _WorldCameraPos, ta = ta + _WorldCameraCenter;
         }
-        else if(CameraID == 2)
+        else if(_CameraID == 2)
         {
             // upside camera
             ro+=vec3(2.0);

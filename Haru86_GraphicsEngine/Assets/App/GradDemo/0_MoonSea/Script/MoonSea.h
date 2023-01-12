@@ -25,6 +25,8 @@ namespace app
 		bool								   m_IsDrawShipTrail;
 		int									   m_RefMapIndex;
 		float								   m_CorrectionValue;
+
+		int									   m_CameraID;
 	private:
 	public:
 		MoonSea();
