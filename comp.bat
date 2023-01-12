@@ -10,4 +10,4 @@ for /R %BuiltDir% %%i in (*Vert.h) do shader_minifier --format c-array --preserv
 
 for /R %BuiltDir% %%i in (*Frag.h) do shader_minifier --format c-array --preserve-externals uniform -o %%~pi%%~niComp.h %%~i
 
-pause
+@rem pause

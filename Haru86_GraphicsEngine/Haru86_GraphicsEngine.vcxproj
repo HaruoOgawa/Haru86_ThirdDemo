@@ -193,6 +193,9 @@ xcopy "$(ProjectDir)GraphicsEngine\Library\GLFW\x86\lib\glfw3.dll" "$(OutDir)" /
 xcopy "$(ProjectDir)Assets\Shader" "$(OutDir)Assets\Shader" /i /s /y
 </Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>call $(SolutionDir)comp.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -220,6 +223,9 @@ xcopy "$(ProjectDir)GraphicsEngine\Library\GLFW\x86\lib\glfw3.dll" "$(OutDir)" /
 xcopy "$(ProjectDir)Assets\Shader" "$(OutDir)Assets\Shader" /i /s /y
 </Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>call $(SolutionDir)comp.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DemoRelease|Win32'">
     <ClCompile>
@@ -251,6 +257,9 @@ xcopy "$(ProjectDir)GraphicsEngine\Library\GLFW\x86\lib\glfw3.dll" "$(OutDir)" /
 xcopy "$(ProjectDir)Assets\Shader" "$(OutDir)Assets\Shader" /i /s /y
 </Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>call $(SolutionDir)comp.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinimumRelease|Win32'">
     <ClCompile>
@@ -284,6 +293,9 @@ xcopy "$(ProjectDir)GraphicsEngine\Library\GLFW\x86\lib\glfw3.dll" "$(OutDir)" /
 xcopy "$(ProjectDir)Assets\Shader" "$(OutDir)Assets\Shader" /i /s /y
 </Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>call $(SolutionDir)comp.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -310,6 +322,9 @@ xcopy "$(ProjectDir)Assets\Sound\edm_electronic_electronica_.mp3" "$(OutDir)bin"
 xcopy "$(ProjectDir)Assets\Font\georgiai.ttf" "$(OutDir)bin" /i /s /y
 del /Q $(OutDir)Haru86_GraphicsEngine.pdb</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>call $(SolutionDir)comp.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -341,6 +356,9 @@ xcopy "$(ProjectDir)Assets\Font\georgiai.ttf" "$(OutDir)bin" /i /s /y
 del /Q $(OutDir)Haru86_GraphicsEngine.pdb
 </Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>call $(SolutionDir)comp.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DemoRelease|x64'">
     <ClCompile>
@@ -374,6 +392,9 @@ call squishy-x64 -i "$(OutDir)Haru86_GraphicsEngine.exe" -o "$(OutDir)Haru86_Gra
 del /Q $(OutDir)Haru86_GraphicsEngine.pdb
 </Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>call $(SolutionDir)comp.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinimumRelease|x64'">
     <ClCompile>
@@ -403,6 +424,9 @@ xcopy "$(ProjectDir)GraphicsEngine\Library\GLFW\x64\lib\glfw3.dll" "$(OutDir)" /
 xcopy "$(ProjectDir)Assets\Shader" "$(OutDir)Assets\Shader" /i /s /y
 xcopy "$(ProjectDir)GraphicsEngine\Assets\Sound\stroke.wav" "$(OutDir)" /i /s /y</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>call $(SolutionDir)comp.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Assets\App\GradDemo\GradDemo.h" />
