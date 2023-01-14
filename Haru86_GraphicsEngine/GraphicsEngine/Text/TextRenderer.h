@@ -15,7 +15,7 @@ namespace text
 		TextRenderer();
 		virtual ~TextRenderer();
 
-		void Draw(const std::string& Text, float FontSize, float Width, float Height, const glm::vec3& Pos, const glm::vec4& Color, bool IsTextAlignLeft, bool IsUseBack);
+		void Draw(const std::string& Text, float FontSize, float WAdjust, float HAdjust, const glm::vec3& Pos, const glm::vec4& Color, bool IsTextAlignLeft, bool IsUseBack);
 	};
 }
 

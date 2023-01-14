@@ -25,28 +25,10 @@ namespace text
 	{
 	}
 
-	void TextRenderer::Draw(const std::string& Text, float FontSize, float WRange, float HRange, const glm::vec3& Pos, const glm::vec4& Color,
+	void TextRenderer::Draw(const std::string& Text, float FontSize, float WAdjust, float HAdjust, const glm::vec3& Pos, const glm::vec4& Color,
 		bool IsTextAlignLeft, bool IsUseBack)
 	{
-		// 背景の描画
-		if (IsUseBack)
-		{
-			glm::vec3 scale = glm::vec3(1.0f, 1.0f * FontSize, 0.0f);
-			m_TextMeshRenderer->m_transform->m_scale = scale;
-			m_TextMeshRenderer->m_transform->m_position = glm::vec3(0.0f, 0.1f, 0.0f);
-
-			m_TextMeshRenderer->Draw([&]() {
-				m_TextMeshRenderer->m_material->SetVec4Uniform("_Color", glm::vec4(0.0f, 0.0f, 0.0f,0.75f));
-				m_TextMeshRenderer->m_material->SetIntUniform("_IsMOnly", 1);
-				m_TextMeshRenderer->m_material->SetIntUniform("_IsMulMatOnVert", 0);
-				m_TextMeshRenderer->m_material->SetIntUniform("_UseLighting", 0);
-				m_TextMeshRenderer->m_material->SetIntUniform("_UseMainTex", 0);
-				m_TextMeshRenderer->m_material->SetIntUniform("_UseColor", 1);
-				
-				}, GL_TRIANGLES, false, 0);
-		}
-
-		// テキストの描画
+		// テキストデータの整理
 		const char* TextData = Text.data();
 		std::vector<std::vector<char>> StructuredText;
 		int PushIndex = 0;
@@ -64,14 +46,36 @@ namespace text
 				StructuredText[PushIndex].push_back(PushText);
 			}
 		}
-		//Console::Log("_____________________________________\n");
 		const float NumOfRowChar = static_cast<float>(StructuredText.size());
+
+		//
 		for (float row = 0.0f; row < NumOfRowChar; row++)
 		{
 			const auto& Arr = StructuredText[row];
 			const float NumOfColChar = static_cast<float>(Arr.size());
 
-			for (float col = 0.0f; col < static_cast<float>(Arr.size()); col++)
+			// 背景の描画
+			if (IsUseBack)
+			{
+				float xSize =  NumOfColChar * FontSize * WAdjust;
+				float xOffset = -1.0f * (1.0f - xSize * 0.5f);
+				glm::vec3 scale = glm::vec3(xSize, 1.0f * FontSize, 0.0f);
+				m_TextMeshRenderer->m_transform->m_scale = scale;
+				m_TextMeshRenderer->m_transform->m_position = glm::vec3(xOffset, 0.1f, 0.0f);
+
+				m_TextMeshRenderer->Draw([&]() {
+					m_TextMeshRenderer->m_material->SetVec4Uniform("_Color", glm::vec4(0.0f, 0.0f, 0.0f, 0.75f));
+					m_TextMeshRenderer->m_material->SetIntUniform("_IsMOnly", 1);
+					m_TextMeshRenderer->m_material->SetIntUniform("_IsMulMatOnVert", 0);
+					m_TextMeshRenderer->m_material->SetIntUniform("_UseLighting", 0);
+					m_TextMeshRenderer->m_material->SetIntUniform("_UseMainTex", 0);
+					m_TextMeshRenderer->m_material->SetIntUniform("_UseColor", 1);
+
+					}, GL_TRIANGLES, false, 0);
+			}
+
+			// テキストの描画
+			for (float col = 0.0f; col < NumOfColChar; col++)
 			{
 				const auto& CharData = Arr[static_cast<size_t>(col)];
 				
@@ -92,9 +96,9 @@ namespace text
 				glm::vec3 scale = glm::vec3(Width, Height, 0.0f) * FontSize;
 				m_TextMeshRenderer->m_transform->m_scale = scale;
 
-				//
-				float XVal = (col - NumOfColChar * 0.5f) * FontSize * WRange;
-				float YVal = (row - NumOfRowChar * 0.5f) * FontSize * HRange * (-1.0f);
+				// センター揃えか左揃えにする
+				float XVal = (IsTextAlignLeft)? -1.0f + col * FontSize * WAdjust : (col - NumOfColChar * 0.5f) * FontSize * WAdjust;
+				float YVal = (row - NumOfRowChar * 0.5f) * FontSize * HAdjust * (-1.0f);
 				float LVal = (Left * scale.x)			 ;
 				float TVal = (Top * scale.y)			 ;
 
