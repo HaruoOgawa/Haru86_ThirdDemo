@@ -10,14 +10,20 @@ namespace app {
 		m_MeshRenderer(nullptr),
 		m_RaySpaceShip(nullptr)
 	{
+		// 演出用のShaderEditorにコードを追加する
+		std::string EarthAndMoon = std::string({
+					#include "../Shader/EarthAndMoon_FragComp.h"
+		});
+
+		GraphicsMain::GetInstance()->m_ShaderEditor->AddShaderMap("EarthAndMoon.Frag", EarthAndMoon);
+
+		//
 		m_MeshRenderer = std::make_shared<MeshRendererComponent>(
 			std::make_shared<TransformComponent>(),
 			PrimitiveType::BOARD,
 			RenderingSurfaceType::RAYMARCHING,
 			shaderlib::StandardRenderBoard_vert,
-			std::string({
-				#include "../Shader/EarthAndMoon_FragComp.h"
-			})
+			EarthAndMoon
 		);
 
 		m_MeshRenderer->useZTest = false;

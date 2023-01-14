@@ -18,14 +18,35 @@ namespace text
 		);
 
 		m_TextMeshRenderer->useAlphaTest = true;
+		m_TextMeshRenderer->useZTest = false;
 	}
 	
 	TextRenderer::~TextRenderer()
 	{
 	}
 
-	void TextRenderer::Draw(const std::string& Text, float FontSize, float WRange, float HRange, const glm::vec3& Pos, const glm::vec4& Color)
+	void TextRenderer::Draw(const std::string& Text, float FontSize, float WRange, float HRange, const glm::vec3& Pos, const glm::vec4& Color,
+		bool IsTextAlignLeft, bool IsUseBack)
 	{
+		// ”wŒi‚Ì•`‰æ
+		if (IsUseBack)
+		{
+			glm::vec3 scale = glm::vec3(1.0f, 1.0f * FontSize, 0.0f);
+			m_TextMeshRenderer->m_transform->m_scale = scale;
+			m_TextMeshRenderer->m_transform->m_position = glm::vec3(0.0f, 0.1f, 0.0f);
+
+			m_TextMeshRenderer->Draw([&]() {
+				m_TextMeshRenderer->m_material->SetVec4Uniform("_Color", glm::vec4(0.0f, 0.0f, 0.0f,0.75f));
+				m_TextMeshRenderer->m_material->SetIntUniform("_IsMOnly", 1);
+				m_TextMeshRenderer->m_material->SetIntUniform("_IsMulMatOnVert", 0);
+				m_TextMeshRenderer->m_material->SetIntUniform("_UseLighting", 0);
+				m_TextMeshRenderer->m_material->SetIntUniform("_UseMainTex", 0);
+				m_TextMeshRenderer->m_material->SetIntUniform("_UseColor", 1);
+				
+				}, GL_TRIANGLES, false, 0);
+		}
+
+		// ƒeƒLƒXƒg‚Ì•`‰æ
 		const char* TextData = Text.data();
 		std::vector<std::vector<char>> StructuredText;
 		int PushIndex = 0;
@@ -52,8 +73,13 @@ namespace text
 
 			for (float col = 0.0f; col < static_cast<float>(Arr.size()); col++)
 			{
+				const auto& CharData = Arr[static_cast<size_t>(col)];
+				
+				// ƒXƒy[ƒX‚Ìê‡‚Í•`‰æ‚©‚çœ‚­(ˆÊ’u‚ÌŒvŽZ‚É‚Íd—v‚È‚Ì‚ÅStructuredText‚É‚Í“ü‚ê‚Ä‚¢‚é) 
+				if (std::isspace(CharData)) continue;
+				
 				//
-				const auto& CharTex = GraphicsMain::GetInstance()->m_TTFFactory->GetFTChar(static_cast<unsigned char>(Arr[static_cast<size_t>(col)]));
+				const auto& CharTex = GraphicsMain::GetInstance()->m_TTFFactory->GetFTChar(CharData);
 				const float PixelSize = static_cast<float>(GraphicsMain::GetInstance()->m_TTFFactory->GetPixelSize());
 				const float Left = static_cast<float>(CharTex->GetLeft()) / PixelSize;
 				const float Top = static_cast<float>(CharTex->GetTop()) / PixelSize;
@@ -81,6 +107,7 @@ namespace text
 					m_TextMeshRenderer->m_material->SetIntUniform("_IsMulMatOnVert", 0);
 					m_TextMeshRenderer->m_material->SetIntUniform("_UseLighting", 0);
 					m_TextMeshRenderer->m_material->SetIntUniform("_UseMainTex", 1);
+					m_TextMeshRenderer->m_material->SetIntUniform("_UseColor", 0);
 
 					if (CharTex)
 					{

@@ -8,6 +8,10 @@ namespace app
 	FindKaguya::FindKaguya():
 		m_Voxel(nullptr)
 	{
+		// 演出用のShaderEditorにコードを追加する
+		GraphicsMain::GetInstance()->m_ShaderEditor->AddShaderMap("Voxel.Frag", shaderlib::Voxel_frag);
+
+		//
 		m_Voxel = std::make_shared<MeshRendererComponent>(
 			std::make_shared<TransformComponent>(),
 			PrimitiveType::BOARD,

@@ -14,6 +14,15 @@ namespace app
 		m_Voxel(nullptr),
 		m_Triangle(nullptr)
 	{
+		// 演出用のShaderEditorにコードを追加する
+		std::string Triangle = std::string({
+				#include "../Shader/Triangle_FragComp.h"
+			});
+
+		GraphicsMain::GetInstance()->m_ShaderEditor->AddShaderMap("Triangle.Frag", Triangle);
+
+		//
+
 		// m_NegativeSphereMeshRenderer
 		{
 			std::vector<std::vector<float>> VertexData; std::vector<int> Dimention; std::vector<unsigned short> Indices;
@@ -73,9 +82,7 @@ namespace app
 				PrimitiveType::BOARD,
 				RenderingSurfaceType::RAYMARCHING,
 				shaderlib::StandardRenderBoard_vert,
-				std::string({
-					#include "../Shader/Triangle_FragComp.h"
-				})
+				Triangle
 			);
 
 			m_Triangle->useAlphaTest = true;

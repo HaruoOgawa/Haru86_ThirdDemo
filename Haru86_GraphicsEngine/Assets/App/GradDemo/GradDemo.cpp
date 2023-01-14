@@ -38,7 +38,7 @@ namespace app
     {
 #ifdef _DEBUG
         // 時間のオフセット
-        GraphicsMain::GetInstance()->m_SecondsTimeOffset = 40.0f;// シーンを飛ばすためのオフセット
+        GraphicsMain::GetInstance()->m_SecondsTimeOffset = 100.0f;// シーンを飛ばすためのオフセット
 
         // 音楽のミュート
         //GraphicsMain::GetInstance()->m_SoundPlayer->Mute(true);
@@ -137,7 +137,7 @@ namespace app
         }
 
 #ifdef _DEBUG
-        Console::Log("m_LocalTime: %f\n", m_LocalTime);
+        //Console::Log("m_LocalTime: %f\n", m_LocalTime);
 #endif // _DEBUG
 
         m_MoonSea->UpdateTimeLine(m_LocalTime);

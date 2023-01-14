@@ -9,6 +9,8 @@
 #include <glew.h>
 #include <glfw3.h>
 
+#include "GraphicsEngine/ShaderEditor/CShaderEditor.h"
+
 enum class ERerderingTarget
 {
 	COLOR,
@@ -74,6 +76,9 @@ public:
 
 	// テキスト
 	std::shared_ptr<text::TTFFactory>	m_TTFFactory;
+
+	// シェーダーエディター
+	std::shared_ptr<editor::CShaderEditor> m_ShaderEditor;
 private :
 	void UpdateTimeline();
 	void InputProcess();

@@ -14,14 +14,20 @@ namespace app {
 		m_MoveSpeed(50.0f),
 		m_DrawEarth(true)
 	{
+		// 演出用のShaderEditorにコードを追加する
+		std::string MoonTravel = std::string({
+				#include "../Shader/MoonTravel_FragComp.h"
+		});
+
+		GraphicsMain::GetInstance()->m_ShaderEditor->AddShaderMap("MoonTravel.Frag", MoonTravel);
+
+		//
 		m_MeshRenderer = std::make_shared<MeshRendererComponent>(
 			std::make_shared<TransformComponent>(),
 			PrimitiveType::BOARD,
 			RenderingSurfaceType::RAYMARCHING,
 			shaderlib::StandardRenderBoard_vert,
-			std::string({
-				#include "../Shader/MoonTravel_FragComp.h"
-			})
+			MoonTravel
 		);
 
 		m_MeshRenderer->useZTest = false;

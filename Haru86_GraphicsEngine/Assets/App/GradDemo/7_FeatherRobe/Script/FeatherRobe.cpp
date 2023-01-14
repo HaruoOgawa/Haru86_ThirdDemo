@@ -10,14 +10,20 @@ namespace app {
 		m_AuraPos(glm::vec3(0.0f)),
 		m_Voxel(nullptr)
 	{
+		// 演出用のShaderEditorにコードを追加する
+		std::string FeatherRobe = std::string({
+				#include "../Shader/FeatherRobe_FragComp.h"
+			});
+
+		GraphicsMain::GetInstance()->m_ShaderEditor->AddShaderMap("FeatherRobe.Frag", FeatherRobe);
+
+		//
 		m_MeshRenderer = std::make_shared<MeshRendererComponent>(
 			std::make_shared<TransformComponent>(),
 			PrimitiveType::BOARD,
 			RenderingSurfaceType::RAYMARCHING,
 			shaderlib::StandardRenderBoard_vert,
-			std::string({
-				#include "../Shader/FeatherRobe_FragComp.h"
-			})
+			FeatherRobe
 		);
 
 		m_MeshRenderer->useZTest = false;
