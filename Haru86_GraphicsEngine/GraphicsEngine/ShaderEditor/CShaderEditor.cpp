@@ -93,8 +93,8 @@ namespace editor
 				if (DrawLineIndex >= CodeLineSize) break;
 
 				const auto& TextLine = ShaderCode->GetCodeLineList()[DrawLineIndex];
-				text::TextObject::Draw(TextLine.m_TextLine, m_FontSize, 1.35f, 3.0f, TextLine.m_Pos + glm::vec3(xOffset, 0.0f, 0.0f),
-					glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), true, true, DrawLineIndex);
+				text::TextObject::Draw(TextLine.m_TextLine, m_FontSize, 1.15f, 3.0f, TextLine.m_Pos + glm::vec3(xOffset, 0.0f, 0.0f),
+					glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), true, true, DrawLineIndex, TextLine.m_ColorList);
 			}
 		}
 
@@ -111,7 +111,7 @@ namespace editor
 		float time = GraphicsMain::GetInstance()->m_SecondsTime, sTime = GraphicsMain::GetInstance()->GetSceneStartTime(), eTime = GraphicsMain::GetInstance()->GetSceneEndTime();
 		float SceneProgress = glm::clamp((time - sTime) / (eTime - sTime), 0.0f, 1.0f);
 
-		m_EditorOffset = -1.0f * SceneProgress * m_BufferYRepeatNum[m_CurerentShadeIndex];
+		//m_EditorOffset = -1.0f * SceneProgress * m_BufferYRepeatNum[m_CurerentShadeIndex];
 	}
 
 	void CShaderEditor::Draw()

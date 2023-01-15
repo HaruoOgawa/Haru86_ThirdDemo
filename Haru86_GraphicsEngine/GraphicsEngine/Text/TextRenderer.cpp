@@ -26,13 +26,15 @@ namespace text
 	}
 
 	void TextRenderer::Draw(const std::string& Text, float FontSize, float WAdjust, float HAdjust, const glm::vec3& Pos, const glm::vec4& Color,
-		bool IsTextAlignLeft, bool IsUseBack, int LineNumber)
+		bool IsTextAlignLeft, bool IsUseBack, int LineNumber, const std::vector<glm::vec4>& ColorList)
 	{
 		// テキストデータの整理
 		const char* TextData = Text.data();
 		std::vector<std::vector<char>> StructuredText;
 		int PushIndex = 0;
 		StructuredText.push_back(std::vector<char>());
+		std::vector<glm::vec4> UseColorList;
+
 		for (float n = 0.0f; n < static_cast<float>(Text.size()); n++)
 		{
 			const auto PushText = TextData[static_cast<size_t>(n)];
@@ -44,6 +46,7 @@ namespace text
 			else
 			{
 				StructuredText[PushIndex].push_back(PushText);
+				if(ColorList.size() > 0) UseColorList.push_back(ColorList[n]);
 			}
 		}
 		const float NumOfRowChar = static_cast<float>(StructuredText.size());
@@ -89,7 +92,7 @@ namespace text
 						m_TextMeshRenderer->m_transform->m_position = glm::vec3(xPos, FontSize * 2.0f, 0.0f) + Pos;
 
 						m_TextMeshRenderer->Draw([&]() {
-							m_TextMeshRenderer->m_material->SetVec4Uniform("_Color", Color);
+							m_TextMeshRenderer->m_material->SetVec4Uniform("_Color", glm::vec4(1.0f));
 							m_TextMeshRenderer->m_material->SetIntUniform("_IsMOnly", 1);
 							m_TextMeshRenderer->m_material->SetIntUniform("_IsMulMatOnVert", 0);
 							m_TextMeshRenderer->m_material->SetIntUniform("_UseLighting", 0);
@@ -122,6 +125,7 @@ namespace text
 				const float Top = static_cast<float>(CharTex->GetTop()) / PixelSize;
 				const float Width = static_cast<float>(CharTex->GetWidth()) / PixelSize;
 				const float Height = static_cast<float>(CharTex->GetHeight()) / PixelSize;
+				const auto& DrawColor = (UseColorList.size() > 0) ? UseColorList[col] : Color;
 
 				//Console::Log("Char: %c / PixelSize: %f / Left: %d / Top: %d / Width: %d / Height: %d\n", Arr[static_cast<size_t>(col)], PixelSize, CharTex->GetLeft(), CharTex->GetTop(), CharTex->GetWidth(), CharTex->GetHeight());
 
@@ -139,7 +143,7 @@ namespace text
 
 				//
 				m_TextMeshRenderer->Draw([&]() {
-					m_TextMeshRenderer->m_material->SetVec4Uniform("_Color", Color);
+					m_TextMeshRenderer->m_material->SetVec4Uniform("_Color", DrawColor);
 					m_TextMeshRenderer->m_material->SetIntUniform("_IsMOnly", 1);
 					m_TextMeshRenderer->m_material->SetIntUniform("_IsMulMatOnVert", 0);
 					m_TextMeshRenderer->m_material->SetIntUniform("_UseLighting", 0);
