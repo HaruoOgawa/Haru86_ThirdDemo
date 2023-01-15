@@ -37,12 +37,11 @@ namespace editor
 				// 構文解析を行いハイライトカラーを決める
 				std::vector<glm::vec4> ColorList; 
 				std::string TextStack;
-				int CurrentIndex = 0;
+				int ReadStartIndex = 0;
 				for (int nInLine = 0; nInLine < result.size(); nInLine++)
 				{
 					// 現在の文字を取得
 					const auto& C = result[nInLine];
-					glm::vec4 Color = glm::vec4(0.0f);
 
 					// スペースか記号なら何もしない
 					if (std::isspace(C) || std::find(m_SymbolList.begin(), m_SymbolList.end(), C) != m_SymbolList.end())
@@ -51,7 +50,8 @@ namespace editor
 						ColorList.push_back(glm::vec4(1.0f));
 
 						// リセット
-						CurrentIndex = nInLine + 1;
+						TextStack.clear();
+						ReadStartIndex = nInLine + 1;
 
 						continue;
 					}
@@ -60,11 +60,12 @@ namespace editor
 					// 文字スタックが空かをチェックするのはvec3とかがあるから
 					if (TextStack.empty() && std::find(m_BuiltInNumber.begin(), m_BuiltInNumber.end(), C) != m_BuiltInNumber.end())
 					{
-						// 数値は黄色(0 ~ 9 と 『.』)
+						// 数値は黄色(0 ~ 9 と . )
 						ColorList.push_back(glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
 
 						// リセット
-						CurrentIndex = nInLine + 1;
+						TextStack.clear();
+						ReadStartIndex = nInLine + 1;
 
 						continue;
 					}
@@ -77,54 +78,60 @@ namespace editor
 					if (std::find(m_BuiltInTypes.begin(), m_BuiltInTypes.end(), TextStack) != m_BuiltInTypes.end())
 					{
 						// 合致した瞬間の文字の分もちゃんと追加しておく
+						// 従来合致しなかった場合、構文解析の最後の行でColorList.push_backの仮決定を行っているが、
+						// 合致した瞬間の文字にはその処理が届かないためこのようなことをしている
 						ColorList.push_back(glm::vec4(0.655f, 0.341f, 0.658f, 1.0f));
 
 						// 組み込み型は紫
-						for (int m = 0; m < (nInLine - CurrentIndex + 1); m++)
+						for (int m = 0; m < (nInLine - ReadStartIndex + 1); m++)
 						{
-							int RewriteIndex = CurrentIndex + m;
-							ColorList[RewriteIndex] = glm::vec4(0.655f, 0.341f, 0.658f, 1.0f);
+							int ReadIndex = ReadStartIndex + m;
+							ColorList[ReadIndex] = glm::vec4(0.655f, 0.341f, 0.658f, 1.0f);
 						}
 
 						// リセット
 						TextStack.clear();
-						CurrentIndex = nInLine + 1;
+						ReadStartIndex = nInLine + 1;
 
 						continue;
 					}
 					else if (std::find(m_BuiltInVal.begin(), m_BuiltInVal.end(), TextStack) != m_BuiltInVal.end())
 					{
 						// 合致した瞬間の文字の分もちゃんと追加しておく
-						ColorList.push_back(glm::vec4(1.0f, 0.674f, 0.0f, 1.0f));
+						// 従来合致しなかった場合、構文解析の最後の行でColorList.push_backの仮決定を行っているが、
+						// 合致した瞬間の文字にはその処理が届かないためこのようなことをしている
+						ColorList.push_back(glm::vec4(0.937f, 0.54f, 0.29f, 1.0f));
 
 						// 組み込み変数はオレンジ
-						for (int m = 0; m < (nInLine - CurrentIndex + 1); m++)
+						for (int m = 0; m < (nInLine - ReadStartIndex + 1); m++)
 						{
-							int RewriteIndex = CurrentIndex + m;
-							ColorList[RewriteIndex] = glm::vec4(1.0f, 0.674f, 0.0f, 1.0f);
+							int ReadIndex = ReadStartIndex + m;
+							ColorList[ReadIndex] = glm::vec4(0.937f, 0.54f, 0.29f, 1.0f);
 						}
 
 						// リセット
 						TextStack.clear();
-						CurrentIndex = nInLine + 1;
+						ReadStartIndex = nInLine + 1;
 
 						continue;
 					}
 					else if (std::find(m_BuiltInFunc.begin(), m_BuiltInFunc.end(), TextStack) != m_BuiltInFunc.end())
 					{
 						// 合致した瞬間の文字の分もちゃんと追加しておく
-						ColorList.push_back(glm::vec4(0.655f, 0.341f, 0.658f, 1.0f));
+						// 従来合致しなかった場合、構文解析の最後の行でColorList.push_backの仮決定を行っているが、
+						// 合致した瞬間の文字にはその処理が届かないためこのようなことをしている
+						ColorList.push_back(glm::vec4(0.937f, 0.54f, 0.29f, 1.0f));
 
-						// 組み込み関数は紫
-						for (int m = 0; m < (nInLine - CurrentIndex + 1); m++)
+						// 組み込み関数はオレンジ
+						for (int m = 0; m < (nInLine - ReadStartIndex + 1); m++)
 						{
-							int RewriteIndex = CurrentIndex + m;
-							ColorList[RewriteIndex] = glm::vec4(0.655f, 0.341f, 0.658f, 1.0f);
+							int ReadIndex = ReadStartIndex + m;
+							ColorList[ReadIndex] = glm::vec4(0.937f, 0.54f, 0.29f, 1.0f);
 						}
 
 						// リセット
 						TextStack.clear();
-						CurrentIndex = nInLine + 1;
+						ReadStartIndex = nInLine + 1;
 
 						continue;
 					} 

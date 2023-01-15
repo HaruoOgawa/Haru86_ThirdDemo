@@ -17,11 +17,11 @@ namespace editor
 		std::vector<CShaderCodeLine> m_CodeLineList;
 
 		// ç\ï∂âêÕópÇÃîzóÒ
-		const std::vector<std::string> m_BuiltInTypes = { "int", "bool", "float",  "vec2", "vec3", "vec4", "mat2", "mat3", "mat4",
+		const std::vector<std::string> m_BuiltInTypes = { "int", "bool", "float",  "vec2", "vec3", "vec4", "mat2", "mat3", "mat4", "void",
 			"version", "define", "uniform", "layout","in", "out", "flat", "extension", "if", "else"};
-		const std::vector<std::string> m_BuiltInVal = { "gl_FragColor", "gl_FragCoord" };
+		const std::vector<std::string> m_BuiltInVal = { "gl_FragColor", "gl_FragCoord", "true", "false"};
 		const std::vector<std::string> m_BuiltInFunc = { "abs", "sign", "floor", "ceil", "fract", "mod",
-			"min", "max", "clamp", "mix", "step", "smoothstep", "sin", "cos", "acos", "pow", "exp", "log", "exp2", "log2", "sqrt",
+			"min", "max", "clamp", "mix", "step", "smoothstep", "sin", "cos", "asin", "acos", "atan", "pow", "exp", "log", "exp2", "log2", "sqrt",
 			"length", "distance", "normalize", "dot", "cross", "reflect", "refract" };
 		const std::vector<char> m_SymbolList = { '!', '#', '%', '&', '(', ')', '*', '+', ',', '-', '/', ':', ';', '<', '=', '>', '?',
 			'{' , '|' , '}' };
