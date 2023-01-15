@@ -156,6 +156,14 @@ void GraphicsMain::Update() {
 
 	m_SecondsTime = m_MilliSecondsTime * 0.001f;
 	m_DeltaTime = (m_MilliSecondsTime - previousTime) * 0.001f;
+
+#ifdef _DEBUG
+	// FPS‚ÌŒv‘ª‚Æ•\Ž¦(60FPS‚ðŠî€‚Æ‚·‚é)
+	float FPS = 60.0f / (m_DeltaTime * 60.0f);
+	Console::Log("[FPS] %f fps / [CurrentTime] %f s\n", FPS, m_SecondsTime);
+#endif // _DEBUG
+
+
 	previousTime = m_MilliSecondsTime;
 	if (m_App)m_App->Update();
 	m_ShaderEditor->Update();
