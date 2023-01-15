@@ -39,7 +39,7 @@ namespace editor
 #endif // _DEBUG
 
 				//
-				m_CodeLineList.push_back(result);
+				m_CodeLineList.push_back(CShaderCodeLine{ result, glm::vec3(0.0f, -1.0f, 0.0f) });
 
 				// ƒCƒ“ƒfƒ“ƒg‚ğ‘‚â‚·
 				if (InputChar == '{') indent++;

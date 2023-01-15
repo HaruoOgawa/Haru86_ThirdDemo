@@ -61,7 +61,7 @@ namespace text
 				float xOffset = -1.0f * (1.0f - xSize * 0.5f);
 				glm::vec3 scale = glm::vec3(xSize, 1.0f * FontSize, 0.0f);
 				m_TextMeshRenderer->m_transform->m_scale = scale;
-				m_TextMeshRenderer->m_transform->m_position = glm::vec3(xOffset, 0.1f, 0.0f);
+				m_TextMeshRenderer->m_transform->m_position = glm::vec3(xOffset, 0.0f + FontSize * 2.0f, 0.0f) + Pos;
 
 				m_TextMeshRenderer->Draw([&]() {
 					m_TextMeshRenderer->m_material->SetVec4Uniform("_Color", glm::vec4(0.0f, 0.0f, 0.0f, 0.75f));
