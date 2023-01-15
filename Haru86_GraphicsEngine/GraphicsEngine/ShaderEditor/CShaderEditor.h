@@ -2,6 +2,10 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include <glm/glm.hpp>
+
+class Texture;
+class MeshRendererComponent;
 
 namespace editor
 {
@@ -10,19 +14,25 @@ namespace editor
 
 	class CShaderEditor
 	{
+		//
 		std::vector<std::string> m_ShaderNameList;
 		std::vector<std::shared_ptr<CShaderCode>> m_ShaderCodeList;
+		
+		std::vector<std::shared_ptr<Texture>> m_FrameTextureList;
+		std::shared_ptr<MeshRendererComponent> m_EditorRenderer;
+		std::vector<int> m_BufferYRepeatNum;
 
+		//
 		float m_FontSize;
-
 		int m_CurerentShadeIndex;
 		int m_MaxDrawCount;
-		std::vector<int> m_DrawLineIndexList;
+		float m_EditorOffset;
 	public:
 		CShaderEditor();
 		virtual ~CShaderEditor();
 
 		void AddShaderMap(const std::string& ShaderName, const std::string& ShaderCode);
+		void CreatePreCodeLineTexture();
 
 		void Update();
 		void Draw();

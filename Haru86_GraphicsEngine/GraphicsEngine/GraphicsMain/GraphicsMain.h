@@ -41,6 +41,8 @@ public:
 	bool RunLoop();
 
 	unsigned int GetAppSceneIndex()const;
+	float        GetSceneStartTime() const;
+	float        GetSceneEndTime() const;
 
 	float m_SecondsTime;
 	float m_MilliSecondsTime;

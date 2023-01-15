@@ -27,6 +27,8 @@ namespace app
         std::shared_ptr<MountFuji> m_MountFuji;
 
         unsigned int m_SceneIndex;
+        float        m_SceneStartTime;
+        float        m_SceneEndTime;
         float        m_LocalTime;
     public:
         GradDemo();
@@ -38,6 +40,8 @@ namespace app
         void UpdateTimeline();
 
         unsigned int GetSceneIndex()const { return m_SceneIndex; }
+        float        GetSceneStartTime() const { return m_SceneStartTime; }
+        float        GetSceneEndTime() const { return m_SceneEndTime; }
     };
 }
 

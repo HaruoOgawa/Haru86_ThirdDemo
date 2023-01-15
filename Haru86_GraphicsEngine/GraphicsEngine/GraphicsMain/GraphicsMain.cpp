@@ -90,6 +90,9 @@ void GraphicsMain::LoadData() {
 	if (m_MainCamera == nullptr) m_MainCamera = std::make_shared<TransformComponent>(glm::vec3(0.0f, 0.0f, -3.0f), glm::vec3(0.0f), glm::vec3(1.0f));
 	if (!m_GroabalLightPosition) m_GroabalLightPosition = std::make_shared<TransformComponent>(glm::vec3(10.0f));
 
+	// 描画リソース全体のロード完了後にテキストラインテクスチャをプリレンダリングする
+	m_ShaderEditor->CreatePreCodeLineTexture();
+
 	//
 	if (m_SecondsTimeOffset != 0.0f && m_SecondsTimeOffset > 0.0f)
 	{
@@ -99,7 +102,6 @@ void GraphicsMain::LoadData() {
 	{
 		m_SoundPlayer->Play();
 	}
-
 }
 
 bool GraphicsMain::RunLoop() {
@@ -117,6 +119,16 @@ bool GraphicsMain::RunLoop() {
 unsigned int GraphicsMain::GetAppSceneIndex()const
 {
 	return m_App->GetSceneIndex();
+}
+
+float GraphicsMain::GetSceneStartTime() const
+{
+	return m_App->GetSceneStartTime();
+}
+
+float GraphicsMain::GetSceneEndTime() const
+{
+	return m_App->GetSceneEndTime();
 }
 
 void GraphicsMain::UpdateTimeline() {
