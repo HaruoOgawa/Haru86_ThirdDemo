@@ -49,7 +49,7 @@ namespace editor
 		{
 			// •Ï”€”õ
 			int CodeLineSize = static_cast<int>(ShaderCode->GetCodeLineList().size());
-			float xOffset = 0.05f, yAdjust = 1.25f;
+			float xOffset = 0.05f, yAdjust = 1.75f;
 			std::vector<int> DrawLineIndexList;
 			unsigned int FrameIndex = 0;
 
@@ -94,7 +94,7 @@ namespace editor
 
 				const auto& TextLine = ShaderCode->GetCodeLineList()[DrawLineIndex];
 				text::TextObject::Draw(TextLine.m_TextLine, m_FontSize, 1.35f, 3.0f, TextLine.m_Pos + glm::vec3(xOffset, 0.0f, 0.0f),
-					glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), true, true);
+					glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), true, true, DrawLineIndex);
 			}
 		}
 

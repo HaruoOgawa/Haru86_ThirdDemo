@@ -26,7 +26,7 @@ namespace text
 	}
 
 	void TextRenderer::Draw(const std::string& Text, float FontSize, float WAdjust, float HAdjust, const glm::vec3& Pos, const glm::vec4& Color,
-		bool IsTextAlignLeft, bool IsUseBack)
+		bool IsTextAlignLeft, bool IsUseBack, int LineNumber)
 	{
 		// テキストデータの整理
 		const char* TextData = Text.data();
@@ -57,21 +57,54 @@ namespace text
 			// 背景の描画
 			if (IsUseBack)
 			{
-				float xSize =  NumOfColChar * FontSize * WAdjust;
-				float xOffset = -1.0f * (1.0f - xSize * 0.5f);
-				glm::vec3 scale = glm::vec3(xSize, 1.0f * FontSize, 0.0f);
-				m_TextMeshRenderer->m_transform->m_scale = scale;
-				m_TextMeshRenderer->m_transform->m_position = glm::vec3(xOffset, 0.0f + FontSize * 2.0f, 0.0f) + Pos;
+				{
+					float xOffAdj = -0.01f, xSAdj = 0.7f;
+					float xSize = NumOfColChar * FontSize * xSAdj;
+					float xOffset = -1.0f * (1.0f - xSize);
+					glm::vec3 scale = glm::vec3(xSize, 1.5f * FontSize, 0.0f);
+					m_TextMeshRenderer->m_transform->m_scale = scale;
+					m_TextMeshRenderer->m_transform->m_position = glm::vec3(xOffset + xOffAdj, 0.0f + FontSize * 2.0f, 0.0f) + Pos;
 
-				m_TextMeshRenderer->Draw([&]() {
-					m_TextMeshRenderer->m_material->SetVec4Uniform("_Color", glm::vec4(0.0f, 0.0f, 0.0f, 0.75f));
-					m_TextMeshRenderer->m_material->SetIntUniform("_IsMOnly", 1);
-					m_TextMeshRenderer->m_material->SetIntUniform("_IsMulMatOnVert", 0);
-					m_TextMeshRenderer->m_material->SetIntUniform("_UseLighting", 0);
-					m_TextMeshRenderer->m_material->SetIntUniform("_UseMainTex", 0);
-					m_TextMeshRenderer->m_material->SetIntUniform("_UseColor", 1);
+					m_TextMeshRenderer->Draw([&]() {
+						m_TextMeshRenderer->m_material->SetVec4Uniform("_Color", glm::vec4(0.0f, 0.0f, 0.0f, 0.75f));
+						m_TextMeshRenderer->m_material->SetIntUniform("_IsMOnly", 1);
+						m_TextMeshRenderer->m_material->SetIntUniform("_IsMulMatOnVert", 0);
+						m_TextMeshRenderer->m_material->SetIntUniform("_UseLighting", 0);
+						m_TextMeshRenderer->m_material->SetIntUniform("_UseMainTex", 0);
+						m_TextMeshRenderer->m_material->SetIntUniform("_UseColor", 1);
 
-					}, GL_TRIANGLES, false, 0);
+						}, GL_TRIANGLES, false, 0);
+				}
+
+				// 行番号の描画
+				{
+					std::string LineNumberStr = std::to_string(LineNumber);
+					for (int i = 0; i< LineNumberStr.size(); i++)
+					{
+						const auto& Num = LineNumberStr[i];
+						const auto& CharTex = GraphicsMain::GetInstance()->m_TTFFactory->GetFTChar(Num);
+						float xPos = -1.04f + FontSize * static_cast<float>(i);
+
+						m_TextMeshRenderer->m_transform->m_scale = glm::vec3(FontSize * 0.5f);
+						m_TextMeshRenderer->m_transform->m_position = glm::vec3(xPos, FontSize * 2.0f, 0.0f) + Pos;
+
+						m_TextMeshRenderer->Draw([&]() {
+							m_TextMeshRenderer->m_material->SetVec4Uniform("_Color", Color);
+							m_TextMeshRenderer->m_material->SetIntUniform("_IsMOnly", 1);
+							m_TextMeshRenderer->m_material->SetIntUniform("_IsMulMatOnVert", 0);
+							m_TextMeshRenderer->m_material->SetIntUniform("_UseLighting", 0);
+							m_TextMeshRenderer->m_material->SetIntUniform("_UseMainTex", 1);
+							m_TextMeshRenderer->m_material->SetIntUniform("_UseColor", 0);
+
+							if (CharTex)
+							{
+								CharTex->SetActive(GL_TEXTURE0);
+								m_TextMeshRenderer->m_material->SetIntUniform("_MainTex", 0);
+							}
+							}, GL_TRIANGLES, false, 0);
+						if (CharTex)CharTex->SetEnactive(GL_TEXTURE0);
+					}
+				}
 			}
 
 			// テキストの描画
