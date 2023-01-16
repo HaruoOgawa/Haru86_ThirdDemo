@@ -49,6 +49,7 @@ GraphicsMain::GraphicsMain()
 	m_SoundPlayer(nullptr),
 	m_TTFFactory(nullptr),
 	m_ShaderEditor(nullptr),
+	m_LoadingWaitTime(0.0f),
 	m_GroabalLightPosition(nullptr)
 {
 }
@@ -86,12 +87,19 @@ void GraphicsMain::LoadData() {
 
 	//
 	m_App->Start();
+	// Appのロードにかかった時間
+	//float AppLoadWatiTime = static_cast<float>(clock());
+	float AdjustAppLoadWatitTime = 846.0f; 
+	//AdjustAppLoadWatitTime = (AppLoadWatiTime < AdjustAppLoadWatitTime) ? AppLoadWatiTime : AdjustAppLoadWatitTime;
 
 	if (m_MainCamera == nullptr) m_MainCamera = std::make_shared<TransformComponent>(glm::vec3(0.0f, 0.0f, -3.0f), glm::vec3(0.0f), glm::vec3(1.0f));
 	if (!m_GroabalLightPosition) m_GroabalLightPosition = std::make_shared<TransformComponent>(glm::vec3(10.0f));
 
 	// 描画リソース全体のロード完了後にテキストラインテクスチャをプリレンダリングする
 	m_ShaderEditor->CreatePreCodeLineTexture();
+
+	// ロードにかかった時間を記録しておく(エディタ実装以前の待ち時間と辻褄を合わせる)
+	m_LoadingWaitTime = static_cast<float>(clock()) - AdjustAppLoadWatitTime;
 
 	//
 	if (m_SecondsTimeOffset != 0.0f && m_SecondsTimeOffset > 0.0f)
@@ -161,11 +169,8 @@ void GraphicsMain::key_callback(GLFWwindow* window, int key, int scancode, int a
 }
 
 void GraphicsMain::Update() {
-	m_MilliSecondsTime = static_cast<float>(clock()) + m_SecondsTimeOffset*1000.0f;
-
-	// Debug用(コミットしない)
-	//m_MilliSecondsTime = glm::mod(static_cast<float>(clock()), (87.0f - 40.0f) * 1000.0f) + 40.0f * 1000.0f;
-
+	// 現在の経過時間(ロードにかかった時間分は引いておく)
+	m_MilliSecondsTime = static_cast<float>(clock()) + m_SecondsTimeOffset * 1000.0f - m_LoadingWaitTime;
 	m_SecondsTime = m_MilliSecondsTime * 0.001f;
 	m_DeltaTime = (m_MilliSecondsTime - previousTime) * 0.001f;
 
@@ -174,7 +179,6 @@ void GraphicsMain::Update() {
 	float FPS = 60.0f / (m_DeltaTime * 60.0f);
 	Console::Log("[FPS] %f fps / [CurrentTime] %f s\n", FPS, m_SecondsTime);
 #endif // _DEBUG
-
 
 	previousTime = m_MilliSecondsTime;
 	if (m_App)m_App->Update();
