@@ -30,6 +30,8 @@ namespace app
 		});
 
 		GraphicsMain::GetInstance()->m_ShaderEditor->AddShaderMap("MoonSea.Frag", MoonSeaCode);
+		// Shader数とシーンインデックスの互換性のためにもう一つ追加しておく
+		GraphicsMain::GetInstance()->m_ShaderEditor->AddShaderMap("MoonSea.Frag", MoonSeaCode);
 
 		//
 		m_MoonSeaMeshRenderer = std::make_shared<MeshRendererComponent>(
