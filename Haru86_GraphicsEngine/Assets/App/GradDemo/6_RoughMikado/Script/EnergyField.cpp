@@ -10,14 +10,21 @@ namespace app
 		m_RayCoreRenderer(nullptr),
 		m_RayTrailRenderer(nullptr)
 	{
+		// 演出用のShaderEditorにコードを追加する
+		std::string EnergyField = std::string({
+				#include "../Shader/EnergyField_FragComp.h"
+			});
+
+		GraphicsMain::GetInstance()->m_ShaderEditor->AddShaderMap("EnergyField.Frag", EnergyField);
+
+		//
+
 		m_RayCoreRenderer = std::make_shared<MeshRendererComponent>(
 			std::make_shared<TransformComponent>(),
 			PrimitiveType::BOARD,
 			RenderingSurfaceType::RAYMARCHING,
 			shaderlib::StandardRenderBoard_vert,
-			std::string({
-				#include "../Shader/EnergyField_FragComp.h"
-			})
+			EnergyField
 		);
 		
 		m_RayTrailRenderer = std::make_shared<MeshRendererComponent>(

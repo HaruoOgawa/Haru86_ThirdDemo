@@ -14,14 +14,26 @@ namespace app {
 		m_MoveSpeed(50.0f),
 		m_DrawEarth(true)
 	{
+		// 演出用のShaderEditorにコードを追加する
+		std::string MoonTravel = std::string({
+				#include "../Shader/MoonTravel_FragComp.h"
+		});
+
+		GraphicsMain::GetInstance()->m_ShaderEditor->AddShaderMap("MoonTravel.Frag", MoonTravel);
+		
+		std::string CyberpunkSpaceRay = std::string({
+				#include "../Shader/CyberpunkSpaceRay_FragComp.h"
+			});
+
+		GraphicsMain::GetInstance()->m_ShaderEditor->AddShaderMap("CyberpunkSpaceRay.Frag", CyberpunkSpaceRay);
+
+		//
 		m_MeshRenderer = std::make_shared<MeshRendererComponent>(
 			std::make_shared<TransformComponent>(),
 			PrimitiveType::BOARD,
 			RenderingSurfaceType::RAYMARCHING,
 			shaderlib::StandardRenderBoard_vert,
-			std::string({
-				#include "../Shader/MoonTravel_FragComp.h"
-			})
+			MoonTravel
 		);
 
 		m_MeshRenderer->useZTest = false;
@@ -44,9 +56,7 @@ namespace app {
 			PrimitiveType::BOARD,
 			RenderingSurfaceType::RAYMARCHING,
 			shaderlib::StandardRenderBoard_vert,
-			std::string({
-				#include "../Shader/CyberpunkSpaceRay_FragComp.h"
-			})
+			CyberpunkSpaceRay
 		);
 
 		m_CyberMeshRenderer->useZTest = false;

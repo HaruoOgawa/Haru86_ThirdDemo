@@ -11,14 +11,20 @@ namespace app {
 		m_UseTextIndex(-1),
 		m_Alpha(0.0f)
 	{
+		// 演出用のShaderEditorにコードを追加する
+			std::string MountFuji = std::string({
+				#include "../Shader/MountFuji_FragComp.h"
+				});
+
+		GraphicsMain::GetInstance()->m_ShaderEditor->AddShaderMap("MountFuji.Frag", MountFuji);
+
+		//
 		m_MeshRenderer = std::make_shared<MeshRendererComponent>(
 			std::make_shared<TransformComponent>(),
 			PrimitiveType::BOARD,
 			RenderingSurfaceType::RAYMARCHING,
 			shaderlib::StandardRenderBoard_vert,
-			std::string({
-				#include "../Shader/MountFuji_FragComp.h"
-			})
+			MountFuji
 		);
 
 		m_MeshRenderer->useZTest = false;

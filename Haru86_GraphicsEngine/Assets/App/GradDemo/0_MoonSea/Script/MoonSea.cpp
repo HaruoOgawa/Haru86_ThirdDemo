@@ -24,15 +24,22 @@ namespace app
 		m_CorrectionValue(0.1f),
 		m_CameraID(-1)
 	{
-		
+		// 演出用のShaderEditorにコードを追加する
+		std::string MoonSeaCode = std::string({
+					#include "../Shader/MoonSea_FragComp.h"
+		});
+
+		GraphicsMain::GetInstance()->m_ShaderEditor->AddShaderMap("MoonSea.Frag", MoonSeaCode);
+		// Shader数とシーンインデックスの互換性のためにもう一つ追加しておく
+		GraphicsMain::GetInstance()->m_ShaderEditor->AddShaderMap("MoonSea.Frag", MoonSeaCode);
+
+		//
 		m_MoonSeaMeshRenderer = std::make_shared<MeshRendererComponent>(
 			std::make_shared<TransformComponent>(),
 			PrimitiveType::BOARD,
 			RenderingSurfaceType::RAYMARCHING,
 			shaderlib::StandardRenderBoard_vert,
-			std::string({
-					#include "../Shader/MoonSea_FragComp.h"
-			})
+			MoonSeaCode
 		);
 		m_MoonSeaMeshRenderer->useZTest = false;
 		m_MoonSeaMeshRenderer->useAlphaTest = false;

@@ -20,6 +20,7 @@ uniform int _UseEnvColor;
 uniform vec4 _EnvColor;
 
 uniform int _UseMainTex;
+uniform int _UseMainEditorTex;
 uniform sampler2D _MainTex;
 uniform int _UseMainCube;
 uniform samplerCube _MainCube;
@@ -29,6 +30,9 @@ uniform int _IsRimMul;
 uniform vec4 _RimColor;
 uniform float _RimPower;
 uniform float _RimMulVal;
+
+uniform float _EditorOffset;
+uniform float _ShrinkRate;
 
 void main(){
 	vec4 col=vec4(vec3(0.0),1.0);
@@ -42,6 +46,16 @@ void main(){
 	{
 		vec4 TexCol = texture(_MainTex,vec2(in_uv.x,1.0-in_uv.y));
 		col = _Color * TexCol.r;
+	}
+	else if(_UseMainEditorTex == 1) // テクスチャサンプリング
+	{
+		vec2 st = vec2(in_uv.x, in_uv.y);
+		st.y += -1.0;
+		st *= _ShrinkRate;
+		st.y += 1.0;
+
+		vec4 TexCol = texture(_MainTex,vec2(st.x, st.y + _EditorOffset));
+		col = TexCol;
 	}
 	else if(_UseMainCube == 1)
 	{

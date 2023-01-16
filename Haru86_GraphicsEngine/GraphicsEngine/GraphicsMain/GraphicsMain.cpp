@@ -48,6 +48,7 @@ GraphicsMain::GraphicsMain()
 	m_UsingCamera(nullptr),
 	m_SoundPlayer(nullptr),
 	m_TTFFactory(nullptr),
+	m_ShaderEditor(nullptr),
 	m_GroabalLightPosition(nullptr)
 {
 }
@@ -74,12 +75,23 @@ bool GraphicsMain::Initialize() {
 
 void GraphicsMain::LoadData() {
 	//
+	m_ShaderEditor = std::make_shared<editor::CShaderEditor>();
+
+	//
 	m_SoundPlayer = std::make_shared<sound::SoundPlayer>();
 
+	//
+	m_TTFFactory = std::make_shared<text::TTFFactory>();
+	if (!m_TTFFactory->Load()) isRunning = false;
+
+	//
 	m_App->Start();
 
 	if (m_MainCamera == nullptr) m_MainCamera = std::make_shared<TransformComponent>(glm::vec3(0.0f, 0.0f, -3.0f), glm::vec3(0.0f), glm::vec3(1.0f));
 	if (!m_GroabalLightPosition) m_GroabalLightPosition = std::make_shared<TransformComponent>(glm::vec3(10.0f));
+
+	// 描画リソース全体のロード完了後にテキストラインテクスチャをプリレンダリングする
+	m_ShaderEditor->CreatePreCodeLineTexture();
 
 	//
 	if (m_SecondsTimeOffset != 0.0f && m_SecondsTimeOffset > 0.0f)
@@ -90,10 +102,6 @@ void GraphicsMain::LoadData() {
 	{
 		m_SoundPlayer->Play();
 	}
-
-	//
-	m_TTFFactory = std::make_shared<text::TTFFactory>();
-	if(!m_TTFFactory->Load()) isRunning = false;
 }
 
 bool GraphicsMain::RunLoop() {
@@ -111,6 +119,16 @@ bool GraphicsMain::RunLoop() {
 unsigned int GraphicsMain::GetAppSceneIndex()const
 {
 	return m_App->GetSceneIndex();
+}
+
+float GraphicsMain::GetSceneStartTime() const
+{
+	return m_App->GetSceneStartTime();
+}
+
+float GraphicsMain::GetSceneEndTime() const
+{
+	return m_App->GetSceneEndTime();
 }
 
 void GraphicsMain::UpdateTimeline() {
@@ -150,8 +168,17 @@ void GraphicsMain::Update() {
 
 	m_SecondsTime = m_MilliSecondsTime * 0.001f;
 	m_DeltaTime = (m_MilliSecondsTime - previousTime) * 0.001f;
+
+#ifdef _DEBUG
+	// FPSの計測と表示(60FPSを基準とする)
+	float FPS = 60.0f / (m_DeltaTime * 60.0f);
+	Console::Log("[FPS] %f fps / [CurrentTime] %f s\n", FPS, m_SecondsTime);
+#endif // _DEBUG
+
+
 	previousTime = m_MilliSecondsTime;
 	if (m_App)m_App->Update();
+	m_ShaderEditor->Update();
 }
 
 // ここのDrawではカメラ位置を変える
@@ -161,6 +188,9 @@ void GraphicsMain::Draw() {
 
 	// 通常の描画(画面に表示される部分)
 	GraphicsRenderer::GetInstance()->Draw(m_MainCamera, true,0, []() {},GraphicsRenderer::GetInstance()->GetScreenSize().x, GraphicsRenderer::GetInstance()->GetScreenSize().y);
+
+	// 演出用ShaderEditorを上書きする
+	m_ShaderEditor->Draw();
 
 	//カラーバッファを入れ替える
 	glfwSwapBuffers(GraphicsRenderer::GetInstance()->GetWindow());
