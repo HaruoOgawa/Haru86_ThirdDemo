@@ -56,10 +56,17 @@ namespace editor
 			m_FrameTextureList.push_back(std::make_shared<Texture>());
 			DrawLineIndexList.push_back(0);
 
-			// フレームバッファを生成
-			const auto& ScreenSize = GraphicsRenderer::GetInstance()->GetScreenSize();
-			glm::ivec2 BufferSize = glm::ivec2(static_cast<int>(ScreenSize.x), static_cast<int>(ScreenSize.y) * CodeLineSize / m_MaxDrawCount);
+			// 繰り返す数
 			m_BufferYRepeatNum.push_back(CodeLineSize / m_MaxDrawCount);
+
+			// 収縮率(スクリーン座標系の-1 ~ 1の描画範囲に合わせるために収縮する必要がある。フレームバッファのサイズとは無関係)
+			const float ShrinkRate = (1.0f / static_cast<float>(m_BufferYRepeatNum.back() * 2));
+			m_ShrinkRateList.push_back(ShrinkRate);
+
+			// フレームバッファを生成
+			const float Resolution = 1.0f / ShrinkRate;
+			const auto& ScreenSize = GraphicsRenderer::GetInstance()->GetScreenSize();
+			glm::ivec2 BufferSize = glm::ivec2(static_cast<int>(ScreenSize.x * Resolution), static_cast<int>(ScreenSize.y * Resolution));
 
 			GraphicsRenderer::GetInstance()->CreateFrameBuffer(BufferSize.x, BufferSize.y, m_FrameTextureList.back(), FrameIndex, GL_RGBA, GL_RGBA);
 		
@@ -93,8 +100,9 @@ namespace editor
 				if (DrawLineIndex >= CodeLineSize) break;
 
 				const auto& TextLine = ShaderCode->GetCodeLineList()[DrawLineIndex];
-				text::TextObject::Draw(TextLine.m_TextLine, m_FontSize, 1.15f, 3.0f, TextLine.m_Pos + glm::vec3(xOffset, 0.0f, 0.0f),
-					glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), true, true, DrawLineIndex, TextLine.m_ColorList);
+				text::TextObject::Draw(TextLine.m_TextLine, m_FontSize * ShrinkRate, 1.15f, 3.0f, 
+					glm::vec3(TextLine.m_Pos.x + xOffset * ShrinkRate, 1.0f + TextLine.m_Pos.y * ShrinkRate, TextLine.m_Pos.z),
+					glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), true, true, DrawLineIndex, TextLine.m_ColorList, ShrinkRate);
 			}
 		}
 
@@ -111,7 +119,7 @@ namespace editor
 		float time = GraphicsMain::GetInstance()->m_SecondsTime, sTime = GraphicsMain::GetInstance()->GetSceneStartTime(), eTime = GraphicsMain::GetInstance()->GetSceneEndTime();
 		float SceneProgress = glm::clamp((time - sTime) / (eTime - sTime), 0.0f, 1.0f);
 
-		//m_EditorOffset = -1.0f * SceneProgress * m_BufferYRepeatNum[m_CurerentShadeIndex];
+		m_EditorOffset = -1.0f * SceneProgress * m_BufferYRepeatNum[m_CurerentShadeIndex] * m_ShrinkRateList[m_CurerentShadeIndex];
 	}
 
 	void CShaderEditor::Draw()
@@ -127,6 +135,7 @@ namespace editor
 				m_FrameTextureList[m_CurerentShadeIndex]->SetActive(GL_TEXTURE0);
 				m_EditorRenderer->m_material->SetIntUniform("_MainTex", 0);
 				m_EditorRenderer->m_material->SetFloatUniform("_EditorOffset", m_EditorOffset);
+				m_EditorRenderer->m_material->SetFloatUniform("_ShrinkRate", m_ShrinkRateList[m_CurerentShadeIndex]);
 			}, GL_TRIANGLES, false, 0);
 			m_FrameTextureList[m_CurerentShadeIndex]->SetEnactive(GL_TEXTURE0);
 		}

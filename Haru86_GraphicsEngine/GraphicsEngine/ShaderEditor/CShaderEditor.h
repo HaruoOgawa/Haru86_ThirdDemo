@@ -21,6 +21,7 @@ namespace editor
 		std::vector<std::shared_ptr<Texture>> m_FrameTextureList;
 		std::shared_ptr<MeshRendererComponent> m_EditorRenderer;
 		std::vector<int> m_BufferYRepeatNum;
+		std::vector<float> m_ShrinkRateList;
 
 		//
 		float m_FontSize;

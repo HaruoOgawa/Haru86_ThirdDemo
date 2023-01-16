@@ -143,7 +143,7 @@ namespace editor
 				}
 
 				// CodeLine‚ğì¬
-				m_CodeLineList.push_back(CShaderCodeLine{ result, glm::vec3(0.0f, 1.0f, 0.0f), ColorList });
+				m_CodeLineList.push_back(CShaderCodeLine{ result, glm::vec3(0.0f, 0.0f, 0.0f), ColorList });
 
 				// ƒCƒ“ƒfƒ“ƒg‚ğ‘‚â‚·
 				if (InputChar == '{') indent++;

@@ -26,7 +26,7 @@ namespace text
 	}
 
 	void TextRenderer::Draw(const std::string& Text, float FontSize, float WAdjust, float HAdjust, const glm::vec3& Pos, const glm::vec4& Color,
-		bool IsTextAlignLeft, bool IsUseBack, int LineNumber, const std::vector<glm::vec4>& ColorList)
+		bool IsTextAlignLeft, bool IsUseBack, int LineNumber, const std::vector<glm::vec4>& ColorList, const float ShrinkRate)
 	{
 		// テキストデータの整理
 		const char* TextData = Text.data();
@@ -61,7 +61,7 @@ namespace text
 			if (IsUseBack)
 			{
 				{
-					float xOffAdj = -0.01f, xSAdj = 0.7f;
+					float xOffAdj = -0.01f * ShrinkRate, xSAdj = 0.7f;
 					float xSize = NumOfColChar * FontSize * xSAdj;
 					float xOffset = -1.0f * (1.0f - xSize);
 					glm::vec3 scale = glm::vec3(xSize, 1.5f * FontSize, 0.0f);
@@ -86,10 +86,10 @@ namespace text
 					{
 						const auto& Num = LineNumberStr[i];
 						const auto& CharTex = GraphicsMain::GetInstance()->m_TTFFactory->GetFTChar(Num);
-						float xPos = -1.04f + FontSize * static_cast<float>(i);
+						float xPos = -1.0f + 0.001f + FontSize * static_cast<float>(i);
 
 						m_TextMeshRenderer->m_transform->m_scale = glm::vec3(FontSize * 0.5f);
-						m_TextMeshRenderer->m_transform->m_position = glm::vec3(xPos, FontSize * 2.0f, 0.0f) + Pos;
+						m_TextMeshRenderer->m_transform->m_position = glm::vec3(xPos, FontSize * 2.0f + Pos.y, 0.0f);
 
 						m_TextMeshRenderer->Draw([&]() {
 							m_TextMeshRenderer->m_material->SetVec4Uniform("_Color", glm::vec4(1.0f));
