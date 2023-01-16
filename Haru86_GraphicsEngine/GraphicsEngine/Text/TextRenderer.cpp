@@ -69,7 +69,7 @@ namespace text
 					m_TextMeshRenderer->m_transform->m_position = glm::vec3(xOffset + xOffAdj, 0.0f + FontSize * 2.0f, 0.0f) + Pos;
 
 					m_TextMeshRenderer->Draw([&]() {
-						m_TextMeshRenderer->m_material->SetVec4Uniform("_Color", glm::vec4(0.0f, 0.0f, 0.0f, 0.75f));
+						m_TextMeshRenderer->m_material->SetVec4Uniform("_Color", glm::vec4(0.0f, 0.0f, 0.0f, 0.9f));
 						m_TextMeshRenderer->m_material->SetIntUniform("_IsMOnly", 1);
 						m_TextMeshRenderer->m_material->SetIntUniform("_IsMulMatOnVert", 0);
 						m_TextMeshRenderer->m_material->SetIntUniform("_UseLighting", 0);

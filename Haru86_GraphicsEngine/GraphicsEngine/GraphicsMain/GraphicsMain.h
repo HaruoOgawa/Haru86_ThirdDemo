@@ -48,7 +48,8 @@ public:
 	float m_MilliSecondsTime;
 	float m_SecondsTimeOffset;
 	float m_DeltaTime;
-	
+	float m_LoadingWaitTime;
+
 	//frame board
 	std::shared_ptr<class CameraObject> game_camera_instance;
 	
