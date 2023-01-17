@@ -17,7 +17,9 @@ namespace editor
 		m_CurerentShadeIndex(0),
 		m_MaxDrawCount(75),
 		m_EditorRenderer(nullptr),
-		m_EditorOffset(0.0f)
+		m_EditorOffset(0.0f),
+		m_wCharH(m_WriteRange),
+		m_SumOfMainDelta(0.0f)
 	{
 		m_EditorRenderer = std::make_shared<MeshRendererComponent>(
 			std::make_shared<TransformComponent>(),
@@ -107,7 +109,7 @@ namespace editor
 		}
 
 		// ShaderCodeはもう使わないので解放する
-		m_ShaderCodeList.clear();
+		//m_ShaderCodeList.clear();
 	}
 
 	void CShaderEditor::Update()
@@ -118,8 +120,28 @@ namespace editor
 		//
 		float time = GraphicsMain::GetInstance()->m_SecondsTime, sTime = GraphicsMain::GetInstance()->GetSceneStartTime(), eTime = GraphicsMain::GetInstance()->GetSceneEndTime();
 		float SceneProgress = glm::clamp((time - sTime) / (eTime - sTime), 0.0f, 1.0f);
+		
+		const auto& ShaderCode = m_ShaderCodeList[m_CurerentShadeIndex];
+		int NumofRow = ShaderCode->GetCodeLineList().size();
 
-		m_EditorOffset = -1.0f * SceneProgress * m_BufferYRepeatNum[m_CurerentShadeIndex] * m_ShrinkRateList[m_CurerentShadeIndex];
+		int CurrentRow = static_cast<int>(SceneProgress * (float)NumofRow) - 1;
+		float RowDeltaTime = (eTime - sTime) / static_cast<float>(NumofRow);
+
+		m_SumOfMainDelta += GraphicsMain::GetInstance()->m_DeltaTime;
+
+		if (m_SumOfMainDelta >= RowDeltaTime)
+		{
+			m_SumOfMainDelta = 0.0f;
+
+			// 18行のラインは0.3の長さを使用する
+			m_wCharH -= (m_WriteRange / 18.0);
+		}
+
+		if (m_wCharH <= 0.0f)
+		{
+			m_wCharH = m_WriteRange;
+			m_EditorOffset = -1.0f * SceneProgress * m_BufferYRepeatNum[m_CurerentShadeIndex] * m_ShrinkRateList[m_CurerentShadeIndex];
+		}
 	}
 
 	void CShaderEditor::Draw()
@@ -136,6 +158,8 @@ namespace editor
 				m_EditorRenderer->m_material->SetIntUniform("_MainTex", 0);
 				m_EditorRenderer->m_material->SetFloatUniform("_EditorOffset", m_EditorOffset);
 				m_EditorRenderer->m_material->SetFloatUniform("_ShrinkRate", m_ShrinkRateList[m_CurerentShadeIndex]);
+				m_EditorRenderer->m_material->SetFloatUniform("_FontSize", m_FontSize);
+				m_EditorRenderer->m_material->SetFloatUniform("_wCharH", m_wCharH);
 			}, GL_TRIANGLES, false, 0);
 			m_FrameTextureList[m_CurerentShadeIndex]->SetEnactive(GL_TEXTURE0);
 		}
