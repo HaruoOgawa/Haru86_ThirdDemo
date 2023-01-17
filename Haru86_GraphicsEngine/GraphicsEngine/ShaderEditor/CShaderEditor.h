@@ -28,6 +28,10 @@ namespace editor
 		int m_CurerentShadeIndex;
 		int m_MaxDrawCount;
 		float m_EditorOffset;
+
+		float m_WriteRange = 0.3f;
+		float m_wCharH;
+		float m_SumOfMainDelta;
 	public:
 		CShaderEditor();
 		virtual ~CShaderEditor();

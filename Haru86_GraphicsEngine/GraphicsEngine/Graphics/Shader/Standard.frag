@@ -34,6 +34,9 @@ uniform float _RimPower;
 uniform float _RimMulVal;
 
 uniform float _EditorOffset;
+uniform float _ShrinkRate;
+uniform float _FontSize;
+uniform float _wCharH;
 
 void main(){
 	vec4 col=vec4(vec3(0.0),1.0);
@@ -50,8 +53,17 @@ void main(){
 	}
 	else if(_UseMainEditorTex == 1) // テクスチャサンプリング
 	{
-		vec4 TexCol = texture(_MainTex,vec2(in_uv.x,in_uv.y + _EditorOffset));
+		vec2 st = vec2(in_uv.x, in_uv.y);
+		st.y += -1.0;
+		st *= _ShrinkRate;
+		st.y += 1.0;
+
+		vec4 TexCol = texture(_MainTex,vec2(st.x, st.y + _EditorOffset));
 		col = TexCol;
+
+		float h = (_wCharH - 1.0) * _ShrinkRate + 1.0;
+		float w = 0.02 * _ShrinkRate, s = _FontSize * _ShrinkRate;
+		if(st.y < h && st.x >= w) col.a = 0.0;
 	}
 	else if(_UseMainCube == 1)
 	{
