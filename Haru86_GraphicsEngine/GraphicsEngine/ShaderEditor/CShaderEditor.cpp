@@ -123,10 +123,9 @@ namespace editor
 		
 		const auto& ShaderCode = m_ShaderCodeList[m_CurerentShadeIndex];
 		int NumofRow = ShaderCode->GetCodeLineList().size();
-
-		int CurrentRow = static_cast<int>(SceneProgress * (float)NumofRow) - 1;
 		float RowDeltaTime = (eTime - sTime) / static_cast<float>(NumofRow);
 
+		// ライブコーディングとスクロールの演出
 		m_SumOfMainDelta += GraphicsMain::GetInstance()->m_DeltaTime;
 
 		if (m_SumOfMainDelta >= RowDeltaTime)
