@@ -25,10 +25,11 @@ namespace editor
 
 		//
 		float m_FontSize;
-		int m_CurerentShadeIndex;
+		int m_CurerentShaderIndex;
 		int m_MaxDrawCount;
 		float m_EditorOffset;
 
+		bool m_IsDraw;
 		float m_WriteRange = 0.3f;
 		float m_wCharH;
 		float m_SumOfMainDelta;
