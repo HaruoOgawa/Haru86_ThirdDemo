@@ -35,7 +35,7 @@ namespace text {
 #ifdef _DEBUG
 		FT_Error Error = FT_New_Face(ft, "Assets\\Font\\georgiai.ttf", 0, &face);
 #else
-		FT_Error Error = FT_New_Face(ft, "bin\\georgiai.ttf", 0, &face);
+		FT_Error Error = FT_New_Face(ft, "georgiai.ttf", 0, &face);
 #endif
 		
 		if (Error)

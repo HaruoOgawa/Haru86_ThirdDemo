@@ -45,54 +45,54 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DemoRelease|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinimumRelease|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DemoRelease|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinimumRelease|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -313,14 +313,11 @@ xcopy "$(ProjectDir)Assets\Shader" "$(OutDir)Assets\Shader" /i /s /y
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <PostBuildEvent>
-      <Command>mkdir $(OutDir)bin
-attrib +s +h $(OutDir)bin
-xcopy "$(ProjectDir)GraphicsEngine\Library\GLEW\x64\bin\glew32d.dll" "$(OutDir)bin" /i /s /y
-xcopy "$(ProjectDir)GraphicsEngine\Library\GLFW\x64\lib\glfw3.dll" "$(OutDir)bin" /i /s /y
-xcopy "$(ProjectDir)GraphicsEngine\Library\FreeType\lib\freetype.dll" "$(OutDir)bin" /i /s /y 
-xcopy "$(ProjectDir)Assets\Sound\edm_electronic_electronica_.mp3" "$(OutDir)bin" /i /s /y
-xcopy "$(ProjectDir)Assets\Font\georgiai.ttf" "$(OutDir)bin" /i /s /y
-del /Q $(OutDir)Haru86_GraphicsEngine.pdb</Command>
+      <Command>call xcopy "$(ProjectDir)GraphicsEngine\Library\GLEW\x64\bin\glew32d.dll" $(OutDir) /i /s /y
+call xcopy "$(ProjectDir)GraphicsEngine\Library\GLFW\x64\lib\glfw3.dll" $(OutDir) /i /s /y
+call xcopy "$(ProjectDir)GraphicsEngine\Library\FreeType\lib\freetype.dll" $(OutDir) /i /s /y 
+call xcopy "$(ProjectDir)Assets\Sound\edm_electronic_electronica_.mp3" $(OutDir) /i /s /y
+call xcopy "$(ProjectDir)Assets\Font\georgiai.ttf" "$(OutDir)" /i /s /y</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>call $(SolutionDir)comp.bat</Command>
@@ -346,15 +343,11 @@ del /Q $(OutDir)Haru86_GraphicsEngine.pdb</Command>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <PostBuildEvent>
-      <Command>mkdir $(OutDir)bin
-attrib +s +h $(OutDir)bin
-xcopy "$(ProjectDir)GraphicsEngine\Library\GLEW\x64\bin\glew32d.dll" "$(OutDir)bin" /i /s /y
-xcopy "$(ProjectDir)GraphicsEngine\Library\GLFW\x64\lib\glfw3.dll" "$(OutDir)bin" /i /s /y
-xcopy "$(ProjectDir)GraphicsEngine\Library\FreeType\lib\freetype.dll" "$(OutDir)bin" /i /s /y 
-xcopy "$(ProjectDir)Assets\Sound\edm_electronic_electronica_.mp3" "$(OutDir)bin" /i /s /y
-xcopy "$(ProjectDir)Assets\Font\georgiai.ttf" "$(OutDir)bin" /i /s /y
-del /Q $(OutDir)Haru86_GraphicsEngine.pdb
-</Command>
+      <Command>call xcopy "$(ProjectDir)GraphicsEngine\Library\GLEW\x64\bin\glew32d.dll" $(OutDir) /i /s /y
+call xcopy "$(ProjectDir)GraphicsEngine\Library\GLFW\x64\lib\glfw3.dll" $(OutDir) /i /s /y
+call xcopy "$(ProjectDir)GraphicsEngine\Library\FreeType\lib\freetype.dll" $(OutDir) /i /s /y 
+call xcopy "$(ProjectDir)Assets\Sound\edm_electronic_electronica_.mp3" $(OutDir) /i /s /y
+call xcopy "$(ProjectDir)Assets\Font\georgiai.ttf" "$(OutDir)" /i /s /y</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>call $(SolutionDir)comp.bat</Command>
@@ -381,15 +374,13 @@ del /Q $(OutDir)Haru86_GraphicsEngine.pdb
       <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
     <PostBuildEvent>
-      <Command>mkdir $(OutDir)bin
-attrib +s +h $(OutDir)bin
-xcopy "$(ProjectDir)GraphicsEngine\Library\GLEW\x64\bin\glew32d.dll" "$(OutDir)bin" /i /s /y
-xcopy "$(ProjectDir)GraphicsEngine\Library\GLFW\x64\lib\glfw3.dll" "$(OutDir)bin" /i /s /y
-xcopy "$(ProjectDir)GraphicsEngine\Library\FreeType\lib\freetype.dll" "$(OutDir)bin" /i /s /y 
-xcopy "$(ProjectDir)Assets\Sound\edm_electronic_electronica_.mp3" "$(OutDir)bin" /i /s /y
-xcopy "$(ProjectDir)Assets\Font\georgiai.ttf" "$(OutDir)bin" /i /s /y
+      <Command>call xcopy "$(ProjectDir)GraphicsEngine\Library\GLEW\x64\bin\glew32d.dll" $(OutDir) /i /s /y
+call xcopy "$(ProjectDir)GraphicsEngine\Library\GLFW\x64\lib\glfw3.dll" $(OutDir) /i /s /y
+call xcopy "$(ProjectDir)GraphicsEngine\Library\FreeType\lib\freetype.dll" $(OutDir) /i /s /y 
+call xcopy "$(ProjectDir)Assets\Sound\edm_electronic_electronica_.mp3" $(OutDir) /i /s /y
+call xcopy "$(ProjectDir)Assets\Font\georgiai.ttf" "$(OutDir)" /i /s /y
 call squishy-x64 -i "$(OutDir)Haru86_GraphicsEngine.exe" -o "$(OutDir)Haru86_GraphicsEngine.exe"
-del /Q $(OutDir)Haru86_GraphicsEngine.pdb
+
 </Command>
     </PostBuildEvent>
     <PreBuildEvent>
